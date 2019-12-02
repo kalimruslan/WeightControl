@@ -78,11 +78,11 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope {
     }
 
     override fun showLoadingView() {
-        "загружаю".showToast(ctx)
+        //"загружаю".showToast(ctx)
     }
 
     override fun hideLoadingView() {
-        "загрузил".showToast(ctx)
+        //"загрузил".showToast(ctx)
     }
 
     companion object {

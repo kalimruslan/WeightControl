@@ -7,5 +7,5 @@ import ru.ruslan.weighttracker.model.YoutubeModel
 
 interface YoutubeApi {
     @GET("v3/playlistItems")
-    suspend fun getPlaylistVideosAsync(@Query("playlistId") playlist: String): Deferred<YoutubeModel>
+    suspend fun getPlaylistVideosAsync(playlist: String): Deferred<YoutubeModel>
 }

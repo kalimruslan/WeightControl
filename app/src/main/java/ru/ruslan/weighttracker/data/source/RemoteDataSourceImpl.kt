@@ -7,7 +7,7 @@ import ru.ruslan.weighttracker.network.NoConnectivityException
 import ru.ruslan.weighttracker.network.Result
 import ru.ruslan.weighttracker.network.YoutubeApi
 
-class RemoteDataSourceImpl(val youtubeApi: YoutubeApi): RemoteDataSource {
+class RemoteDataSourceImpl(private val youtubeApi: YoutubeApi): RemoteDataSource {
     override suspend fun getVideosForPlayList(playlist: String): Result<YoutubeModel> {
         return try {
             val result = youtubeApi.getPlaylistVideosAsync(playlist).await()
