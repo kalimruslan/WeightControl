@@ -1,10 +1,11 @@
 package ru.ruslan.weighttracker.network
 
-import retrofit2.Response
+import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
+import retrofit2.http.Query
 import ru.ruslan.weighttracker.model.YoutubeModel
 
 interface YoutubeApi {
-    @GET("playlistItems")
-    suspend fun getPlaylistVideos(): Response<YoutubeModel>
+    @GET("v3/playlistItems")
+    suspend fun getPlaylistVideosAsync(@Query("playlistId") playlist: String): Deferred<YoutubeModel>
 }
