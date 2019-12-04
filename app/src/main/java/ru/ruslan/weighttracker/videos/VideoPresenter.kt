@@ -13,6 +13,7 @@ class VideoPresenter(private val videoIntreractor: VideoInteractor) : VideoContr
 
     override fun setView(view: VideoContract.View) {
         videosView = view
+        videosView?.initVars()
     }
 
     override fun getVideos(playlist: String) {

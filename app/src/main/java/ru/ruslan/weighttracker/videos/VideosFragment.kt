@@ -16,7 +16,6 @@ import ru.ruslan.weighttracker.model.YoutubeModel
 import ru.ruslan.weighttracker.network.ApiFactory
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.showSnackBar
-import ru.ruslan.weighttracker.util.showToast
 import kotlin.coroutines.CoroutineContext
 
 class VideosFragment : VideoContract.View, Fragment(), CoroutineScope {
@@ -35,11 +34,17 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope {
         ctx = context
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_videos, container, false)
-        videoPresenter = VideoPresenter(VideoInteractor(RemoteDataSourceImpl(ApiFactory.getRestClient(ctx))))
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = inflater.inflate(R.layout.fragment_videos, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        videoPresenter =
+            VideoPresenter(VideoInteractor(RemoteDataSourceImpl(ApiFactory.getRestClient(ctx))))
         videoPresenter.setView(this)
-        return view
     }
 
     override fun onResume() {
@@ -48,25 +53,22 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope {
     }
 
     override fun initVars() {
-        adapter = VideosAdapter(
-            ctx,
-            videosList,
-            object : OnItemClickListener {
+        adapter = VideosAdapter(ctx, videosList, object : OnItemClickListener {
 
-                override fun itemClick(position: Int) {
-                    videoPresenter?.videoItemClick(position)
-                }
+            override fun itemClick(position: Int) {
+                videoPresenter.videoItemClick(position)
+            }
 
-                override fun itemLongClick(position: Int) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-            })
+            override fun itemLongClick(position: Int) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
         rv_videos.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
         rv_videos.adapter = adapter
-   }
+    }
 
     override fun populateAdapter(videos: List<YoutubeModel>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        adapter?.addItems(videos)
     }
 
     override fun openVideoDetails(video: YoutubeModel) {
@@ -78,11 +80,11 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope {
     }
 
     override fun showLoadingView() {
-        //"загружаю".showToast(ctx)
+        ll_progress.visibility = View.VISIBLE
     }
 
     override fun hideLoadingView() {
-        //"загрузил".showToast(ctx)
+        ll_progress.visibility = View.GONE
     }
 
     companion object {
