@@ -3,7 +3,7 @@ package ru.ruslan.weighttracker
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class PginationScrollListener(private val layoutManager: LinearLayoutManager) : RecyclerView.OnScrollListener() {
+abstract class PaginationScrollListener(private val layoutManager: LinearLayoutManager) : RecyclerView.OnScrollListener() {
 
     abstract fun isLoading(): Boolean
     abstract fun isLastPage(): Boolean

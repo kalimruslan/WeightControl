@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.videos
+package ru.ruslan.weighttracker.videos.list
 
 import android.annotation.SuppressLint
 import android.content.Context

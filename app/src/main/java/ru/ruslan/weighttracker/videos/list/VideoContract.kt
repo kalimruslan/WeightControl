@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.videos
+package ru.ruslan.weighttracker.videos.list
 
 import ru.ruslan.weighttracker.base.BaseContract
 import ru.ruslan.weighttracker.base.BasePresenter

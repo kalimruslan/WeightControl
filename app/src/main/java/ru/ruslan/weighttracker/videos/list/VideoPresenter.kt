@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.videos
+package ru.ruslan.weighttracker.videos.list
 
 import kotlinx.coroutines.*
 import ru.ruslan.weighttracker.model.YoutubeModel
@@ -6,7 +6,8 @@ import ru.ruslan.weighttracker.network.Result
 import ru.ruslan.weighttracker.util.Constants
 import kotlin.coroutines.CoroutineContext
 
-class VideoPresenter(private val videoIntreractor: VideoInteractor) : VideoContract.VideoPresenter {
+class VideoPresenter(private val videoIntreractor: VideoInteractor) :
+    VideoContract.VideoPresenter {
 
     private var job = Job()
     private val coroutineIOContext: CoroutineContext = job + Dispatchers.IO

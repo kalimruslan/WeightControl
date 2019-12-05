@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.videos
+package ru.ruslan.weighttracker.videos.list
 
 import android.content.Context
 import android.os.Bundle
@@ -11,7 +11,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_videos.*
 import kotlinx.coroutines.*
 import ru.ruslan.weighttracker.OnItemClickListener
-import ru.ruslan.weighttracker.PginationScrollListener
+import ru.ruslan.weighttracker.PaginationScrollListener
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.data.source.RemoteDataSourceImpl
 import ru.ruslan.weighttracker.model.YoutubeModel
@@ -54,7 +54,11 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         videoPresenter =
-            VideoPresenter(VideoInteractor(RemoteDataSourceImpl(ApiFactory.getRestClient(ctx))))
+            VideoPresenter(
+                VideoInteractor(
+                    RemoteDataSourceImpl(ApiFactory.getRestClient(ctx))
+                )
+            )
         videoPresenter.setView(this)
         videoPresenter.getVideos(Constants.VIDEO_PLAYLIST_1, "")
     }
@@ -64,21 +68,24 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
         swipeRefresh.setOnRefreshListener(this)
 
         rv_videos.setHasFixedSize(true)
-        adapter = VideosAdapter(ctx, videosList, object : OnItemClickListener {
+        adapter = VideosAdapter(
+            ctx,
+            videosList,
+            object : OnItemClickListener {
 
-            override fun itemClick(position: Int) {
-                videoPresenter.videoItemClick(position)
-            }
+                override fun itemClick(position: Int) {
+                    videoPresenter.videoItemClick(position)
+                }
 
-            override fun itemLongClick(position: Int) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        })
+                override fun itemLongClick(position: Int) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+            })
         val layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
         rv_videos.layoutManager = layoutManager
         rv_videos.adapter = adapter
 
-        rv_videos.addOnScrollListener(object : PginationScrollListener(layoutManager){
+        rv_videos.addOnScrollListener(object : PaginationScrollListener(layoutManager){
             override fun isLoading(): Boolean {
                 return isLoading
             }
