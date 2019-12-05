@@ -4,11 +4,11 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "ru.ruslan.weighttracker"
         minSdkVersion 19
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -24,9 +24,14 @@ android {
             it.buildConfigField ("String", "BASE_URL", '"https://www.googleapis.com/youtube/"')
             it.buildConfigField ("String", "CHANNEL_ID", '"PLh13OF-FPwGGKuAfUfTksOgbeqWernIkV"')
         }
+        debug{
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -39,7 +44,7 @@ dependencies {
     def kotlinCoroutineVersion = "1.0.1"
     def dagger2_version = "2.11"
     def room_version = "2.1.0-alpha04"
-    def glide_version = "4.9.0"
+    def glide_version = "4.10.0"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
