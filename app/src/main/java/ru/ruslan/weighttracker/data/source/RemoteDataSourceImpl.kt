@@ -8,9 +8,9 @@ import ru.ruslan.weighttracker.network.Result
 import ru.ruslan.weighttracker.network.YoutubeApi
 
 class RemoteDataSourceImpl(private val youtubeApi: YoutubeApi): RemoteDataSource {
-    override suspend fun getVideosForPlayList(playlist: String): Result<YoutubeModel> {
+    override suspend fun getVideosForPlayList(playlist: String, pageToken: String): Result<YoutubeModel> {
         return try {
-            val result = youtubeApi.getPlaylistVideosAsync(playlist).await()
+            val result = youtubeApi.getPlaylistVideosAsync(playlist, pageToken).await()
             Result.Success(result)
         } catch (e: HttpException){
             Result.Error(e)

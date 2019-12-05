@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_videos.*
 import kotlinx.coroutines.*
 import ru.ruslan.weighttracker.OnItemClickListener
+import ru.ruslan.weighttracker.PginationScrollListener
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.data.source.RemoteDataSourceImpl
 import ru.ruslan.weighttracker.model.YoutubeModel
@@ -18,7 +20,8 @@ import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.showSnackBar
 import kotlin.coroutines.CoroutineContext
 
-class VideosFragment : VideoContract.View, Fragment(), CoroutineScope {
+class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
+    SwipeRefreshLayout.OnRefreshListener {
 
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -27,7 +30,15 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope {
     private lateinit var ctx: Context
     private var adapter: VideosAdapter? = null
     private lateinit var videoPresenter: VideoContract.VideoPresenter
-    private var videosList: List<YoutubeModel> = emptyList()
+    private var videosList: MutableList<YoutubeModel> = mutableListOf()
+    private var currentPage = 1
+    private var isLastPage = false
+    private var isLoading = false
+
+    companion object {
+        @JvmStatic
+        fun newInstance() = VideosFragment()
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -45,14 +56,14 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope {
         videoPresenter =
             VideoPresenter(VideoInteractor(RemoteDataSourceImpl(ApiFactory.getRestClient(ctx))))
         videoPresenter.setView(this)
+        videoPresenter.getVideos(Constants.VIDEO_PLAYLIST_1, "")
     }
 
-    override fun onResume() {
-        super.onResume()
-        videoPresenter.getVideos(Constants.VIDEO_PLAYLIST_1)
-    }
 
     override fun initVars() {
+        swipeRefresh.setOnRefreshListener(this)
+
+        rv_videos.setHasFixedSize(true)
         adapter = VideosAdapter(ctx, videosList, object : OnItemClickListener {
 
             override fun itemClick(position: Int) {
@@ -63,12 +74,58 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         })
-        rv_videos.layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
+        rv_videos.layoutManager = layoutManager
         rv_videos.adapter = adapter
+
+        rv_videos.addOnScrollListener(object : PginationScrollListener(layoutManager){
+            override fun isLoading(): Boolean {
+                return isLoading
+            }
+
+            override fun isLastPage(): Boolean {
+                return isLastPage
+            }
+
+            override fun loadMoreItems() {
+                videoPresenter.needNextPages()
+            }
+        })
     }
 
-    override fun populateAdapter(videos: List<YoutubeModel>) {
-        adapter?.addItems(videos)
+    override fun populateAdapter(videos: YoutubeModel) {
+        if(currentPage != 1){
+            adapter?.removeLoading()
+        }
+        adapter?.addItems(videos.items)
+        swipeRefresh.isRefreshing = false
+    }
+
+    override fun showHideLoadingInAdapter(isShow: Boolean) {
+        if(isShow)
+            adapter?.addLoading()
+        else
+            adapter?.removeLoading()
+    }
+
+    override fun isLoadingNextPages(loading: Boolean) {
+        isLoading = loading
+    }
+
+    override fun isLastLoadedPage(last: Boolean) {
+        isLastPage = last
+    }
+
+    override fun incrementCurrentPageBeforeLoading() {
+        currentPage++
+    }
+
+    override fun resetCurrentPage() {
+        currentPage = 1
+    }
+
+    override fun clearRecyclerItems() {
+        adapter?.clear()
     }
 
     override fun openVideoDetails(video: YoutubeModel) {
@@ -87,8 +144,7 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope {
         ll_progress.visibility = View.GONE
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance() = VideosFragment()
+    override fun onRefresh() {
+        videoPresenter?.refreshData()
     }
 }

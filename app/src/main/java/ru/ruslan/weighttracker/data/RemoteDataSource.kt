@@ -4,5 +4,5 @@ import ru.ruslan.weighttracker.model.YoutubeModel
 import ru.ruslan.weighttracker.network.Result
 
 interface RemoteDataSource {
-    suspend fun getVideosForPlayList(playlist: String): Result<YoutubeModel>
+    suspend fun getVideosForPlayList(playlist: String, pageToken: String): Result<YoutubeModel>
 }
