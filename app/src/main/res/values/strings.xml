@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">WeightTracker</string>
+    <string name="text_no_internet_connection">НЕт соединения с интернетом</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_please_wait">Пожалуйста, подождите ...</string>
+    <string name="text_home">Главная</string>
+    <string name="text_video">Видео</string>
+    <string name="text_settings">Настройки</string>
 </resources>
