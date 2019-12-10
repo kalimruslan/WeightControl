@@ -1,6 +1,6 @@
 package ru.ruslan.weighttracker.data
 
-import ru.ruslan.weighttracker.model.YoutubeModel
+import ru.ruslan.weighttracker.poko.YoutubeModel
 import ru.ruslan.weighttracker.network.Result
 
 interface RemoteDataSource {

@@ -8,4 +8,6 @@
     <string name="text_home">Главная</string>
     <string name="text_video">Видео</string>
     <string name="text_settings">Настройки</string>
+    <string name="text_initialize_error">Ошибка инициализации</string>
+    <string name="text_error">Произошла ошибка</string>
 </resources>

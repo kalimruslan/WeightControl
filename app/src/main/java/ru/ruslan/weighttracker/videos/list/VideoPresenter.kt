@@ -1,7 +1,7 @@
 package ru.ruslan.weighttracker.videos.list
 
 import kotlinx.coroutines.*
-import ru.ruslan.weighttracker.model.YoutubeModel
+import ru.ruslan.weighttracker.poko.YoutubeModel
 import ru.ruslan.weighttracker.network.Result
 import ru.ruslan.weighttracker.util.Constants
 import kotlin.coroutines.CoroutineContext
@@ -68,7 +68,14 @@ class VideoPresenter(private val videoIntreractor: VideoInteractor) :
         getVideos(Constants.VIDEO_PLAYLIST_1, nextPageToken)
     }
 
-    override fun videoItemClick(position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun videoItemClick(model: YoutubeModel?) {
+        model?.let { videosView?.openVideoDetails(it) }
+    }
+
+    override fun onStart() {
+
+    }
+
+    override fun onStop() {
     }
 }

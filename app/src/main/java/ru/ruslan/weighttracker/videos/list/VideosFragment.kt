@@ -1,6 +1,7 @@
 package ru.ruslan.weighttracker.videos.list
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,10 +15,11 @@ import ru.ruslan.weighttracker.OnItemClickListener
 import ru.ruslan.weighttracker.PaginationScrollListener
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.data.source.RemoteDataSourceImpl
-import ru.ruslan.weighttracker.model.YoutubeModel
+import ru.ruslan.weighttracker.poko.YoutubeModel
 import ru.ruslan.weighttracker.network.ApiFactory
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.showSnackBar
+import ru.ruslan.weighttracker.videos.detail.VideoDetailActivity
 import kotlin.coroutines.CoroutineContext
 
 class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
@@ -46,19 +48,15 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_videos, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        videoPresenter =
-            VideoPresenter(
-                VideoInteractor(
-                    RemoteDataSourceImpl(ApiFactory.getRestClient(ctx))
+        videoPresenter = VideoPresenter(
+                VideoInteractor(RemoteDataSourceImpl(ApiFactory.getRestClient(ctx))
                 )
-            )
+        )
         videoPresenter.setView(this)
         videoPresenter.getVideos(Constants.VIDEO_PLAYLIST_1, "")
     }
@@ -68,24 +66,21 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
         swipeRefresh.setOnRefreshListener(this)
 
         rv_videos.setHasFixedSize(true)
-        adapter = VideosAdapter(
-            ctx,
-            videosList,
-            object : OnItemClickListener {
+        adapter = VideosAdapter(ctx, videosList, object : OnItemClickListener {
 
-                override fun itemClick(position: Int) {
-                    videoPresenter.videoItemClick(position)
-                }
+            override fun itemClick(position: Int) {
+                videoPresenter.videoItemClick(adapter?.getItem(position))
+            }
 
-                override fun itemLongClick(position: Int) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-            })
+            override fun itemLongClick(position: Int) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
         val layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
         rv_videos.layoutManager = layoutManager
         rv_videos.adapter = adapter
 
-        rv_videos.addOnScrollListener(object : PaginationScrollListener(layoutManager){
+        rv_videos.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
             override fun isLoading(): Boolean {
                 return isLoading
             }
@@ -101,7 +96,7 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
     }
 
     override fun populateAdapter(videos: YoutubeModel) {
-        if(currentPage != 1){
+        if (currentPage != 1) {
             adapter?.removeLoading()
         }
         adapter?.addItems(videos.items)
@@ -109,10 +104,8 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
     }
 
     override fun showHideLoadingInAdapter(isShow: Boolean) {
-        if(isShow)
-            adapter?.addLoading()
-        else
-            adapter?.removeLoading()
+        if (isShow) adapter?.addLoading()
+        else adapter?.removeLoading()
     }
 
     override fun isLoadingNextPages(loading: Boolean) {
@@ -136,7 +129,9 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
     }
 
     override fun openVideoDetails(video: YoutubeModel) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val intent = Intent(ctx, VideoDetailActivity::class.java)
+        intent.putExtra(Constants.INTENT_PARAM_YOUTUBE_MODEL, video)
+        startActivity(intent)
     }
 
     override fun showErrorToast(message: String?) {

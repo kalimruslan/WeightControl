@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_video.view.*
 import ru.ruslan.weighttracker.OnItemClickListener
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.model.YoutubeModel
+import ru.ruslan.weighttracker.poko.YoutubeModel
 import ru.ruslan.weighttracker.util.showToast
 
 class VideosAdapter(
@@ -88,6 +88,9 @@ class VideosAdapter(
         notifyDataSetChanged()
     }
 
+    fun getItem(position: Int): YoutubeModel? =
+        data?.get(position)
+
     inner class VideosViewHolder(itemView: View) : BaseViewHolder(itemView) {
         override fun clear() {
         }
@@ -109,8 +112,9 @@ class VideosAdapter(
                     .fallback(R.drawable.img_placeholder)
                     .into(item.iv_thumbnails)
             }
-        }
 
+            item.setOnClickListener{clickListener?.itemClick(position)}
+        }
     }
 
     inner class VideoProgressHolder(itemView: View) : BaseViewHolder(itemView) {

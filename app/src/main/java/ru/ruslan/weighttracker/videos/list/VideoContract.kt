@@ -2,7 +2,7 @@ package ru.ruslan.weighttracker.videos.list
 
 import ru.ruslan.weighttracker.base.BaseContract
 import ru.ruslan.weighttracker.base.BasePresenter
-import ru.ruslan.weighttracker.model.YoutubeModel
+import ru.ruslan.weighttracker.poko.YoutubeModel
 
 interface VideoContract {
     interface View: BaseContract {
@@ -18,7 +18,7 @@ interface VideoContract {
     }
 
     interface VideoPresenter: BasePresenter<View> {
-        fun videoItemClick(position: Int)
+        fun videoItemClick(model: YoutubeModel?)
         fun getVideos(playlist: String, pageToken: String)
         fun needNextPages()
         fun refreshData()
