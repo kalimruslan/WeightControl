@@ -13,6 +13,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        savedInstanceState?.let {
+
+        }
         setContentView(R.layout.activity_main)
         setSupportActionBar(main_toolbar)
         clickListeners()

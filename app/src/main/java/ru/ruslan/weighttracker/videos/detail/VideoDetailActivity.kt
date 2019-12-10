@@ -1,23 +1,18 @@
 package ru.ruslan.weighttracker.videos.detail
 
 import android.os.Bundle
-import android.util.Log
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import kotlinx.android.synthetic.main.activity_video_detail.*
-import kotlinx.android.synthetic.main.item_video.view.*
 import ru.ruslan.weighttracker.BuildConfig
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.poko.YoutubeModel
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.showToast
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 
 class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
 
@@ -50,26 +45,37 @@ class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
     override fun initViews(){
         youtubeModel?.let {
             tv_title.text = it.snippet?.title
+            tv_title.contentDescription = it.snippet?.title
+            tv_description.text = it.snippet?.description
             tv_description.text = it.snippet?.description
             tv_channel_name.text = it.snippet?.channelTitle
             tv_published_date.text = it.contentDetails?.publishedAt
 
-            val options = RequestOptions()
-            options.centerCrop()
-            options.placeholder(R.drawable.img_placeholder)
-            options.error(R.drawable.img_placeholder)
-            options.fallback(R.drawable.img_placeholder)
-            options.centerCrop()
+            val glideOptions = RequestOptions()
+            glideOptions.apply {
+                centerCrop()
+                placeholder(R.drawable.img_placeholder)
+                error(R.drawable.img_placeholder)
+                fallback(R.drawable.img_placeholder)
+                centerCrop()
+            }
 
             Glide.with(this)
                 .load(it.snippet?.thumbnails?.medium?.url)
-                .apply(options)
+                .apply(glideOptions)
                 .into(iv_big_banner)
 
             Glide.with(this)
-                .load(it.snippet?.thumbnails?.default?.url)
-                .apply(options)
-                .into(iv_poster)
+                .load(R.drawable.ic_like)
+                .apply(glideOptions)
+                .transform(CircleCrop())
+                .into(iv_like)
+
+            Glide.with(this)
+                .load(R.drawable.ic_dislike)
+                .apply(glideOptions)
+                .transform(CircleCrop())
+                .into(iv_dislike)
         } ?: getString(R.string.text_error).showToast(this)
     }
 

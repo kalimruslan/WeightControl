@@ -47,6 +47,11 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
         ctx = context
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_videos, container, false)
@@ -58,9 +63,15 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
                 )
         )
         videoPresenter.setView(this)
-        videoPresenter.getVideos(Constants.VIDEO_PLAYLIST_1, "")
+        savedInstanceState?.let {
+            rv_videos.layoutManager?.onRestoreInstanceState(savedInstanceState.getParcelable("ITEMS_KEY"))
+        } ?: videoPresenter.getVideos(Constants.VIDEO_PLAYLIST_1, "")
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelable("ITEMS_KEY", rv_videos?.layoutManager?.onSaveInstanceState())
+        super.onSaveInstanceState(outState)
+    }
 
     override fun initVars() {
         swipeRefresh.setOnRefreshListener(this)
@@ -100,7 +111,7 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
             adapter?.removeLoading()
         }
         adapter?.addItems(videos.items)
-        swipeRefresh.isRefreshing = false
+        swipeRefresh?.isRefreshing = false
     }
 
     override fun showHideLoadingInAdapter(isShow: Boolean) {
@@ -135,15 +146,15 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
     }
 
     override fun showErrorToast(message: String?) {
-        rv_videos.showSnackBar("Ошибка - $message")
+        rv_videos?.showSnackBar("Ошибка - $message")
     }
 
     override fun showLoadingView() {
-        ll_progress.visibility = View.VISIBLE
+        ll_progress?.visibility = View.VISIBLE
     }
 
     override fun hideLoadingView() {
-        ll_progress.visibility = View.GONE
+        ll_progress?.visibility = View.GONE
     }
 
     override fun onRefresh() {
