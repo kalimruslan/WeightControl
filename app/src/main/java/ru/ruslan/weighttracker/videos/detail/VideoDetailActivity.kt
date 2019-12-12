@@ -1,5 +1,6 @@
 package ru.ruslan.weighttracker.videos.detail
 
+import android.content.Intent
 import android.os.Bundle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
@@ -14,11 +15,15 @@ import ru.ruslan.weighttracker.poko.YoutubeModel
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.showToast
 
-class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
+class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View{
 
     private var youtubeModel: YoutubeModel? = null
     private var youtubePlayer: YouTubePlayer? = null
     private var presenter: VideoDetailContract.Presenter? = null
+
+    companion object {
+        const val RECOVERY_REQUEST = 1
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +47,8 @@ class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
         youtubeModel = intent.getParcelableExtra(Constants.INTENT_PARAM_YOUTUBE_MODEL)
     }
 
-    override fun initViews(){
+    override fun initViews() {
+        main_toolbar.title = "Мотивация"
         youtubeModel?.let {
             tv_title.text = it.snippet?.title
             tv_title.contentDescription = it.snippet?.title
@@ -64,18 +70,6 @@ class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
                 .load(it.snippet?.thumbnails?.medium?.url)
                 .apply(glideOptions)
                 .into(iv_big_banner)
-
-            Glide.with(this)
-                .load(R.drawable.ic_like)
-                .apply(glideOptions)
-                .transform(CircleCrop())
-                .into(iv_like)
-
-            Glide.with(this)
-                .load(R.drawable.ic_dislike)
-                .apply(glideOptions)
-                .transform(CircleCrop())
-                .into(iv_dislike)
         } ?: getString(R.string.text_error).showToast(this)
     }
 
@@ -90,7 +84,7 @@ class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
 
             override fun onInitializationFailure(p0: YouTubePlayer.Provider?,
                                                  p1: YouTubeInitializationResult?) {
-                presenter?.playerInitializeError()
+                presenter?.playerInitializeError(p0, p1)
             }
         })
 
@@ -100,8 +94,14 @@ class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
         youtubePlayer?.cueVideo(youtubeModel?.contentDetails?.videoId)
     }
 
-    override fun failureVideoRunning() =
-        getString(R.string.text_initialize_error).showToast(this@VideoDetailActivity)
+    override fun failureVideoRunning(p0: YouTubePlayer.Provider?,
+                                     p1: YouTubeInitializationResult?) {
+        if (p1?.isUserRecoverableError!!) {
+            p1.getErrorDialog(this, RECOVERY_REQUEST).show()
+        } else {
+            getString(R.string.text_initialize_error).showToast(this@VideoDetailActivity)
+        }
+    }
 
     override fun showErrorToast(message: String?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -115,5 +115,10 @@ class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RECOVERY_REQUEST) {
+            setListeners()
+        }
+    }
 
 }

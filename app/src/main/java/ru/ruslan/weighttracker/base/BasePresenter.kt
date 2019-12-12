@@ -4,4 +4,6 @@ interface BasePresenter<in T: BaseContract> {
     fun setView(view: T)
     fun onStart()
     fun onStop()
+    fun onSaveState()
+    fun onRestoreState()
 }

@@ -78,4 +78,12 @@ class VideoPresenter(private val videoIntreractor: VideoInteractor) :
 
     override fun onStop() {
     }
+
+    override fun onSaveState() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onRestoreState() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }
