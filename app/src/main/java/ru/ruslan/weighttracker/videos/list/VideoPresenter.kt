@@ -4,11 +4,11 @@ import kotlinx.coroutines.*
 import ru.ruslan.weighttracker.poko.YoutubeModel
 import ru.ruslan.weighttracker.network.Result
 import ru.ruslan.weighttracker.util.Constants
+import ru.ruslan.weighttracker.videos.list.contract.VideoContract
 import kotlin.coroutines.CoroutineContext
 
 class VideoPresenter(private val videoIntreractor: VideoInteractor) :
-    VideoContract.VideoPresenter {
-
+    VideoContract.VideoPresenter{
     private var job = Job()
     private val coroutineIOContext: CoroutineContext = job + Dispatchers.IO
     private var videosView: VideoContract.View? = null

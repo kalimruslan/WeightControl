@@ -20,6 +20,7 @@ import ru.ruslan.weighttracker.network.ApiFactory
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.showSnackBar
 import ru.ruslan.weighttracker.videos.detail.VideoDetailActivity
+import ru.ruslan.weighttracker.videos.list.contract.VideoContract
 import kotlin.coroutines.CoroutineContext
 
 class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
