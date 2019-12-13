@@ -15,4 +15,13 @@
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
+    <style name="personal_collapsed_title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="personal_expanded_title">
+        <item name="android:textSize">0sp</item>
+    </style>
+
 </resources>

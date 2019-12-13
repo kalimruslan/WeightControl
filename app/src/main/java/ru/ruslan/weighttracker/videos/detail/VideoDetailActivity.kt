@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
@@ -14,8 +15,9 @@ import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.poko.YoutubeModel
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.showToast
+import kotlin.math.abs
 
-class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View{
+class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
 
     private var youtubeModel: YoutubeModel? = null
     private var youtubePlayer: YouTubePlayer? = null
@@ -48,7 +50,6 @@ class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View{
     }
 
     override fun initViews() {
-        main_toolbar.title = "Мотивация"
         youtubeModel?.let {
             tv_title.text = it.snippet?.title
             tv_title.contentDescription = it.snippet?.title
@@ -74,6 +75,24 @@ class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View{
     }
 
     override fun setListeners() {
+        appbar.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
+            var isShow = false
+            var scrollRange = -1
+            override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
+                if (scrollRange == -1)
+                    scrollRange = appBarLayout?.totalScrollRange!!
+
+                if (abs(scrollRange + verticalOffset) < 10) {
+                    collapsingToolbar.title = "Мотивация"
+                    isShow = true
+                } else if (isShow) {
+                    collapsingToolbar.title = ""
+                    isShow = true
+                }
+
+            }
+
+        })
         youtube_view.initialize(BuildConfig.API_KEY, object : YouTubePlayer.OnInitializedListener {
             override fun onInitializationSuccess(p0: YouTubePlayer.Provider?,
                                                  player: YouTubePlayer?,
