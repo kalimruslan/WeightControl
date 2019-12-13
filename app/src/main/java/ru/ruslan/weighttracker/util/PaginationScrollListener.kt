@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker
+package ru.ruslan.weighttracker.util
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView

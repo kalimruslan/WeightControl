@@ -10,4 +10,7 @@
     <string name="text_settings">Настройки</string>
     <string name="text_initialize_error">Ошибка инициализации</string>
     <string name="text_error">Произошла ошибка</string>
+    <string name="text_toolbar_home">Главная</string>
+    <string name="text_photo_before"> Фото до</string>
+    <string name="text_photo_after"> Фото после</string>
 </resources>

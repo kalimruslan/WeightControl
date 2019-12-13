@@ -12,7 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_videos.*
 import kotlinx.coroutines.*
 import ru.ruslan.weighttracker.OnItemClickListener
-import ru.ruslan.weighttracker.PaginationScrollListener
+import ru.ruslan.weighttracker.util.PaginationScrollListener
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.data.source.RemoteDataSourceImpl
 import ru.ruslan.weighttracker.poko.YoutubeModel
