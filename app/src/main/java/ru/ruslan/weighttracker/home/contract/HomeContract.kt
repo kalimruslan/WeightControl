@@ -9,6 +9,8 @@ interface HomeContract {
         fun initViews()
         fun setListeners()
         fun populateWeightAdapter()
+        fun closeFabMenu()
+        fun openFabMenu()
     }
 
     interface Presenter: BasePresenter<View>{
@@ -18,6 +20,6 @@ interface HomeContract {
         fun getWeightList()
         fun photoBeforeViewClicked()
         fun photoAfterViewClicked()
-        fun fabVievClicked(what: Int)
+        fun mainFabViewClicked()
     }
 }

@@ -5,6 +5,7 @@ import ru.ruslan.weighttracker.home.contract.HomeContract
 class HomePresenterImpl : HomeContract.Presenter{
 
     private var homeView: HomeContract.View? = null
+    private var isFabOpen = false
 
     override fun setView(view: HomeContract.View) {
         homeView = view
@@ -36,8 +37,14 @@ class HomePresenterImpl : HomeContract.Presenter{
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun fabVievClicked(what: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun mainFabViewClicked() {
+        isFabOpen = if(isFabOpen){
+            homeView?.closeFabMenu()
+            false
+        } else{
+            homeView?.openFabMenu()
+            true
+        }
     }
 
     override fun onStart() {
