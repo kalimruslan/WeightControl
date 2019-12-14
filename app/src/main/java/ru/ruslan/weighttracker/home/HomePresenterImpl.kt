@@ -11,6 +11,9 @@ class HomePresenterImpl : HomeContract.Presenter{
     }
 
     override fun init() {
+        homeView?.initVars()
+        homeView?.initViews()
+        homeView?.setListeners()
     }
 
     override fun getPhotoBefore() {
