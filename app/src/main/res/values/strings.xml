@@ -13,4 +13,8 @@
     <string name="text_toolbar_home">Главная</string>
     <string name="text_photo_before"> Фото до</string>
     <string name="text_photo_after"> Фото после</string>
+    <string name="text_choose_app">Выберите приложение</string>
+    <string name="text_camera_app">Камера</string>
+    <string name="text_gallery_app">Gallery</string>
+    <string name="text_chooser_image">Select Picture</string>
 </resources>

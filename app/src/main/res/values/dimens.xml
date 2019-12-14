@@ -7,4 +7,5 @@
     <dimen name="size_22sp">22sp</dimen>
     <dimen name="indent_8dp">8dp</dimen>
     <dimen name="indent_4dp">4dp</dimen>
+    <dimen name="indent_16dp">16dp</dimen>
 </resources>

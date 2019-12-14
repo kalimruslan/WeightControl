@@ -1,6 +1,11 @@
 package ru.ruslan.weighttracker.home
 
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.os.Build
 import ru.ruslan.weighttracker.home.contract.HomeContract
+import ru.ruslan.weighttracker.util.ImageUtil
 
 class HomePresenterImpl : HomeContract.Presenter{
 
@@ -45,6 +50,26 @@ class HomePresenterImpl : HomeContract.Presenter{
             homeView?.openFabMenu()
             true
         }
+    }
+
+    override fun photoFabViewClicked() {
+        homeView?.showChooseDialog()
+    }
+
+    override fun cameraAppClickedInChooseDialog() {
+        homeView?.tryOpenCamera()
+    }
+
+    override fun galleryAppClickedInChooseDialog() {
+        homeView?.tryOpenGallery()
+    }
+
+    override fun resultFromCameraSuccess(homeContext: Context, data: Intent) {
+        homeView?.setAfterImageView(ImageUtil.convertUriToBitmap(homeContext, data.data))
+    }
+
+    override fun resultFromGallerySuccess(homeContext: Context, data: Intent) {
+        homeView?.setAfterImageView(data.extras?.get("data") as Bitmap)
     }
 
     override fun onStart() {
