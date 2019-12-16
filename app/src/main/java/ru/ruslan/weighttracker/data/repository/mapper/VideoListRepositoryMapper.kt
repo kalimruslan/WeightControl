@@ -10,7 +10,8 @@ object VideoListRepositoryMapper : BaseMapper<YoutubeModel, VideosEntity> {
         if(type != null){
             videosEntity = VideosEntity(
                 type.nextPageToken,
-                type.resultsPerPage,
+                type.pageInfo?.resultsPerPage!!,
+                type.pageInfo.totalResult!!,
                 getVideosList(type))
         }
         return videosEntity
