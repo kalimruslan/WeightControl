@@ -2,7 +2,7 @@ package ru.ruslan.weighttracker.videos.list
 
 import ru.ruslan.weighttracker.base.BaseContract
 import ru.ruslan.weighttracker.base.BasePresenter
-import ru.ruslan.weighttracker.videos.list.domain.model.YoutubeModel
+import ru.ruslan.weighttracker.data.datasource.api.model.response.YoutubeModel
 
 interface VideoContract {
     interface View: BaseContract {

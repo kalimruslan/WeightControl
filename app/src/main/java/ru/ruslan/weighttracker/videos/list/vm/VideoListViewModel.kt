@@ -1,91 +1,75 @@
 package ru.ruslan.weighttracker.videos.list.vm
 
+import android.app.Application
+import android.util.Log
+import androidx.lifecycle.*
 import kotlinx.coroutines.*
-import ru.ruslan.weighttracker.videos.list.domain.model.YoutubeModel
+import ru.ruslan.weighttracker.data.datasource.api.model.response.YoutubeModel
 import ru.ruslan.weighttracker.core.datatype.Result
+import ru.ruslan.weighttracker.core.datatype.ResultType
+import ru.ruslan.weighttracker.data.datasource.api.VideoListNetworkDataSource
+import ru.ruslan.weighttracker.data.datasource.api.retrofit.ApiFactory
+import ru.ruslan.weighttracker.data.repository.VideoListRepositoryImpl
 import ru.ruslan.weighttracker.util.Constants
+import ru.ruslan.weighttracker.util.printLog
 import ru.ruslan.weighttracker.videos.list.VideoContract
+import ru.ruslan.weighttracker.videos.list.domain.model.VideosEntity
 import ru.ruslan.weighttracker.videos.list.domain.usecase.GetVideoListUseCase
+import ru.ruslan.weighttracker.videos.list.vm.mapper.VideosEntityToUiMapper
+import ru.ruslan.weighttracker.videos.list.vm.model.VideoUI
 import kotlin.coroutines.CoroutineContext
 
-class VideoListViewModel(private val getVideoIntreractor: GetVideoListUseCase) :
-    VideoContract.VideoPresenter {
+class VideoListViewModel(application: Application) : AndroidViewModel(application) {
 
-    private var job = Job()
-    private val coroutineIOContext: CoroutineContext = job + Dispatchers.IO
-    private var videosView: VideoContract.View? = null
+    private val getVideoListUseCase:GetVideoListUseCase = GetVideoListUseCase(
+        VideoListRepositoryImpl(
+            VideoListNetworkDataSource(
+                ApiFactory.getRestClient(getApplication())
+            )
+        )
+    )
 
-    private var currentPage = 0
-    private var totalPage = 0
-    private var nextPageToken: String = ""
+    private val videosMutableLiveData: MutableLiveData<List<VideoUI>> = MutableLiveData()
+    val videosLiveData: LiveData<List<VideoUI>>
+        get() = videosMutableLiveData
 
-    override fun setView(view: VideoContract.View) {
-        videosView = view
-        videosView?.initVars()
+    init {
+        handleVideosLoad()
     }
 
-    override fun getVideos(playlist: String, pageToken:String) {
-        job = CoroutineScope(coroutineIOContext).launch {
+    fun handleVideosLoad() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = getVideoListUseCase.getVideosByPlaylist(Constants.VIDEO_PLAYLIST_1, "")
             withContext(Dispatchers.Main) {
-                if(pageToken.isEmpty())
-                    videosView?.showLoadingView()
-            }
-            when (val result = getVideoIntreractor.getVideosByPlaylist(playlist, pageToken)) {
-                is Result.Success<YoutubeModel> -> {
-                    withContext(Dispatchers.Main) {
-                        videosView?.populateAdapter(result.data)
-                        nextPageToken = result.data.nextPageToken
-                        totalPage = result.data.pageInfo?.totalResult!! / result.data.pageInfo.resultsPerPage
-                        videosView?.isLoadingNextPages(false)
-                        if(pageToken.isEmpty()) videosView?.hideLoadingView()
-                    }
-                }
-                is Result.Error -> {
-                    videosView?.showErrorToast(result.exception.message)
-                    withContext(Dispatchers.Main) {
-                        if(pageToken.isEmpty()) videosView?.hideLoadingView()
-                    }
-                }
+                updateLiveData(result)
             }
         }
     }
 
-    override fun needNextPages() {
-        videosView?.isLoadingNextPages(true)
-        videosView?.incrementCurrentPageBeforeLoading()
-        getVideos(Constants.VIDEO_PLAYLIST_1, nextPageToken)
-        if(currentPage < totalPage){
-            videosView?.showHideLoadingInAdapter(true)
-        }
-        else{
-            videosView?.isLastLoadedPage(true)
+    private fun updateLiveData(result: Result<VideosEntity>?) {
+        if (isResultSuccess(result?.resultType)) {
+            onResultSuccess(result?.data)
+        } else {
+            onResultError()
         }
     }
 
-    override fun refreshData() {
-        videosView?.resetCurrentPage()
-        videosView?.isLastLoadedPage(false)
-        videosView?.clearRecyclerItems()
-        nextPageToken = ""
-        getVideos(Constants.VIDEO_PLAYLIST_1, nextPageToken)
+    private fun onResultError() {
+        "VIEW_MODEL: onResultError".printLog("CleanArch", Log.DEBUG)
     }
 
-    override fun videoItemClick(model: YoutubeModel?) {
-        model?.let { videosView?.openVideoDetails(it) }
+    private fun onResultSuccess(data: VideosEntity?) {
+        val videosUI = VideosEntityToUiMapper.map(data?.items)
+
+        if (videosUI.isEmpty()) {
+            "VIEW_MODEL: videoUI empty".printLog("CleanArch", Log.DEBUG)
+        } else {
+            videosMutableLiveData.value = videosUI
+        }
     }
 
-    override fun onStart() {
-
+    private fun isResultSuccess(resultType: ResultType?): Boolean {
+        return resultType == ResultType.SUCCESS
     }
 
-    override fun onStop() {
-    }
-
-    override fun onSaveState() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onRestoreState() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 }

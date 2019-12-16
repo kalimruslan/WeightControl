@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.network
+package ru.ruslan.weighttracker.data.datasource.api.retrofit
 
 import okhttp3.Interceptor
 import okhttp3.Response

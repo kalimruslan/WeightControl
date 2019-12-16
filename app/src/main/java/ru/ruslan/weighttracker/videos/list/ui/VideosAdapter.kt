@@ -10,12 +10,13 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_video.view.*
 import ru.ruslan.weighttracker.OnItemClickListener
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.videos.list.domain.model.YoutubeModel
+import ru.ruslan.weighttracker.data.datasource.api.model.response.YoutubeModel
 import ru.ruslan.weighttracker.util.showToast
+import ru.ruslan.weighttracker.videos.list.vm.model.VideoUI
 
 class VideosAdapter(
     private val context: Context?,
-    private var data: MutableList<YoutubeModel>?,
+    private var data: MutableList<VideoUI>?,
     private val clickListener: OnItemClickListener?
 ) : RecyclerView.Adapter<BaseViewHolder>() {
 
@@ -60,7 +61,7 @@ class VideosAdapter(
         }
     }
 
-    fun addItems(newData: List<YoutubeModel>?) {
+    fun addItems(newData: List<VideoUI>?) {
         newData?.let {
             data?.addAll(newData)
             notifyDataSetChanged()
@@ -69,14 +70,14 @@ class VideosAdapter(
 
     fun addLoading(){
         isLoaderVisible = true
-        data?.add(YoutubeModel())
+        data?.add(VideoUI())
         notifyItemInserted(data?.size!! - 1)
     }
 
     fun removeLoading(){
         isLoaderVisible = false
         val position: Int = data?.size!! - 1
-        val item: YoutubeModel? = data?.get(position)!!
+        val item: VideoUI? = data?.get(position)!!
         if(item != null){
             data?.removeAt(position)
             notifyItemRemoved(position)
@@ -88,7 +89,7 @@ class VideosAdapter(
         notifyDataSetChanged()
     }
 
-    fun getItem(position: Int): YoutubeModel? =
+    fun getItem(position: Int): VideoUI? =
         data?.get(position)
 
     inner class VideosViewHolder(itemView: View) : BaseViewHolder(itemView) {
@@ -98,11 +99,11 @@ class VideosAdapter(
         private val item = itemView
 
         @SuppressLint("DefaultLocale", "SetTextI18n")
-        override fun onBind(position: Int, model: YoutubeModel?) {
+        override fun onBind(position: Int, model: VideoUI?) {
             super.onBind(position, model)
-            item.tv_title.text = "${model?.snippet?.title?.substring(0,1)?.toUpperCase()}${model?.snippet?.title?.substring(1)}"
-            item.tv_description.text = "${model?.snippet?.description?.substring(0,1)?.toUpperCase()}${model?.snippet?.description?.substring(1)}"
-            val url = model?.snippet?.thumbnails?.medium?.url
+            item.tv_title.text = "${model?.title?.substring(0,1)?.toUpperCase()}${model?.title?.substring(1)}"
+            item.tv_description.text = "${model?.description?.substring(0,1)?.toUpperCase()}${model?.description?.substring(1)}"
+            val url = model?.url
             context?.let {
                 Glide.with(it)
                     .load(url)

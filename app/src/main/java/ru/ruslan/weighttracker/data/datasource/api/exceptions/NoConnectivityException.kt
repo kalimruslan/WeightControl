@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.network
+package ru.ruslan.weighttracker.data.datasource.api.exceptions
 
 import java.io.IOException
 import java.lang.StringBuilder

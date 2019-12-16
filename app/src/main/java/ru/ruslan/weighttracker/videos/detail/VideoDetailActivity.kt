@@ -11,7 +11,7 @@ import com.google.android.youtube.player.YouTubePlayer
 import kotlinx.android.synthetic.main.activity_video_detail.*
 import ru.ruslan.weighttracker.BuildConfig
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.videos.list.domain.model.YoutubeModel
+import ru.ruslan.weighttracker.data.datasource.api.model.response.YoutubeModel
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.showToast
 import kotlin.math.abs
@@ -45,7 +45,7 @@ class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
     }
 
     override fun initVars() {
-        youtubeModel = intent.getParcelableExtra(Constants.INTENT_PARAM_YOUTUBE_MODEL)
+        //youtubeModel = intent.getParcelableExtra(Constants.INTENT_PARAM_YOUTUBE_MODEL)
     }
 
     override fun initViews() {

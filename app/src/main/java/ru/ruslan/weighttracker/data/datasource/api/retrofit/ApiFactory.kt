@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.network
+package ru.ruslan.weighttracker.data.datasource.api.retrofit
 
 import android.content.Context
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -13,7 +13,11 @@ object ApiFactory {
     fun getRestClient(context: Context): YoutubeApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
-            .client(getOkHttpClient(context))
+            .client(
+                getOkHttpClient(
+                    context
+                )
+            )
             .addConverterFactory(MoshiConverterFactory.create())
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
@@ -26,7 +30,11 @@ object ApiFactory {
 
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-            .addInterceptor(ConnectivityInterceptor(context))
+            .addInterceptor(
+                ConnectivityInterceptor(
+                    context
+                )
+            )
             .addInterceptor(QueriesInterceptor())
             .connectTimeout(50, TimeUnit.SECONDS)
             .writeTimeout(50, TimeUnit.SECONDS)

@@ -1,11 +1,11 @@
-package ru.ruslan.weighttracker.videos.list.domain.model
+package ru.ruslan.weighttracker.data.datasource.api.model.response
 
 import android.os.Parcel
 import android.os.Parcelable
 import com.squareup.moshi.Json
 
 data class YoutubeThumbnails(
-    @field:Json(name = "default") val default: YoutubeThumbnails?,
+    @field:Json(name = "aDefault") val default: YoutubeThumbnails?,
     @field:Json(name = "medium") val medium: YoutubeThumbnails?,
     @field:Json(name = "url") val url: String,
     @field:Json(name = "width") val width: String,
@@ -32,7 +32,9 @@ data class YoutubeThumbnails(
 
     companion object CREATOR : Parcelable.Creator<YoutubeThumbnails> {
         override fun createFromParcel(parcel: Parcel): YoutubeThumbnails {
-            return YoutubeThumbnails(parcel)
+            return YoutubeThumbnails(
+                parcel
+            )
         }
 
         override fun newArray(size: Int): Array<YoutubeThumbnails?> {
