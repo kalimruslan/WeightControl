@@ -21,7 +21,7 @@ import kotlin.coroutines.CoroutineContext
 
 class VideoListViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val getVideoListUseCase:GetVideoListUseCase = GetVideoListUseCase(
+    private val getVideoListUseCase: GetVideoListUseCase = GetVideoListUseCase(
         VideoListRepositoryImpl(
             VideoListNetworkDataSource(
                 ApiFactory.getRestClient(getApplication())
@@ -33,11 +33,16 @@ class VideoListViewModel(application: Application) : AndroidViewModel(applicatio
     val videosLiveData: LiveData<List<VideoUI>>
         get() = videosMutableLiveData
 
+    private val isLoadingMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    val isLoadingLiveData: LiveData<Boolean>
+        get() = isLoadingMutableLiveData
+
     init {
         handleVideosLoad()
     }
 
     fun handleVideosLoad() {
+        updateLoadingLiveData(true)
         viewModelScope.launch(Dispatchers.IO) {
             val result = getVideoListUseCase.getVideosByPlaylist(Constants.VIDEO_PLAYLIST_1, "")
             withContext(Dispatchers.Main) {
@@ -55,7 +60,7 @@ class VideoListViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     private fun onResultError() {
-        "VIEW_MODEL: onResultError".printLog("CleanArch", Log.DEBUG)
+        updateLoadingLiveData(false)
     }
 
     private fun onResultSuccess(data: VideosEntity?) {
@@ -66,6 +71,12 @@ class VideoListViewModel(application: Application) : AndroidViewModel(applicatio
         } else {
             videosMutableLiveData.value = videosUI
         }
+
+        updateLoadingLiveData(false)
+    }
+
+    private fun updateLoadingLiveData(isLoading: Boolean) {
+        isLoadingMutableLiveData.value = isLoading
     }
 
     private fun isResultSuccess(resultType: ResultType?): Boolean {

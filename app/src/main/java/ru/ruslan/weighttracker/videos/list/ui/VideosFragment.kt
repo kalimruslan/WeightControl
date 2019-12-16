@@ -28,16 +28,10 @@ import ru.ruslan.weighttracker.videos.list.vm.VideoListViewModel
 import ru.ruslan.weighttracker.videos.list.vm.model.VideoUI
 import kotlin.coroutines.CoroutineContext
 
-class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
-    SwipeRefreshLayout.OnRefreshListener {
-
-    private var job: Job = Job()
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.IO + job
+class VideosFragment : VideoContract.View, Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var ctx: Context
     private var adapter: VideosAdapter? = null
-    private lateinit var videoPresenter: VideoContract.VideoPresenter
     private var videosList: MutableList<VideoUI> = mutableListOf()
     private var currentPage = 1
     private var isLastPage = false
@@ -55,11 +49,6 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
         ctx = context
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        retainInstance = true
-    }
-
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_videos, container, false)
@@ -71,12 +60,8 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
     }
 
     private fun observerLiveData() {
-        viewModel?.videosLiveData?.observe(this, Observer(:: populateAdapterRight))
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable("ITEMS_KEY", rv_videos?.layoutManager?.onSaveInstanceState())
-        super.onSaveInstanceState(outState)
+        viewModel?.videosLiveData?.observe(this, Observer(::populateAdapterRight))
+        viewModel?.isLoadingLiveData?.observe(this, Observer(::showHideLoadingView))
     }
 
     override fun initVars() {
@@ -111,7 +96,6 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
             }
 
             override fun loadMoreItems() {
-                videoPresenter.needNextPages()
             }
         })
     }
@@ -165,15 +149,12 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
         rv_videos?.showSnackBar("Ошибка - $message")
     }
 
-    override fun showLoadingView() {
-        ll_progress?.visibility = View.VISIBLE
-    }
+    override fun showHideLoadingView(isLoading: Boolean) {
+        if(isLoading) ll_progress?.visibility = View.VISIBLE
+        else ll_progress?.visibility = View.GONE
 
-    override fun hideLoadingView() {
-        ll_progress?.visibility = View.GONE
     }
 
     override fun onRefresh() {
-        videoPresenter?.refreshData()
     }
 }

@@ -17,6 +17,9 @@ import ru.ruslan.weighttracker.util.showToast
 import kotlin.math.abs
 
 class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
+    override fun showHideLoadingView(isLoading: Boolean) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private var youtubeModel: YoutubeModel? = null
     private var youtubePlayer: YouTubePlayer? = null
@@ -122,14 +125,6 @@ class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
     }
 
     override fun showErrorToast(message: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun showLoadingView() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun hideLoadingView() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
