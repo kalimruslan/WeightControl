@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.videos.list
+package ru.ruslan.weighttracker.videos.list.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_video.view.*
 import ru.ruslan.weighttracker.OnItemClickListener
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.poko.YoutubeModel
+import ru.ruslan.weighttracker.videos.list.domain.model.YoutubeModel
 import ru.ruslan.weighttracker.util.showToast
 
 class VideosAdapter(

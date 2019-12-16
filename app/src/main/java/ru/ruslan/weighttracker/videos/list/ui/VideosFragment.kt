@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.videos.list
+package ru.ruslan.weighttracker.videos.list.ui
 
 import android.content.Context
 import android.content.Intent
@@ -14,12 +14,15 @@ import kotlinx.coroutines.*
 import ru.ruslan.weighttracker.OnItemClickListener
 import ru.ruslan.weighttracker.PaginationScrollListener
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.data.source.RemoteDataSourceImpl
-import ru.ruslan.weighttracker.poko.YoutubeModel
+import ru.ruslan.weighttracker.data.source.VideoListRepositoryImpl
+import ru.ruslan.weighttracker.videos.list.domain.model.YoutubeModel
 import ru.ruslan.weighttracker.network.ApiFactory
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.showSnackBar
 import ru.ruslan.weighttracker.videos.detail.VideoDetailActivity
+import ru.ruslan.weighttracker.videos.list.VideoContract
+import ru.ruslan.weighttracker.videos.list.domain.usecase.GetVideoListUseCase
+import ru.ruslan.weighttracker.videos.list.vm.VideoListViewModel
 import kotlin.coroutines.CoroutineContext
 
 class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
@@ -58,9 +61,10 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        videoPresenter = VideoPresenter(
-                VideoInteractor(RemoteDataSourceImpl(ApiFactory.getRestClient(ctx))
-                )
+        videoPresenter = VideoListViewModel(
+            GetVideoListUseCase(
+                VideoListRepositoryImpl(ApiFactory.getRestClient(ctx))
+            )
         )
         videoPresenter.setView(this)
         savedInstanceState?.let {
@@ -77,16 +81,19 @@ class VideosFragment : VideoContract.View, Fragment(), CoroutineScope,
         swipeRefresh.setOnRefreshListener(this)
 
         rv_videos.setHasFixedSize(true)
-        adapter = VideosAdapter(ctx, videosList, object : OnItemClickListener {
+        adapter = VideosAdapter(
+            ctx,
+            videosList,
+            object : OnItemClickListener {
 
-            override fun itemClick(position: Int) {
-                videoPresenter.videoItemClick(adapter?.getItem(position))
-            }
+                override fun itemClick(position: Int) {
+                    videoPresenter.videoItemClick(adapter?.getItem(position))
+                }
 
-            override fun itemLongClick(position: Int) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        })
+                override fun itemLongClick(position: Int) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+            })
         val layoutManager = LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false)
         rv_videos.layoutManager = layoutManager
         rv_videos.adapter = adapter

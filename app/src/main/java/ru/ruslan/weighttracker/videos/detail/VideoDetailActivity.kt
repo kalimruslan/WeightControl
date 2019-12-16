@@ -3,7 +3,6 @@ package ru.ruslan.weighttracker.videos.detail
 import android.content.Intent
 import android.os.Bundle
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.youtube.player.YouTubeBaseActivity
@@ -12,7 +11,7 @@ import com.google.android.youtube.player.YouTubePlayer
 import kotlinx.android.synthetic.main.activity_video_detail.*
 import ru.ruslan.weighttracker.BuildConfig
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.poko.YoutubeModel
+import ru.ruslan.weighttracker.videos.list.domain.model.YoutubeModel
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.showToast
 import kotlin.math.abs

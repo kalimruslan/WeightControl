@@ -1,15 +1,15 @@
-package ru.ruslan.weighttracker.poko
+package ru.ruslan.weighttracker.videos.list.domain.model
 
 import android.os.Parcel
 import android.os.Parcelable
 import com.squareup.moshi.Json
 
 data class YoutubeThumbnails(
-        @field:Json(name = "default") val default: YoutubeThumbnails?,
-        @field:Json(name = "medium") val medium: YoutubeThumbnails?,
-        @field:Json(name = "url") val url: String,
-        @field:Json(name = "width") val width: String,
-        @field:Json(name = "height") val height: String
+    @field:Json(name = "default") val default: YoutubeThumbnails?,
+    @field:Json(name = "medium") val medium: YoutubeThumbnails?,
+    @field:Json(name = "url") val url: String,
+    @field:Json(name = "width") val width: String,
+    @field:Json(name = "height") val height: String
                             ) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readParcelable(YoutubeThumbnails::class.java.classLoader),

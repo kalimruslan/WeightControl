@@ -1,12 +1,14 @@
-package ru.ruslan.weighttracker.videos.list
+package ru.ruslan.weighttracker.videos.list.vm
 
 import kotlinx.coroutines.*
-import ru.ruslan.weighttracker.poko.YoutubeModel
-import ru.ruslan.weighttracker.network.Result
+import ru.ruslan.weighttracker.videos.list.domain.model.YoutubeModel
+import ru.ruslan.weighttracker.core.datatype.Result
 import ru.ruslan.weighttracker.util.Constants
+import ru.ruslan.weighttracker.videos.list.VideoContract
+import ru.ruslan.weighttracker.videos.list.domain.usecase.GetVideoListUseCase
 import kotlin.coroutines.CoroutineContext
 
-class VideoPresenter(private val videoIntreractor: VideoInteractor) :
+class VideoListViewModel(private val getVideoIntreractor: GetVideoListUseCase) :
     VideoContract.VideoPresenter {
 
     private var job = Job()
@@ -28,7 +30,7 @@ class VideoPresenter(private val videoIntreractor: VideoInteractor) :
                 if(pageToken.isEmpty())
                     videosView?.showLoadingView()
             }
-            when (val result = videoIntreractor.getVideosByPlaylist(playlist, pageToken)) {
+            when (val result = getVideoIntreractor.getVideosByPlaylist(playlist, pageToken)) {
                 is Result.Success<YoutubeModel> -> {
                     withContext(Dispatchers.Main) {
                         videosView?.populateAdapter(result.data)

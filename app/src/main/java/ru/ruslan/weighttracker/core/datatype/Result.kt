@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.network
+package ru.ruslan.weighttracker.core.datatype
 
 sealed class Result<out T: Any> {
     class Success<out T: Any>(val data: T): Result<T>()
