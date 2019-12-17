@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.ruslan.weighttracker.home.HomeFragment
-import ru.ruslan.weighttracker.videos.list.VideosFragment
+import ru.ruslan.weighttracker.videos.list.ui.VideosFragment
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         }
         setContentView(R.layout.activity_main)
+        setSupportActionBar(main_toolbar)
         clickListeners()
 
         bottom_navigation.selectedItemId = R.id.nav_main
