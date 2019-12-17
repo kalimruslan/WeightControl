@@ -3,7 +3,6 @@ package ru.ruslan.weighttracker.videos.detail
 import android.content.Intent
 import android.os.Bundle
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.youtube.player.YouTubeBaseActivity
@@ -12,16 +11,18 @@ import com.google.android.youtube.player.YouTubePlayer
 import kotlinx.android.synthetic.main.activity_video_detail.*
 import ru.ruslan.weighttracker.BuildConfig
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.poko.YoutubeModel
+import ru.ruslan.weighttracker.data.datasource.api.model.response.YoutubeModel
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.showToast
 import kotlin.math.abs
 
-class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
+class VideoDetailActivity : YouTubeBaseActivity() {
+    fun showHideLoadingView(isLoading: Boolean) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private var youtubeModel: YoutubeModel? = null
     private var youtubePlayer: YouTubePlayer? = null
-    private var presenter: VideoDetailContract.Presenter? = null
 
     companion object {
         const val RECOVERY_REQUEST = 1
@@ -30,26 +31,14 @@ class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_detail)
-        presenter = VideoDetailPresenter()
-        presenter?.setView(this)
-        presenter?.init()
+
     }
 
-    override fun onStart() {
-        super.onStart()
-        presenter?.onStart()
+    fun initVars() {
+        //youtubeModel = intent.getParcelableExtra(Constants.INTENT_PARAM_YOUTUBE_MODEL)
     }
 
-    override fun onStop() {
-        super.onStop()
-        presenter?.onStop()
-    }
-
-    override fun initVars() {
-        youtubeModel = intent.getParcelableExtra(Constants.INTENT_PARAM_YOUTUBE_MODEL)
-    }
-
-    override fun initViews() {
+    fun initViews() {
         youtubeModel?.let {
             tv_title.text = it.snippet?.title
             tv_title.contentDescription = it.snippet?.title
@@ -74,7 +63,7 @@ class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
         } ?: getString(R.string.text_error).showToast(this)
     }
 
-    override fun setListeners() {
+    fun setListeners() {
         appbar.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
             var isShow = false
             var scrollRange = -1
@@ -98,22 +87,22 @@ class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
                                                  player: YouTubePlayer?,
                                                  wasRestored: Boolean) {
                 youtubePlayer = player
-                presenter?.playerInitializeSucces(wasRestored)
+                //presenter?.playerInitializeSucces(wasRestored)
             }
 
             override fun onInitializationFailure(p0: YouTubePlayer.Provider?,
                                                  p1: YouTubeInitializationResult?) {
-                presenter?.playerInitializeError(p0, p1)
+                //presenter?.playerInitializeError(p0, p1)
             }
         })
 
     }
 
-    override fun runVideo(wasRestored: Boolean) {
+    fun runVideo(wasRestored: Boolean) {
         youtubePlayer?.cueVideo(youtubeModel?.contentDetails?.videoId)
     }
 
-    override fun failureVideoRunning(p0: YouTubePlayer.Provider?,
+    fun failureVideoRunning(p0: YouTubePlayer.Provider?,
                                      p1: YouTubeInitializationResult?) {
         if (p1?.isUserRecoverableError!!) {
             p1.getErrorDialog(this, RECOVERY_REQUEST).show()
@@ -122,15 +111,7 @@ class VideoDetailActivity : YouTubeBaseActivity(), VideoDetailContract.View {
         }
     }
 
-    override fun showErrorToast(message: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun showLoadingView() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun hideLoadingView() {
+    fun showErrorToast(message: String?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
