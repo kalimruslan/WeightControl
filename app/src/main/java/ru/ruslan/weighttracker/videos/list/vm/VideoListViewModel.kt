@@ -51,6 +51,10 @@ class VideoListViewModel(application: Application) : AndroidViewModel(applicatio
     val isLastLoadPageLiveData: LiveData<Boolean>
         get() = isLastLoadedPageMutableLiveData
 
+    private val errorForLoadingDataMutableLiveData: MutableLiveData<String> = MutableLiveData()
+    val erroForLoadingLiveData: LiveData<String>
+        get() = errorForLoadingDataMutableLiveData
+
     init {
         handleVideosLoad(Constants.VIDEO_PLAYLIST, "")
     }
@@ -71,11 +75,12 @@ class VideoListViewModel(application: Application) : AndroidViewModel(applicatio
         if (isResultSuccess(result?.resultType)) {
             onResultSuccess(result?.data)
         } else {
-            onResultError()
+            onResultError(result?.error)
         }
     }
 
-    private fun onResultError() {
+    private fun onResultError(error: Exception?) {
+        errorForLoadingDataMutableLiveData.value = error?.message.toString()
         updateLoadingLiveData(false)
     }
 

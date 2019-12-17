@@ -1,6 +1,7 @@
 package ru.ruslan.weighttracker.videos.detail
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -11,17 +12,15 @@ import com.google.android.youtube.player.YouTubePlayer
 import kotlinx.android.synthetic.main.activity_video_detail.*
 import ru.ruslan.weighttracker.BuildConfig
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.data.datasource.api.model.response.YoutubeModel
+import ru.ruslan.weighttracker.data.datasource.api.model.response.YotubeResponce
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.showToast
+import ru.ruslan.weighttracker.videos.list.vm.model.VideoUI
 import kotlin.math.abs
 
 class VideoDetailActivity : YouTubeBaseActivity() {
-    fun showHideLoadingView(isLoading: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
-    private var youtubeModel: YoutubeModel? = null
+    private var video: VideoUI? = null
     private var youtubePlayer: YouTubePlayer? = null
 
     companion object {
@@ -31,21 +30,28 @@ class VideoDetailActivity : YouTubeBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_detail)
-
+        initVars()
+        initViews()
+        setListeners()
     }
 
-    fun initVars() {
-        //youtubeModel = intent.getParcelableExtra(Constants.INTENT_PARAM_YOUTUBE_MODEL)
+    private fun initVars() {
+        main_toolbar.setNavigationIcon(R.drawable.ic_close)
+        main_toolbar.setNavigationOnClickListener { onBackPressed() }
+        video = intent.getParcelableExtra(Constants.EXTRA_PARAM_VIDEO)
+
+        collapsingToolbar.setExpandedTitleColor(Color.WHITE)
+        collapsingToolbar.setCollapsedTitleTextColor(Color.WHITE)
     }
 
-    fun initViews() {
-        youtubeModel?.let {
-            tv_title.text = it.snippet?.title
-            tv_title.contentDescription = it.snippet?.title
-            tv_description.text = it.snippet?.description
-            tv_description.text = it.snippet?.description
-            tv_channel_name.text = it.snippet?.channelTitle
-            tv_published_date.text = it.contentDetails?.publishedAt
+    private fun initViews() {
+        video?.let {
+            tv_title.text = it.title
+            tv_title.contentDescription = it.title
+            tv_description.text = it.description
+            tv_description.text = it.description
+            tv_channel_name.text = it.channelTitle
+            tv_published_date.text = it.publishedAt
 
             val glideOptions = RequestOptions()
             glideOptions.apply {
@@ -57,13 +63,13 @@ class VideoDetailActivity : YouTubeBaseActivity() {
             }
 
             Glide.with(this)
-                .load(it.snippet?.thumbnails?.medium?.url)
+                .load(it.url)
                 .apply(glideOptions)
                 .into(iv_big_banner)
         } ?: getString(R.string.text_error).showToast(this)
     }
 
-    fun setListeners() {
+    private fun setListeners() {
         appbar.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
             var isShow = false
             var scrollRange = -1
@@ -72,7 +78,7 @@ class VideoDetailActivity : YouTubeBaseActivity() {
                     scrollRange = appBarLayout?.totalScrollRange!!
 
                 if (abs(scrollRange + verticalOffset) < 10) {
-                    collapsingToolbar.title = "Мотивация"
+                    collapsingToolbar.title = getString(R.string.text_collapsing_toolbar)
                     isShow = true
                 } else if (isShow) {
                     collapsingToolbar.title = ""
@@ -87,32 +93,19 @@ class VideoDetailActivity : YouTubeBaseActivity() {
                                                  player: YouTubePlayer?,
                                                  wasRestored: Boolean) {
                 youtubePlayer = player
-                //presenter?.playerInitializeSucces(wasRestored)
+                youtubePlayer?.cueVideo(video?.videoId)
             }
 
             override fun onInitializationFailure(p0: YouTubePlayer.Provider?,
                                                  p1: YouTubeInitializationResult?) {
-                //presenter?.playerInitializeError(p0, p1)
+                if (p1?.isUserRecoverableError!!) {
+                    p1.getErrorDialog(this@VideoDetailActivity, RECOVERY_REQUEST).show()
+                } else {
+                    getString(R.string.text_initialize_error).showToast(this@VideoDetailActivity)
+                }
             }
         })
 
-    }
-
-    fun runVideo(wasRestored: Boolean) {
-        youtubePlayer?.cueVideo(youtubeModel?.contentDetails?.videoId)
-    }
-
-    fun failureVideoRunning(p0: YouTubePlayer.Provider?,
-                                     p1: YouTubeInitializationResult?) {
-        if (p1?.isUserRecoverableError!!) {
-            p1.getErrorDialog(this, RECOVERY_REQUEST).show()
-        } else {
-            getString(R.string.text_initialize_error).showToast(this@VideoDetailActivity)
-        }
-    }
-
-    fun showErrorToast(message: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

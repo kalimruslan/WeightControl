@@ -10,7 +10,10 @@ object VideosEntityToUiMapper: BaseMapper<List<VideoEntity>, List<VideoUI>> {
             VideoUI(
                 title = video.snippet.title,
                 description = video.snippet.description,
-                url = video.snippet.thumbnailsEntity?.url!!
+                url = video.snippet.thumbnailsEntity?.url!!,
+                channelTitle = video.snippet.channelTitle,
+                publishedAt = video.contentDetails.publishedAt,
+                videoId = video.contentDetails.videoId
             )
         } ?: listOf()
     }

@@ -1,11 +1,11 @@
 package ru.ruslan.weighttracker.data.repository.mapper
 
 import ru.ruslan.weighttracker.core.BaseMapper
-import ru.ruslan.weighttracker.data.datasource.api.model.response.YoutubeModel
+import ru.ruslan.weighttracker.data.datasource.api.model.response.YotubeResponce
 import ru.ruslan.weighttracker.videos.list.domain.model.*
 
-object ApiToEntityMapper: BaseMapper<YoutubeModel, VideosEntity>{
-    override fun map(type: YoutubeModel?): VideosEntity? {
+object ApiToEntityMapper: BaseMapper<YotubeResponce, VideosEntity>{
+    override fun map(type: YotubeResponce?): VideosEntity? {
         var videosEntity: VideosEntity? = null
         if(type != null){
             videosEntity = VideosEntity(
@@ -18,7 +18,7 @@ object ApiToEntityMapper: BaseMapper<YoutubeModel, VideosEntity>{
         return videosEntity
     }
 
-    private fun getVideosList(type: YoutubeModel): List<VideoEntity> {
+    private fun getVideosList(type: YotubeResponce): List<VideoEntity> {
         return type.items.map { item ->
             val snippetThumbnailsEntity = SnippetThumbnailsEntity(
                 url = item.snippet?.thumbnails?.medium?.url!!,

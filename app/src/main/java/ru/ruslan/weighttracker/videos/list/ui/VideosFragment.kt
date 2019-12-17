@@ -15,9 +15,8 @@ import kotlinx.android.synthetic.main.fragment_videos.*
 import ru.ruslan.weighttracker.OnItemClickListener
 import ru.ruslan.weighttracker.PaginationScrollListener
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.data.datasource.api.model.response.YoutubeModel
 import ru.ruslan.weighttracker.util.Constants
-import ru.ruslan.weighttracker.util.showSnackBar
+import ru.ruslan.weighttracker.util.showToast
 import ru.ruslan.weighttracker.videos.detail.VideoDetailActivity
 import ru.ruslan.weighttracker.videos.list.vm.VideoListViewModel
 import ru.ruslan.weighttracker.videos.list.vm.model.VideoUI
@@ -58,6 +57,7 @@ class VideosFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         viewModel?.isLoadingNextPagesLiveData?.observe(this, Observer(::isLoadingNextPages))
         viewModel?.showHideLoadingInadapterLiveData?.observe(this, Observer(::showHideLoadingInAdapter))
         viewModel?.isLastLoadPageLiveData?.observe(this, Observer(::isLastLoadedPage))
+        viewModel?.erroForLoadingLiveData?.observe(this, Observer(::errorLoading))
     }
 
     private fun initVars() {
@@ -71,9 +71,9 @@ class VideosFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             videosList,
             object : OnItemClickListener {
                 override fun itemClick(position: Int) {
-                    /*val intent = Intent(ctx, VideoDetailActivity::class.java)
-                    intent.putExtra(Constants.EXTRA_PARAM_VIDEO, video)
-                    startActivity(intent)*/
+                    val intent = Intent(ctx, VideoDetailActivity::class.java)
+                    intent.putExtra(Constants.EXTRA_PARAM_VIDEO, videosList[position])
+                    startActivity(intent)
                 }
 
                 override fun itemLongClick(position: Int) {
@@ -103,7 +103,8 @@ class VideosFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if (viewModel?.currentPage != 1) {
             adapter?.removeLoading()
         }
-        adapter?.addItems(videos)
+        videosList.addAll(videos)
+        adapter?.addItems(videosList)
         swipeRefresh?.isRefreshing = false
         isLoading = false
     }
@@ -129,6 +130,10 @@ class VideosFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if(isLoading) ll_progress?.visibility = View.VISIBLE
         else ll_progress?.visibility = View.GONE
 
+    }
+
+    private fun errorLoading(error: String){
+        error.showToast(ctx)
     }
 
     override fun onRefresh() {
