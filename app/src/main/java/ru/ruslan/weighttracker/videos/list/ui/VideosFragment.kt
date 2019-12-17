@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_videos.*
 import ru.ruslan.weighttracker.OnItemClickListener
-import ru.ruslan.weighttracker.PaginationScrollListener
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.util.Constants
+import ru.ruslan.weighttracker.util.PaginationScrollListener
 import ru.ruslan.weighttracker.util.showToast
 import ru.ruslan.weighttracker.videos.detail.VideoDetailActivity
 import ru.ruslan.weighttracker.videos.list.vm.VideoListViewModel
