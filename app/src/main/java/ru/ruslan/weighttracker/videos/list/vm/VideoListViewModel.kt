@@ -42,7 +42,8 @@ class VideoListViewModel(application: Application) : AndroidViewModel(applicatio
     val isLoadingNextPagesLiveData: LiveData<Boolean>
         get() = isLoadingNextPagesMutableLiveData
 
-    private val showHideLoadingInAdapterMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val showHideLoadingInAdapterMutableLiveData: MutableLiveData<Boolean> =
+        MutableLiveData()
     val showHideLoadingInadapterLiveData: LiveData<Boolean>
         get() = showHideLoadingInAdapterMutableLiveData
 
@@ -51,12 +52,12 @@ class VideoListViewModel(application: Application) : AndroidViewModel(applicatio
         get() = isLastLoadedPageMutableLiveData
 
     init {
-        handleVideosLoad(Constants.VIDEO_PLAYLIST_1, "")
+        handleVideosLoad(Constants.VIDEO_PLAYLIST, "")
     }
 
     fun handleVideosLoad(playlist: String, pageToken: String) {
         nextPageToken = pageToken
-        if(pageToken.isEmpty())
+        if (pageToken.isEmpty())
             updateLoadingLiveData(true)
         viewModelScope.launch(Dispatchers.IO) {
             val result = getVideoListUseCase.getVideosByPlaylist(playlist, pageToken)
@@ -104,11 +105,10 @@ class VideoListViewModel(application: Application) : AndroidViewModel(applicatio
     fun needNextPages() {
         isLoadingNextPagesMutableLiveData.value = true
         currentPage++
-        handleVideosLoad(Constants.VIDEO_PLAYLIST_1, nextPageToken)
-        if(currentPage < totalPage){
+        handleVideosLoad(Constants.VIDEO_PLAYLIST, nextPageToken)
+        if (currentPage < totalPage) {
             showHideLoadingInAdapterMutableLiveData.value = true
-        }
-        else{
+        } else {
             isLastLoadedPageMutableLiveData.value = true
         }
     }

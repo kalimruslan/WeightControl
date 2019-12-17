@@ -1,7 +1,5 @@
 package ru.ruslan.weighttracker.data.datasource.api.exceptions
 
-import com.example.manuel.baseproject.data.datasource.api.exceptions.BadRequestException
-import com.example.manuel.baseproject.data.datasource.api.exceptions.NetworkConnectionException
 import retrofit2.HttpException
 import java.io.IOException
 import java.lang.Exception

@@ -1,3 +1,2 @@
-package com.example.manuel.baseproject.data.datasource.api.exceptions
-
+package ru.ruslan.weighttracker.data.datasource.api.exceptions
 class BadRequestException : Exception()

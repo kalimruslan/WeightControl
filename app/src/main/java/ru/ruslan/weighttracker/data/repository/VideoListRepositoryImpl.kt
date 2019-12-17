@@ -3,8 +3,8 @@ package ru.ruslan.weighttracker.data.repository
 import ru.ruslan.weighttracker.core.datatype.Result
 import ru.ruslan.weighttracker.core.datatype.ResultType
 import ru.ruslan.weighttracker.data.datasource.api.VideoListNetworkDataSource
+import ru.ruslan.weighttracker.data.repository.mapper.ApiToEntityMapper
 import ru.ruslan.weighttracker.videos.list.domain.VideoListRepository
-import ru.ruslan.weighttracker.data.repository.mapper.VideoListRepositoryMapper
 import ru.ruslan.weighttracker.videos.list.domain.model.VideosEntity
 
 class VideoListRepositoryImpl(private val videoListNetworkDataSource: VideoListNetworkDataSource) :
@@ -18,7 +18,7 @@ class VideoListRepositoryImpl(private val videoListNetworkDataSource: VideoListN
 
         result = if (resultYoutubeModel.resultType == ResultType.SUCCESS) {
             if (resultYoutubeModel.data?.items!!.isNotEmpty()) {
-                Result.success(VideoListRepositoryMapper.map(resultYoutubeModel.data))
+                Result.success(ApiToEntityMapper.map(resultYoutubeModel.data))
             } else {
                 Result.error(resultYoutubeModel.error)
             }

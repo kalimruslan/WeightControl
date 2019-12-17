@@ -1,6 +1,7 @@
 package ru.ruslan.weighttracker.videos.list.ui
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.data.datasource.api.model.response.YoutubeModel
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.showSnackBar
+import ru.ruslan.weighttracker.videos.detail.VideoDetailActivity
 import ru.ruslan.weighttracker.videos.list.vm.VideoListViewModel
 import ru.ruslan.weighttracker.videos.list.vm.model.VideoUI
 
@@ -69,7 +71,9 @@ class VideosFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             videosList,
             object : OnItemClickListener {
                 override fun itemClick(position: Int) {
-                    //videoPresenter.videoItemClick(adapter?.getItem(position))
+                    /*val intent = Intent(ctx, VideoDetailActivity::class.java)
+                    intent.putExtra(Constants.EXTRA_PARAM_VIDEO, video)
+                    startActivity(intent)*/
                 }
 
                 override fun itemLongClick(position: Int) {
@@ -121,16 +125,6 @@ class VideosFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         adapter?.clear()
     }
 
-    fun openVideoDetails(video: YoutubeModel) {
-        /*val intent = Intent(ctx, VideoDetailActivity::class.java)
-        intent.putExtra(Constants.INTENT_PARAM_YOUTUBE_MODEL, video)
-        startActivity(intent)*/
-    }
-
-    fun showErrorToast(message: String?) {
-        rv_videos?.showSnackBar("Ошибка - $message")
-    }
-
     private fun showHideLoadingView(isLoading: Boolean) {
         if(isLoading) ll_progress?.visibility = View.VISIBLE
         else ll_progress?.visibility = View.GONE
@@ -141,6 +135,6 @@ class VideosFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         viewModel?.currentPage = 1
         isLastLoadedPage(false)
         clearRecyclerItems()
-        viewModel?.handleVideosLoad(Constants.VIDEO_PLAYLIST_1, "")
+        viewModel?.handleVideosLoad(Constants.VIDEO_PLAYLIST, "")
     }
 }

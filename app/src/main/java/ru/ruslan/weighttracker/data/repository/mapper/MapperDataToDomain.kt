@@ -4,15 +4,16 @@ import ru.ruslan.weighttracker.core.BaseMapper
 import ru.ruslan.weighttracker.data.datasource.api.model.response.YoutubeModel
 import ru.ruslan.weighttracker.videos.list.domain.model.*
 
-object VideoListRepositoryMapper : BaseMapper<YoutubeModel, VideosEntity> {
+object ApiToEntityMapper: BaseMapper<YoutubeModel, VideosEntity>{
     override fun map(type: YoutubeModel?): VideosEntity? {
         var videosEntity: VideosEntity? = null
         if(type != null){
             videosEntity = VideosEntity(
                 type.nextPageToken,
                 type.pageInfo?.resultsPerPage!!,
-                type.pageInfo.totalResult!!,
-                getVideosList(type))
+                type.pageInfo.totalResult,
+                getVideosList(type)
+            )
         }
         return videosEntity
     }
