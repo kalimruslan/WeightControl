@@ -14,7 +14,7 @@ import ru.ruslan.weighttracker.data.utils.Constants
         onDelete = ForeignKey.CASCADE)]
 )
 data class WeightLocal(@field:PrimaryKey(autoGenerate = true) var id: Int = 0,
-                       @field:ColumnInfo(name = "profile_id") val profileId: Int,
-                       @field:ColumnInfo(name = "weight") val weight: Double,
-                       @field:ColumnInfo(name = "weight_date") val weightDate: String)
+                       @field:ColumnInfo(name = "profile_id") val profileId: Int = 0,
+                       @field:ColumnInfo(name = "weight") val weight: Double = 0.0,
+                       @field:ColumnInfo(name = "weight_date") val weightDate: String = "")
 

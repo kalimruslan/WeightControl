@@ -23,6 +23,7 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.home.vm.HomeViewModel
 import ru.ruslan.weighttracker.home.vm.ProfileUI
+import ru.ruslan.weighttracker.profile.ui.ProfileActivity
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.ImageUtil
 import ru.ruslan.weighttracker.util.PermissionUtils
@@ -30,7 +31,6 @@ import ru.ruslan.weighttracker.util.RouterUtil
 
 class HomeFragment : Fragment() {
 
-    private var isFabOpen: Boolean = false
     private lateinit var glideOptions: RequestOptions
     private lateinit var fabAnimOpen: Animation
     private lateinit var fabAnimClose: Animation

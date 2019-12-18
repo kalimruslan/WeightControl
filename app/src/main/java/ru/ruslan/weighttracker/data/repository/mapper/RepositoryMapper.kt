@@ -7,6 +7,7 @@ import ru.ruslan.weighttracker.data.datasource.localdb.model.ProfileLocal
 import ru.ruslan.weighttracker.data.datasource.localdb.model.WeightLocal
 import ru.ruslan.weighttracker.home.domain.model.PhotoEntity
 import ru.ruslan.weighttracker.home.domain.model.ProfileEntity
+import ru.ruslan.weighttracker.home.domain.model.WeightEntity
 import ru.ruslan.weighttracker.videos.list.domain.model.*
 
 object ApiToEntityMapper : BaseMapper<YotubeResponce, VideosEntity> {
@@ -45,7 +46,7 @@ object ApiToEntityMapper : BaseMapper<YotubeResponce, VideosEntity> {
     }
 }
 
-object EntityToLocalMapper : BaseMapper<ProfileEntity, ProfileLocal> {
+object ProfileEntityToLocalMapper : BaseMapper<ProfileEntity, ProfileLocal> {
     override fun map(type: ProfileEntity?): ProfileLocal? {
         var profileLocal: ProfileLocal? = null
         type?.let {
@@ -67,6 +68,20 @@ object EntityToLocalMapper : BaseMapper<ProfileEntity, ProfileLocal> {
             )
         }
         return profileLocal
+    }
+}
+
+object WeightEntityToLocalMapper : BaseMapper<WeightEntity, WeightLocal> {
+    override fun map(type: WeightEntity?): WeightLocal? {
+        var weightLocal: WeightLocal? = null
+        type?.let {
+            val weightLocal = WeightLocal(
+                profileId = it.profileId,
+                weight = it.weight,
+                weightDate = it.weightDate
+            )
+        }
+        return weightLocal
     }
 }
 

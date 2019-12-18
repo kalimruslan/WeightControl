@@ -6,10 +6,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import ru.ruslan.weighttracker.data.datasource.localdb.dao.ProfileLocalDao
+import ru.ruslan.weighttracker.data.datasource.localdb.model.PhotoLocal
 import ru.ruslan.weighttracker.data.datasource.localdb.model.ProfileLocal
+import ru.ruslan.weighttracker.data.datasource.localdb.model.WeightLocal
 import ru.ruslan.weighttracker.data.utils.Constants
 
-@Database(entities = [ProfileLocal::class], version = 1, exportSchema = false)
+@Database(entities = [ProfileLocal::class, PhotoLocal::class, WeightLocal::class], version = 1, exportSchema = false)
 abstract class AppRoomDatabase : RoomDatabase() {
     abstract fun profileLocalDao(): ProfileLocalDao
 

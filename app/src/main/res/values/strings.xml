@@ -18,4 +18,5 @@
     <string name="text_gallery_app">Gallery</string>
     <string name="text_chooser_image">Select Picture</string>
     <string name="text_collapsing_toolbar">Мотивация</string>
+    <string name="text_action_profile">Профиль</string>
 </resources>

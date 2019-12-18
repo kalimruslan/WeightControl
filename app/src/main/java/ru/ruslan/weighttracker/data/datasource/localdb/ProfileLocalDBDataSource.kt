@@ -3,6 +3,7 @@ package ru.ruslan.weighttracker.data.datasource.localdb
 import ru.ruslan.weighttracker.data.datasource.localdb.dao.ProfileLocalDao
 import ru.ruslan.weighttracker.data.datasource.localdb.database.AppRoomDatabase
 import ru.ruslan.weighttracker.data.datasource.localdb.model.ProfileLocal
+import ru.ruslan.weighttracker.data.datasource.localdb.model.WeightLocal
 
 class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
 
@@ -22,13 +23,12 @@ class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
         profileLocalDao = roomDatabase.profileLocalDao()
     }
 
-    suspend fun saveWeight(profileLocal: ProfileLocal?) {
-        profileLocal?.let { profile ->
-            if (profile.weightLocal == null) return
+    suspend fun saveWeight(weightLocal: WeightLocal?) {
+        weightLocal?.let { weight ->
             profileLocalDao?.saveWeight(
-                profileId = profile.weightLocal.profileId,
-                weight = profile.weightLocal.weight,
-                weightDate = profile.weightLocal.weightDate
+                profileId = weight.profileId,
+                weight = weight.weight,
+                weightDate = weight.weightDate
             )
         }
     }
@@ -41,6 +41,12 @@ class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
                 photoUrl = profile.photoLocal.photoUrl,
                 photoDate = profile.photoLocal.photoDate
             )
+        }
+    }
+
+   suspend fun insertProfile(profileLocal: ProfileLocal?) {
+        profileLocal?.let {
+            profileLocalDao?.insertProfile(it)
         }
     }
 
