@@ -16,7 +16,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val profileLiveData: LiveData<ProfileUI>
         get() = profileMutableLiveData
 
-
     init {
         updateProfileViews()
     }
