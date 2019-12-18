@@ -51,7 +51,7 @@ dependencies {
     def room_version = "2.1.0-alpha04"
     def glide_version = "4.10.0"
     def lifecycle_viewmodel = "2.2.0-alpha01"
-    def glide_transformation = "3.3.0"
+    def glide_transformation = "4.1.0"
     def gpuimage_library = "1.4.1"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -96,4 +96,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha01'
 }

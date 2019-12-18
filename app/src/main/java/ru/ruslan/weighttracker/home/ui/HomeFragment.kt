@@ -1,6 +1,5 @@
-package ru.ruslan.weighttracker.home
+package ru.ruslan.weighttracker.home.ui
 
-import android.Manifest
 import android.app.Dialog
 import android.content.Context
 import android.content.pm.PackageManager
@@ -9,31 +8,29 @@ import android.os.Bundle
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.content_home_photos.*
 import kotlinx.android.synthetic.main.dialog_choose_camera_or_gallery.*
 import kotlinx.android.synthetic.main.home_fragment.*
-import ru.ruslan.weighttracker.home.contract.HomeContract
 import android.content.Intent
-import androidx.core.app.ActivityCompat
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.graphics.Bitmap
-import android.provider.MediaStore
-import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import ru.ruslan.weighttracker.R
+import ru.ruslan.weighttracker.home.vm.HomeViewModel
+import ru.ruslan.weighttracker.home.vm.ProfileUI
 import ru.ruslan.weighttracker.util.Constants
+import ru.ruslan.weighttracker.util.ImageUtil
 import ru.ruslan.weighttracker.util.PermissionUtils
 import ru.ruslan.weighttracker.util.RouterUtil
-import ru.ruslan.weighttracker.util.showToast
 
-class HomeFragment : Fragment(), HomeContract.View {
+class HomeFragment : Fragment() {
 
-    private var presenter: HomeContract.Presenter? = null
+    private var isFabOpen: Boolean = false
     private lateinit var glideOptions: RequestOptions
     private lateinit var fabAnimOpen: Animation
     private lateinit var fabAnimClose: Animation
@@ -41,6 +38,8 @@ class HomeFragment : Fragment(), HomeContract.View {
     private lateinit var fabAnimAntiClock: Animation
     private var homeContext: Context? = null
     private var chooseDialog: Dialog? = null
+
+    private lateinit var homeViewModel: HomeViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -52,25 +51,28 @@ class HomeFragment : Fragment(), HomeContract.View {
         fun newInstance() = HomeFragment()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = LayoutInflater.from(container?.context).inflate(R.layout.home_fragment, container, false)
-        presenter = HomePresenterImpl()
-        presenter?.setView(this)
+        initVars()
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter?.init()
+        initViews()
+        setListeners()
+        observerLiveData()
     }
 
-    override fun initVars() {
+    private fun observerLiveData() {
+        homeViewModel.openCloseFabLd.observe(this, Observer(::openCloseFabMenu))
+        homeViewModel.profileLiveData.observe(this, Observer(::updateProfileViews))
+    }
+
+    private fun initVars() {
+        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+
         glideOptions = RequestOptions()
         glideOptions.apply {
             fitCenter()
@@ -86,12 +88,7 @@ class HomeFragment : Fragment(), HomeContract.View {
         fabAnimAntiClock = AnimationUtils.loadAnimation(homeContext, R.anim.fab_rotate_anticlock)
     }
 
-    override fun initViews() {
-        tv_date_before.text = "1 января 2019"
-        tv_date_after.text = "1 февраля 2019"
-        tv_weight_before.text = "120 кг"
-        tv_weight_after.text = "110 кг"
-
+    private fun initViews() {
         initChooseAppDialog()
 
         Glide.with(this)
@@ -105,6 +102,15 @@ class HomeFragment : Fragment(), HomeContract.View {
             .into(iv_photo_after)
     }
 
+    private fun updateProfileViews(profile: ProfileUI?){
+        profile?.let { prof ->
+            tv_date_before.text = prof.dateBefore
+            tv_date_after.text = prof.dateAfter
+            tv_weight_before.text = prof.weigthBefore
+            tv_weight_after.text = prof.weigthAfter
+        }
+    }
+
     private fun initChooseAppDialog() {
         chooseDialog = homeContext?.let { Dialog(it, R.style.AppTheme) }
         chooseDialog?.apply {
@@ -113,40 +119,39 @@ class HomeFragment : Fragment(), HomeContract.View {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             setCancelable(true)
             setContentView(R.layout.dialog_choose_camera_or_gallery)
-            llCamera.setOnClickListener{presenter?.cameraAppClickedInChooseDialog()}
-            llGallery.setOnClickListener{presenter?.galleryAppClickedInChooseDialog()}
+            llCamera.setOnClickListener{tryOpenCamera()}
+            llGallery.setOnClickListener{tryOpenGallery()}
             iv_choose_close.setOnClickListener{this.dismiss()}
         }
     }
 
-    override fun setListeners() {
-        fab_main.setOnClickListener{
-            presenter?.mainFabViewClicked()
+   private fun setListeners() {
+        fab_main.setOnClickListener{ homeViewModel.handleFabMain() }
+        fab_photo.setOnClickListener{showChooseDialog()}
+    }
+
+    private fun openCloseFabMenu(isOpen: Boolean){
+        if(isOpen){
+            fab_photo.startAnimation(fabAnimOpen)
+            fab_weight.startAnimation(fabAnimOpen)
+            fab_main.startAnimation(fabAnimClock)
+            fab_photo.isClickable = true
+            fab_photo.isClickable = true
         }
-        fab_photo.setOnClickListener{presenter?.photoFabViewClicked()}
+        else{
+            fab_photo.startAnimation(fabAnimClose)
+            fab_weight.startAnimation(fabAnimClose)
+            fab_main.startAnimation(fabAnimAntiClock)
+            fab_photo.isClickable = false
+            fab_photo.isClickable = false
+        }
     }
 
-    override fun closeFabMenu() {
-        fab_photo.startAnimation(fabAnimClose)
-        fab_weight.startAnimation(fabAnimClose)
-        fab_main.startAnimation(fabAnimAntiClock)
-        fab_photo.isClickable = false
-        fab_photo.isClickable = false
-    }
-
-    override fun openFabMenu() {
-        fab_photo.startAnimation(fabAnimOpen)
-        fab_weight.startAnimation(fabAnimOpen)
-        fab_main.startAnimation(fabAnimClock)
-        fab_photo.isClickable = true
-        fab_photo.isClickable = true
-    }
-
-    override fun showChooseDialog() {
+    private fun showChooseDialog() {
         chooseDialog?.show()
     }
 
-    override fun tryOpenCamera() {
+    private fun tryOpenCamera() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if(PermissionUtils.checkAndRequestCameraPermissions(homeContext)){
                 RouterUtil.openCamera(this)
@@ -159,7 +164,7 @@ class HomeFragment : Fragment(), HomeContract.View {
         }
     }
 
-    override fun tryOpenGallery() {
+    private fun tryOpenGallery() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if(PermissionUtils.checkAndRequestExternalPermission(homeContext)){
                 RouterUtil.openGallery(this)
@@ -172,33 +177,17 @@ class HomeFragment : Fragment(), HomeContract.View {
         }
     }
 
-    override fun setAfterImageView(bitmap: Bitmap?) {
+    private fun setAfterImageView(bitmap: Bitmap?) {
         iv_photo_after.setImageBitmap(bitmap)
-    }
-
-    override fun populateWeightAdapter() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun showErrorToast(message: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun showLoadingView() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun hideLoadingView() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == Constants.RESULT_CAMERA && resultCode == RESULT_OK && data != null){
-            homeContext?.let { presenter?.resultFromCameraSuccess(it, data) }
+            homeContext?.let {setAfterImageView(ImageUtil.convertUriToBitmap(homeContext, data.data))}
         }
         else if(requestCode == Constants.RESULT_GALLERY && resultCode == RESULT_OK && data != null){
-            homeContext?.let { presenter?.resultFromGallerySuccess(it, data) }
+            homeContext?.let {setAfterImageView(data.extras?.get("data") as Bitmap) }
         }
     }
 
