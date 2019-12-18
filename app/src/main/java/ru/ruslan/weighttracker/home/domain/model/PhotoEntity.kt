@@ -1,5 +1,7 @@
 package ru.ruslan.weighttracker.home.domain.model
 
-data class PhotoEntity(val profileId: Int,
-                       val photoUrl: String,
-                       val photoDate: String)
+
+data class PhotoEntity(
+    var profileId: Int,
+    var photoUrl: String,
+    var photoDate: String)

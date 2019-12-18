@@ -1,7 +1,7 @@
 package ru.ruslan.weighttracker.data.repository
 
 import ru.ruslan.weighttracker.home.domain.HomeRepository
-import ru.ruslan.weighttracker.home.domain.model.ProfileLocal
+import ru.ruslan.weighttracker.data.datasource.localdb.model.ProfileLocal
 
 class LocalHomeRepositoryImpl() : HomeRepository {
     override fun saveWeight(userId: String) {
