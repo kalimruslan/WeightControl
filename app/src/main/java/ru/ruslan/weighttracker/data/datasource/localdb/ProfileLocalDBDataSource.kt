@@ -56,10 +56,10 @@ class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
         }
     }
 
-    suspend fun insertProfile(profileLocal: ProfileLocal?): Result<Long> {
+    suspend fun insertProfile(profileLocal: ProfileLocal?): Result<Int> {
         return try {
             val profileId = profileLocal?.let { profileLocalDao?.insertProfile(it) }
-            Result.success(profileId)
+            Result.success(profileId?.toInt())
         } catch (ex: Exception) {
             Result.error(ex)
         }

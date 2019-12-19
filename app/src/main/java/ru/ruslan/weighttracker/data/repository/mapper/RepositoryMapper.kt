@@ -53,14 +53,14 @@ object ProfileEntityToLocalMapper : BaseMapper<ProfileEntity, ProfileLocal> {
             val weightLocal =
                 if (it.weightEntity != null) {
                     WeightLocal(
-                        profileId = it.weightEntity?.profileId!!,
+                        profileId = it.weightEntity.profileId,
                         weight = it.weightEntity.weight, weightDate = it.weightEntity.weightDate
                     )
                 } else null
             val photoLocal =
                 if (it.photoEntity != null) {
                     PhotoLocal(
-                        profileId = it.photoEntity?.profileId!!,
+                        profileId = it.photoEntity.profileId,
                         photoUrl = it.photoEntity.photoUrl,
                         photoDate = it.photoEntity.photoDate
                     )

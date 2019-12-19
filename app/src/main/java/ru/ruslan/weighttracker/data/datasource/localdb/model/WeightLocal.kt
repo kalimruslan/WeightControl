@@ -13,8 +13,10 @@ import ru.ruslan.weighttracker.data.utils.Constants
         childColumns = arrayOf("profile_id"),
         onDelete = ForeignKey.CASCADE)]
 )
-data class WeightLocal(@field:PrimaryKey(autoGenerate = true) var id: Int = 0,
+data class WeightLocal(
                        @field:ColumnInfo(name = "profile_id") val profileId: Int = 0,
                        @field:ColumnInfo(name = "weight") val weight: Double = 0.0,
-                       @field:ColumnInfo(name = "weight_date") val weightDate: String = "")
+                       @field:ColumnInfo(name = "weight_date") val weightDate: String = ""){
+    @field:PrimaryKey(autoGenerate = true) var id: Int? = null
+}
 

@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.home.vm
+package ru.ruslan.weighttracker.home.vm.home
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -21,7 +21,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun updateProfileViews() {
-        val profile = ProfileUI("1 января 2019", "120 кг", "1 февраля 2019", "110 кг")
+        val profile = ProfileUI(
+            "1 января 2019",
+            "120 кг",
+            "1 февраля 2019",
+            "110 кг"
+        )
         profileMutableLiveData.value = profile
     }
 

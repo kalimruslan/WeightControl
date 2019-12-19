@@ -1,5 +1,6 @@
 package ru.ruslan.weighttracker.data.repository
 
+import android.text.InputType
 import ru.ruslan.weighttracker.core.datatype.Result
 import ru.ruslan.weighttracker.core.datatype.ResultType
 import ru.ruslan.weighttracker.data.datasource.localdb.ProfileLocalDBDataSource
@@ -12,7 +13,8 @@ import ru.ruslan.weighttracker.home.domain.model.PhotoEntity
 import ru.ruslan.weighttracker.home.domain.model.ProfileEntity
 import ru.ruslan.weighttracker.home.domain.model.WeightEntity
 
-class LocalProfileRepositoryImpl(private val localDataSource: ProfileLocalDBDataSource) :
+class LocalProfileRepositoryImpl(
+    private val localDataSource: ProfileLocalDBDataSource) :
     ProfileRepository {
 
     override suspend fun saveWeight(weightEntity: WeightEntity) {
@@ -23,7 +25,7 @@ class LocalProfileRepositoryImpl(private val localDataSource: ProfileLocalDBData
         localDataSource.savePhotoData(PhotoEntityToLocalMapper.map(photoEntity))
     }
 
-    override suspend fun createProfile(profileEntity: ProfileEntity): Result<Long> {
+    override suspend fun createProfile(profileEntity: ProfileEntity): Result<Int> {
         val profileId = localDataSource.insertProfile(ProfileEntityToLocalMapper.map(profileEntity))
 
         return if (profileId.resultType == ResultType.SUCCESS)

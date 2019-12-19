@@ -4,16 +4,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_video_detail.*
-import ru.ruslan.weighttracker.home.ui.HomeFragment
-import ru.ruslan.weighttracker.profile.ui.ProfileActivity
+import ru.ruslan.weighttracker.home.ui.home.HomeFragment
+import ru.ruslan.weighttracker.home.ui.profile.ProfileActivity
 import ru.ruslan.weighttracker.videos.list.ui.VideosFragment
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {

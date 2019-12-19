@@ -16,7 +16,9 @@ import ru.ruslan.weighttracker.data.utils.Constants
     )]
 )
 data class PhotoLocal(
-    @field:PrimaryKey(autoGenerate = true) var id: Int = 0,
     @field:ColumnInfo(name = "profile_id") var profileId: Int = 0,
     @field:ColumnInfo(name = "photo_url") var photoUrl: String = "",
-    @field:ColumnInfo(name = "photo_date") var photoDate: String = "")
+    @field:ColumnInfo(name = "photo_date") var photoDate: String = ""){
+
+    @field:PrimaryKey(autoGenerate = true) var id: Int? = null
+}

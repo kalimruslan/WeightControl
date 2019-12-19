@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.home.vm
+package ru.ruslan.weighttracker.home.vm.home
 
 class ProfileUI(val dateBefore: String?,
                 val weigthBefore: String?,

@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.home.ui
+package ru.ruslan.weighttracker.home.ui.home
 
 import android.app.Dialog
 import android.content.Context
@@ -21,9 +21,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.home.vm.HomeViewModel
-import ru.ruslan.weighttracker.home.vm.ProfileUI
-import ru.ruslan.weighttracker.profile.ui.ProfileActivity
+import ru.ruslan.weighttracker.home.vm.home.HomeViewModel
+import ru.ruslan.weighttracker.home.vm.home.ProfileUI
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.ImageUtil
 import ru.ruslan.weighttracker.util.PermissionUtils

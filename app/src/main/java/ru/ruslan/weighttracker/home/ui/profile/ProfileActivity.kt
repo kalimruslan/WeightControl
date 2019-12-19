@@ -1,11 +1,10 @@
-package ru.ruslan.weighttracker.profile.ui
+package ru.ruslan.weighttracker.home.ui.profile
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProviders
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.profile.vm.ProfileViewModel
-import ru.ruslan.weighttracker.videos.list.ui.VideosFragment
+import ru.ruslan.weighttracker.home.vm.profile.ProfileViewModel
 
 class ProfileActivity : AppCompatActivity() {
 
