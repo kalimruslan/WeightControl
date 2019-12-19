@@ -1,9 +1,14 @@
 package ru.ruslan.weighttracker.data.datasource.localdb
 
+import android.database.sqlite.SQLiteConstraintException
+import android.util.Log
+import ru.ruslan.weighttracker.core.datatype.Result
 import ru.ruslan.weighttracker.data.datasource.localdb.dao.ProfileLocalDao
 import ru.ruslan.weighttracker.data.datasource.localdb.database.AppRoomDatabase
+import ru.ruslan.weighttracker.data.datasource.localdb.model.PhotoLocal
 import ru.ruslan.weighttracker.data.datasource.localdb.model.ProfileLocal
 import ru.ruslan.weighttracker.data.datasource.localdb.model.WeightLocal
+import java.lang.Exception
 
 class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
 
@@ -25,28 +30,38 @@ class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
 
     suspend fun saveWeight(weightLocal: WeightLocal?) {
         weightLocal?.let { weight ->
-            profileLocalDao?.saveWeight(
-                profileId = weight.profileId,
-                weight = weight.weight,
-                weightDate = weight.weightDate
-            )
+            try {
+                profileLocalDao?.saveWeight(
+                    profileId = weight.profileId,
+                    weight = weight.weight,
+                    weightDate = weight.weightDate
+                )
+            } catch (ex: SQLiteConstraintException) {
+                ex.printStackTrace()
+            }
         }
     }
 
-    suspend fun savePhotoData(profileLocal: ProfileLocal?) {
-        profileLocal?.let { profile ->
-            if (profile.photoLocal == null) return
-            profileLocalDao?.savePhoto(
-                profileId = profile.photoLocal.profileId,
-                photoUrl = profile.photoLocal.photoUrl,
-                photoDate = profile.photoLocal.photoDate
-            )
+    suspend fun savePhotoData(photoLocal: PhotoLocal?) {
+        photoLocal?.let { photo ->
+            try {
+                profileLocalDao?.savePhoto(
+                    profileId = photo.profileId,
+                    photoUrl = photo.photoUrl,
+                    photoDate = photo.photoDate
+                )
+            } catch (ex: SQLiteConstraintException) {
+                ex.printStackTrace()
+            }
         }
     }
 
-   suspend fun insertProfile(profileLocal: ProfileLocal?) {
-        profileLocal?.let {
-            profileLocalDao?.insertProfile(it)
+    suspend fun insertProfile(profileLocal: ProfileLocal?): Result<Long> {
+        return try {
+            val profileId = profileLocal?.let { profileLocalDao?.insertProfile(it) }
+            Result.success(profileId)
+        } catch (ex: Exception) {
+            Result.error(ex)
         }
     }
 

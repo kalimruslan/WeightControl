@@ -50,19 +50,28 @@ object ProfileEntityToLocalMapper : BaseMapper<ProfileEntity, ProfileLocal> {
     override fun map(type: ProfileEntity?): ProfileLocal? {
         var profileLocal: ProfileLocal? = null
         type?.let {
-            val weightLocal = WeightLocal(
-                profileId = it.weightEntity?.profileId!!,
-                weight = it.weightEntity.weight, weightDate = it.weightEntity.weightDate
-            )
-            val photoLocal = PhotoLocal(
-                profileId = it.photoEntity?.profileId!!,
-                photoUrl = it.photoEntity.photoUrl,
-                photoDate = it.photoEntity.photoDate
-            )
+            val weightLocal =
+                if (it.weightEntity != null) {
+                    WeightLocal(
+                        profileId = it.weightEntity?.profileId!!,
+                        weight = it.weightEntity.weight, weightDate = it.weightEntity.weightDate
+                    )
+                } else null
+            val photoLocal =
+                if (it.photoEntity != null) {
+                    PhotoLocal(
+                        profileId = it.photoEntity?.profileId!!,
+                        photoUrl = it.photoEntity.photoUrl,
+                        photoDate = it.photoEntity.photoDate
+                    )
+                } else null
             profileLocal = ProfileLocal(
-                id = it.id,
                 fio = it.fio,
                 dateBirth = it.dateBirth,
+                currWeight = it.currentWeight,
+                currHeight = it.currentHeight,
+                currIMT = it.currentIMT,
+                goalWeight = it.goalWeight,
                 weightLocal = weightLocal,
                 photoLocal = photoLocal
             )
@@ -75,7 +84,7 @@ object WeightEntityToLocalMapper : BaseMapper<WeightEntity, WeightLocal> {
     override fun map(type: WeightEntity?): WeightLocal? {
         var weightLocal: WeightLocal? = null
         type?.let {
-            val weightLocal = WeightLocal(
+            weightLocal = WeightLocal(
                 profileId = it.profileId,
                 weight = it.weight,
                 weightDate = it.weightDate
@@ -85,7 +94,21 @@ object WeightEntityToLocalMapper : BaseMapper<WeightEntity, WeightLocal> {
     }
 }
 
-object LocalToEntittMapper : BaseMapper<ProfileLocal, ProfileEntity>{
+object PhotoEntityToLocalMapper : BaseMapper<PhotoEntity, PhotoLocal> {
+    override fun map(type: PhotoEntity?): PhotoLocal? {
+        var photoLocal: PhotoLocal? = null
+        type?.let {
+            photoLocal = PhotoLocal(
+                profileId = it.profileId,
+                photoUrl =  it.photoUrl,
+                photoDate =  it.photoDate
+            )
+        }
+        return photoLocal
+    }
+}
+
+object LocalToEntittMapper : BaseMapper<ProfileLocal, ProfileEntity> {
     override fun map(type: ProfileLocal?): ProfileEntity? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

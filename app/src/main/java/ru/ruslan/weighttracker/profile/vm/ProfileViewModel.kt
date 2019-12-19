@@ -8,18 +8,21 @@ import kotlinx.coroutines.launch
 import ru.ruslan.weighttracker.data.datasource.localdb.ProfileLocalDBDataSource
 import ru.ruslan.weighttracker.data.datasource.localdb.database.AppRoomDatabase
 import ru.ruslan.weighttracker.data.repository.LocalProfileRepositoryImpl
-import ru.ruslan.weighttracker.profile.domain.usecase.SaveProfileUseCase
+import ru.ruslan.weighttracker.profile.domain.usecase.SaveToProfileUseCase
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
-    private val saveProfileUseCase: SaveProfileUseCase = SaveProfileUseCase(
+    private val saveToProfileUseCase: SaveToProfileUseCase = SaveToProfileUseCase(
         LocalProfileRepositoryImpl(
             ProfileLocalDBDataSource(AppRoomDatabase.getDatabase(getApplication()))
         )
     )
 
+
     fun generateAndSetProfileData(){
         viewModelScope.launch(Dispatchers.IO){
-            saveProfileUseCase.saveWeight()
+            saveToProfileUseCase.insertProfile()
+            saveToProfileUseCase.saveWeight()
+            saveToProfileUseCase.savePhoto()
         }
     }
 }

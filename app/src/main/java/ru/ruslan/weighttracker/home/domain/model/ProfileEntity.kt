@@ -1,10 +1,14 @@
 package ru.ruslan.weighttracker.home.domain.model
 
-import ru.ruslan.weighttracker.data.datasource.localdb.model.PhotoLocal
-import ru.ruslan.weighttracker.data.datasource.localdb.model.WeightLocal
+import kotlin.math.pow
 
-class ProfileEntity(val id: Int,
-                    val fio: String?,
+class ProfileEntity(val fio: String?,
                     val dateBirth: String?,
-                    val weightEntity: WeightEntity?,
-                    val photoEntity: PhotoEntity?)
+                    var currentWeight: Double = 60.0,
+                    var currentHeight: Double = 160.0,
+                    val goalWeight: Double = 0.0,
+                    val weightEntity: WeightEntity? = null,
+                    val photoEntity: PhotoEntity? = null){
+
+    var currentIMT: Double = currentWeight/ (currentHeight/100).pow(2.0)
+}

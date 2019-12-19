@@ -8,7 +8,7 @@ interface ProfileLocalDao {
     @Query("SELECT * FROM profile WHERE id = :id")
     suspend fun getProfile(id: Int): ProfileLocal
 
-    @Query("INSERT INTO weight(profile_id, weight, weight_date) VALUES(:profileId, :weight, :weightDate) WHERE profile.id = :profileId")
+    @Query("INSERT INTO weight(profile_id, weight, weight_date) VALUES(:profileId, :weight, :weightDate)")
     suspend fun saveWeight(profileId: Int, weight: Double, weightDate: String)
 
     @Query("INSERT INTO photos(profile_id, photo_url, photo_date) VALUES(:profileId, :photoUrl, :photoDate)")
@@ -18,7 +18,7 @@ interface ProfileLocalDao {
     suspend fun getAllProfiles(): List<ProfileLocal>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertProfile(profile: ProfileLocal)
+    suspend fun insertProfile(profile: ProfileLocal): Long
 
     @Update
     suspend fun updateProfile(profile: ProfileLocal)
