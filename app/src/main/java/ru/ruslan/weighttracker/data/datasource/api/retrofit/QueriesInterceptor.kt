@@ -6,7 +6,7 @@ import ru.ruslan.weighttracker.BuildConfig
 
 class QueriesInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val newUrl = chain.request().url()
+        val newUrl = chain.request().url
             .newBuilder()
             .addQueryParameter("part", "snippet, id, contentDetails")
             .addQueryParameter("key", BuildConfig.API_KEY)

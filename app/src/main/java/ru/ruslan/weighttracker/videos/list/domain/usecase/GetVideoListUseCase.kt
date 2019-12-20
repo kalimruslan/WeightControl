@@ -4,8 +4,9 @@ import ru.ruslan.weighttracker.core.datatype.Result
 import ru.ruslan.weighttracker.core.datatype.ResultType
 import ru.ruslan.weighttracker.videos.list.domain.VideoListRepository
 import ru.ruslan.weighttracker.videos.list.domain.model.VideosEntity
+import javax.inject.Inject
 
-class GetVideoListUseCase(private val remoteRepo: VideoListRepository?) {
+class GetVideoListUseCase @Inject constructor(private val remoteRepo: VideoListRepository?) {
 
     suspend fun getVideosByPlaylist(playList: String, pageToken: String): Result<VideosEntity>? {
         var videos: Result<VideosEntity>? = null

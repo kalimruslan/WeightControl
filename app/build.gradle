@@ -13,6 +13,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled = true
     }
     buildTypes {
         buildTypes.each {
@@ -43,16 +44,19 @@ android {
 }
 
 dependencies {
-    def moshiVersion = "1.8.0"
+    def moshiVersion = "1.9.2"
     def retrofit2_version = "2.7.0"
-    def okhttp3_version = "3.12.0"
-    def kotlinCoroutineVersion = "1.0.1"
-    def dagger2_version = "2.11"
+    def okhttp3_version = "4.2.2"
+    def kotlinCoroutineVersion = "1.3.3"
+    def daggerLibVersion = "2.16"
+    def daggerAndroidLibVersion = "2.16"
     def room_version = "2.1.0-alpha04"
     def glide_version = "4.10.0"
     def lifecycle_viewmodel = "2.2.0-alpha01"
     def glide_transformation = "4.1.0"
     def gpuimage_library = "1.4.1"
+    def multidex = "1.0.3"
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -62,13 +66,18 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'com.google.android.material:material:1.1.0-alpha10'
 
+    implementation "com.android.support:multidex:$multidex"
+
     //Moshi
     implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
 
     // Dagger2
-    implementation "com.google.dagger:dagger:$dagger2_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger2_version"
+    implementation "com.google.dagger:dagger:$daggerLibVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerLibVersion"
+    implementation "com.google.dagger:dagger-android:$daggerAndroidLibVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerAndroidLibVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerLibVersion"
 
     //Glide
     implementation "com.github.bumptech.glide:glide:$glide_version"

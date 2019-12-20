@@ -6,29 +6,27 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.*
 import ru.ruslan.weighttracker.core.datatype.Result
 import ru.ruslan.weighttracker.core.datatype.ResultType
-import ru.ruslan.weighttracker.data.datasource.api.VideoListNetworkDataSource
-import ru.ruslan.weighttracker.data.datasource.api.retrofit.ApiFactory
-import ru.ruslan.weighttracker.data.repository.VideoListRepositoryImpl
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.printLog
 import ru.ruslan.weighttracker.videos.list.domain.model.VideosEntity
 import ru.ruslan.weighttracker.videos.list.domain.usecase.GetVideoListUseCase
 import ru.ruslan.weighttracker.videos.list.vm.mapper.VideosEntityToUiMapper
 import ru.ruslan.weighttracker.videos.list.vm.model.VideoUI
+import javax.inject.Inject
 
-class VideoListViewModel(application: Application) : AndroidViewModel(application) {
+class VideoListViewModel @Inject constructor(private val getVideoListUseCase: GetVideoListUseCase) : ViewModel() {
 
     var currentPage = 1
     private var totalPage = 0
     private var nextPageToken: String = ""
 
-    private val getVideoListUseCase: GetVideoListUseCase = GetVideoListUseCase(
+    /*private val getVideoListUseCase: GetVideoListUseCase = GetVideoListUseCase(
         VideoListRepositoryImpl(
             VideoListNetworkDataSource(
                 ApiFactory.getRestClient(getApplication())
             )
         )
-    )
+    )*/
 
     private val videosMutableLiveData: MutableLiveData<List<VideoUI>> = MutableLiveData()
     val videosLiveData: LiveData<List<VideoUI>>

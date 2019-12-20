@@ -8,9 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_videos.*
 import ru.ruslan.weighttracker.OnItemClickListener
 import ru.ruslan.weighttracker.R
@@ -20,14 +22,16 @@ import ru.ruslan.weighttracker.util.showToast
 import ru.ruslan.weighttracker.videos.detail.VideoDetailActivity
 import ru.ruslan.weighttracker.videos.list.vm.VideoListViewModel
 import ru.ruslan.weighttracker.videos.list.vm.model.VideoUI
+import javax.inject.Inject
 
-class VideosFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+class VideosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var ctx: Context
     private var adapter: VideosAdapter? = null
     private var videosList: MutableList<VideoUI> = mutableListOf()
     private var isLastPage = false
     private var isLoading = false
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private var viewModel: VideoListViewModel? = null
 
@@ -61,7 +65,7 @@ class VideosFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun initVars() {
-        viewModel = ViewModelProviders.of(this).get(VideoListViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(VideoListViewModel::class.java)
 
         swipeRefresh.setOnRefreshListener(this)
 
