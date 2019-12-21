@@ -17,7 +17,7 @@ object ApiToEntityMapper : BaseMapper<YotubeResponce, VideosEntity> {
             videosEntity = VideosEntity(
                 type.nextPageToken,
                 type.pageInfo?.resultsPerPage!!,
-                type.pageInfo.totalResult,
+                type.pageInfo.totalResults,
                 getVideosList(type)
             )
         }
@@ -39,7 +39,7 @@ object ApiToEntityMapper : BaseMapper<YotubeResponce, VideosEntity> {
             )
             val contentDetailsEntity = ContentDetailsEntity(
                 videoId = item.contentDetails?.videoId!!,
-                publishedAt = item.contentDetails.publishedAt
+                publishedAt = item.contentDetails.videoPublishedAt
             )
             VideoEntity(snippet = snippetEntity, contentDetails = contentDetailsEntity)
         }

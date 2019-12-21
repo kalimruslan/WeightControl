@@ -6,15 +6,15 @@ import android.content.Context
 import androidx.multidex.MultiDex
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
+import dagger.android.HasAndroidInjector
 import ru.ruslan.weighttracker.di.component.DaggerAppComponent
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
-class MainApplication : Application(), HasActivityInjector{
+class MainApplication : Application(), HasAndroidInjector{
 
     @Inject
-    lateinit var activityInjector: DispatchingAndroidInjector<Activity>
+    lateinit var activityInjector:DispatchingAndroidInjector<Any>
 
     override fun onCreate() {
         super.onCreate()
@@ -33,10 +33,10 @@ class MainApplication : Application(), HasActivityInjector{
         MultiDex.install(this)
     }
 
-    override fun activityInjector(): AndroidInjector<Activity> = activityInjector
-
     companion object {
         var instance: MainApplication by Delegates.notNull()
     }
+
+    override fun androidInjector(): AndroidInjector<Any>? = activityInjector
 
 }

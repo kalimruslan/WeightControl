@@ -25,7 +25,7 @@
 -optimizations !code/simplification/arithmetic
 -keepattributes *Annotation*
 
--keep class ru.ruslan.weighttracker.model.** { *; }
+-keep class ru.ruslan.weighttracker.data.datasource.api.model.response.** { *; }
 
 -dontwarn retrofit2.**
 -keep class retrofit2.** { *; }

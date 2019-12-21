@@ -6,5 +6,5 @@ import kotlinx.android.parcel.Parcelize
 
 data class YoutubeContentDetails(
     @field:Json(name = "videoId") val videoId: String,
-    @field:Json(name = "videoPublishedAt") val publishedAt: String
+    @field:Json(name = "videoPublishedAt") val videoPublishedAt: String
 )
