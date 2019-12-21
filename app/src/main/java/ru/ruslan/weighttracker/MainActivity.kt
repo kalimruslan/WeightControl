@@ -7,12 +7,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
-import ru.ruslan.weighttracker.videos.VideosFragment
+import ru.ruslan.weighttracker.videos.list.ui.VideosFragment
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        savedInstanceState?.let {
+
+        }
         setContentView(R.layout.activity_main)
         setSupportActionBar(main_toolbar)
         clickListeners()
