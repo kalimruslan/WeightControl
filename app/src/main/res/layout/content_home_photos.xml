@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_photos"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/indent_8dp"
+    android:layout_marginTop="@dimen/indent_8dp"
+    android:layout_marginEnd="@dimen/indent_8dp"
+    android:elevation="10dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:showIn="@layout/home_fragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_date_before"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/indent_8dp"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="@+id/iv_photo_before"
+            app:layout_constraintStart_toStartOf="@+id/iv_photo_before"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="21.07.2019" />
+
+        <TextView
+            android:id="@+id/tv_date_after"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/indent_8dp"
+            app:layout_constraintEnd_toEndOf="@+id/iv_photo_after"
+            app:layout_constraintStart_toStartOf="@+id/iv_photo_after"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@color/black"
+            tools:text="28.07.2019" />
+
+        <ImageView
+            android:id="@+id/iv_photo_before"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_marginStart="@dimen/indent_4dp"
+            android:layout_marginTop="@dimen/indent_8dp"
+            android:contentDescription="@string/text_photo_before"
+            app:layout_constraintEnd_toStartOf="@+id/imageView7"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_weight="0.4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_date_before"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <ImageView
+            android:id="@+id/iv_photo_after"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_marginTop="@dimen/indent_8dp"
+            android:layout_marginEnd="@dimen/indent_4dp"
+            android:contentDescription="@string/text_photo_after"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_weight="0.4"
+            app:layout_constraintStart_toEndOf="@+id/imageView7"
+            app:layout_constraintTop_toBottomOf="@+id/tv_date_after"
+            tools:srcCompat="@tools:sample/avatars[1]" />
+
+        <TextView
+            android:id="@+id/tv_weight_before"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/indent_4dp"
+            android:layout_marginBottom="@dimen/indent_8dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/iv_photo_before"
+            app:layout_constraintStart_toStartOf="@+id/iv_photo_before"
+            app:layout_constraintTop_toBottomOf="@+id/iv_photo_before"
+            tools:text="120 кг." />
+
+        <TextView
+            android:id="@+id/tv_weight_after"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/indent_4dp"
+            android:layout_marginBottom="@dimen/indent_8dp"
+            android:textSize="@dimen/size_20sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/iv_photo_after"
+            app:layout_constraintStart_toStartOf="@+id/iv_photo_after"
+            app:layout_constraintTop_toBottomOf="@+id/iv_photo_after"
+            tools:text="119 кг." />
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_photo_before"
+            app:layout_constraintEnd_toStartOf="@+id/iv_photo_after"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_weight="0.2"
+            app:layout_constraintStart_toEndOf="@+id/iv_photo_before"
+            app:layout_constraintTop_toTopOf="@+id/iv_photo_before"
+            app:srcCompat="@drawable/picture_vs" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

@@ -12,6 +12,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled = true
     }
     buildTypes {
         buildTypes.each {
@@ -20,50 +22,68 @@ android {
             it.buildConfigField 'String', "API_KEY", properties.getProperty("youtube_api_key", "")
             it.buildConfigField 'String', "BASE_URL", properties.getProperty("youtube_url", "")
             it.buildConfigField 'String', "CHANNEL_ID", properties.getProperty("youtube_channel_id", "")*/
-            it.buildConfigField ("String", "API_KEY", '"AIzaSyCDyJli99VLtMSS-bQa1yCzMxsNqCIm2_E"')
-            it.buildConfigField ("String", "BASE_URL", '"https://www.googleapis.com/youtube/"')
-            it.buildConfigField ("String", "CHANNEL_ID", '"PLh13OF-FPwGGKuAfUfTksOgbeqWernIkV"')
+            it.buildConfigField("String", "API_KEY", '"AIzaSyCDyJli99VLtMSS-bQa1yCzMxsNqCIm2_E"')
+            it.buildConfigField("String", "BASE_URL", '"https://www.googleapis.com/youtube/"')
+            it.buildConfigField("String", "CHANNEL_ID", '"PLh13OF-FPwGGKuAfUfTksOgbeqWernIkV"')
         }
-        debug{
-            minifyEnabled true
-            shrinkResources true
+        debug {
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-
-    def moshiVersion = "1.8.0"
-    def retrofit2_version = "2.5.0"
-    def okhttp3_version = "3.12.0"
-    def kotlinCoroutineVersion = "1.0.1"
-    def dagger2_version = "2.11"
+    def moshiVersion = "1.9.2"
+    def retrofit2_version = "2.7.0"
+    def okhttp3_version = "4.2.2"
+    def kotlinCoroutineVersion = "1.3.3"
+    def daggerLibVersion = "2.25.3"
+    def daggerAndroidLibVersion = "2.25.3"
     def room_version = "2.1.0-alpha04"
     def glide_version = "4.10.0"
+    def lifecycle_viewmodel = "2.2.0-alpha01"
+    def glide_transformation = "4.1.0"
+    def gpuimage_library = "1.4.1"
+    def multidex = "1.0.3"
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
-
     implementation 'com.google.android.material:material:1.1.0-alpha10'
+
+    implementation "com.android.support:multidex:$multidex"
+
     //Moshi
     implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
+    implementation "com.squareup.moshi:moshi:$moshiVersion"
 
     // Dagger2
-    implementation "com.google.dagger:dagger:$dagger2_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger2_version"
+    implementation "com.google.dagger:dagger:$daggerLibVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerLibVersion"
+    implementation "com.google.dagger:dagger-android:$daggerAndroidLibVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerAndroidLibVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerLibVersion"
 
+    //Glide
     implementation "com.github.bumptech.glide:glide:$glide_version"
+    implementation "jp.wasabeef:glide-transformations:$glide_transformation"
+    implementation "jp.co.cyberagent.android.gpuimage:gpuimage-library:$gpuimage_library"
 
     //Kotlin Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutineVersion"
@@ -76,7 +96,7 @@ dependencies {
     //Retrofit2
     implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit2_version"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2"
+    implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
 
     // Room components
     implementation "androidx.room:room-runtime:$room_version"
@@ -85,4 +105,7 @@ dependencies {
     androidTestImplementation "androidx.room:room-testing:$room_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha01'
 }
