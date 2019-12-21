@@ -23,10 +23,7 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.ui.home.vm.HomeViewModel
 import ru.ruslan.weighttracker.ui.home.vm.ProfileUI
-import ru.ruslan.weighttracker.ui.util.Constants
-import ru.ruslan.weighttracker.ui.util.ImageUtil
-import ru.ruslan.weighttracker.ui.util.PermissionUtils
-import ru.ruslan.weighttracker.ui.util.RouterUtil
+import ru.ruslan.weighttracker.ui.util.*
 
 class HomeFragment : Fragment() {
 
@@ -90,15 +87,8 @@ class HomeFragment : Fragment() {
     private fun initViews() {
         initChooseAppDialog()
 
-        Glide.with(this)
-            .load(R.drawable.test)
-            .apply(glideOptions)
-            .into(iv_photo_before)
-
-        Glide.with(this)
-            .load(R.drawable.test)
-            .apply(glideOptions)
-            .into(iv_photo_after)
+        iv_photo_before.loadImage(drawableId = R.drawable.test)
+        iv_photo_after.loadImage(drawableId = R.drawable.test)
     }
 
     private fun updateProfileViews(profile: ProfileUI?){

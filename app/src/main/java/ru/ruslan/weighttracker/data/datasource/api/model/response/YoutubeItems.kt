@@ -1,8 +1,9 @@
 package ru.ruslan.weighttracker.data.datasource.api.model.response
 
+import com.google.gson.annotations.SerializedName
 import com.squareup.moshi.Json
 
-data class YoutubeItems(@field:Json(name = "kind") val kind: String,
-                        @field:Json(name = "etag") val etag: String,
-                        @field:Json(name = "snippet") val snippet: YoutubeSnippet?,
-                        @field:Json(name = "contentDetails") val contentDetails: YoutubeContentDetails?)
+data class YoutubeItems(@SerializedName("kind") val kind: String,
+                        @SerializedName("etag") val etag: String,
+                        @SerializedName("snippet") val snippet: YoutubeSnippet?,
+                        @SerializedName("contentDetails") val contentDetails: YoutubeContentDetails?)

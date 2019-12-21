@@ -1,12 +1,10 @@
 package ru.ruslan.weighttracker.ui.videos.list.vm
 
-import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
 import ru.ruslan.weighttracker.core.datatype.Result
 import ru.ruslan.weighttracker.core.datatype.ResultType
 import ru.ruslan.weighttracker.ui.util.Constants
-import ru.ruslan.weighttracker.ui.util.printLog
 import ru.ruslan.weighttracker.domain.model.videolists.VideosEntity
 import ru.ruslan.weighttracker.domain.usecase.GetVideoListUseCase
 import ru.ruslan.weighttracker.ui.videos.list.vm.mapper.VideosEntityToUiMapper
@@ -18,14 +16,6 @@ class VideoListViewModel @Inject constructor(private val getVideoListUseCase: Ge
     var currentPage = 1
     private var totalPage = 0
     private var nextPageToken: String = ""
-
-    /*private val getVideoListUseCase: GetVideoListUseCase = GetVideoListUseCase(
-        VideoListRepositoryImpl(
-            VideoListNetworkDataSource(
-                ApiFactory.getRestClient(getApplication())
-            )
-        )
-    )*/
 
     private val videosMutableLiveData: MutableLiveData<List<VideoUI>> = MutableLiveData()
     val videosLiveData: LiveData<List<VideoUI>>
@@ -88,7 +78,6 @@ class VideoListViewModel @Inject constructor(private val getVideoListUseCase: Ge
         val videosUI = VideosEntityToUiMapper.map(data.items)
 
         if (videosUI.isEmpty()) {
-            "VIEW_MODEL: videoUI empty".printLog("CleanArch", Log.DEBUG)
         } else {
             videosMutableLiveData.value = videosUI
         }
@@ -114,5 +103,12 @@ class VideoListViewModel @Inject constructor(private val getVideoListUseCase: Ge
             isLastLoadedPageMutableLiveData.value = true
         }
     }
+
+    fun handleRefreshViews() {
+        currentPage = 1
+        isLastLoadedPageMutableLiveData.value = false
+        handleVideosLoad(Constants.VIDEO_PLAYLIST, "")
+    }
+
 
 }

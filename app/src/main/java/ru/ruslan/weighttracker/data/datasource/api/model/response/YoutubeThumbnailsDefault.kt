@@ -1,7 +1,8 @@
 package ru.ruslan.weighttracker.data.datasource.api.model.response
 
+import com.google.gson.annotations.SerializedName
 import com.squareup.moshi.Json
 
-data class YoutubeThumbnailsDefault (@field:Json(name = "url") val url: String,
-                                     @field:Json(name = "width") val width: String,
-                                     @field:Json(name = "height") val height: String)
+data class YoutubeThumbnailsDefault (@SerializedName("url") val url: String,
+                                     @SerializedName("width") val width: String,
+                                     @SerializedName("height") val height: String)

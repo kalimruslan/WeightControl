@@ -1,14 +1,15 @@
 package ru.ruslan.weighttracker.data.datasource.api.model.response
 
+import com.google.gson.annotations.SerializedName
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class YoutubeResponce(
-    @Json(name = "kind") val kind: String,
-    @Json(name = "etag") val etag: String,
-    @Json(name = "nextPageToken") val nextPageToken: String,
-    @Json(name = "prevPageToken") val prevPageToken: String,
-    @Json(name = "pageInfo") val pageInfo: YotubePageInfo,
-    @Json(name = "items") val items: List<YoutubeItems>
+    @SerializedName("kind") val kind: String,
+    @SerializedName("etag") val etag: String,
+    @SerializedName("nextPageToken") val nextPageToken: String,
+    @SerializedName("prevPageToken") val prevPageToken: String,
+    @SerializedName("pageInfo") val pageInfo: YotubePageInfo,
+    @SerializedName("items") val items: List<YoutubeItems>
 )

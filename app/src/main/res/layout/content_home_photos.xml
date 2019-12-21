@@ -41,7 +41,7 @@
             android:textColor="@color/black"
             tools:text="28.07.2019" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_photo_before"
             android:layout_width="wrap_content"
             android:layout_height="200dp"
@@ -55,7 +55,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_date_before"
             tools:srcCompat="@tools:sample/avatars" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_photo_after"
             android:layout_width="wrap_content"
             android:layout_height="200dp"
@@ -99,7 +99,7 @@
             app:layout_constraintTop_toBottomOf="@+id/iv_photo_after"
             tools:text="119 кг." />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

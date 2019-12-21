@@ -125,10 +125,6 @@ class VideosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener {
         isLastPage = last
     }
 
-    private fun clearRecyclerItems() {
-        adapter?.clear()
-    }
-
     private fun showHideLoadingView(isLoading: Boolean) {
         if(isLoading) ll_progress?.visibility = View.VISIBLE
         else ll_progress?.visibility = View.GONE
@@ -140,9 +136,7 @@ class VideosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        viewModel?.currentPage = 1
-        isLastLoadedPage(false)
-        clearRecyclerItems()
-        viewModel?.handleVideosLoad(Constants.VIDEO_PLAYLIST, "")
+        viewModel?.handleRefreshViews()
+        adapter?.clear()
     }
 }

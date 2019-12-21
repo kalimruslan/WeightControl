@@ -56,6 +56,7 @@ dependencies {
     def glide_transformation = "4.1.0"
     def gpuimage_library = "1.4.1"
     def multidex = "1.0.3"
+    def gsonVersion = "2.4.0"
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -72,6 +73,8 @@ dependencies {
     implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
     implementation "com.squareup.moshi:moshi:$moshiVersion"
+
+    implementation "com.squareup.retrofit2:converter-gson:$gsonVersion"
 
     // Dagger2
     implementation "com.google.dagger:dagger:$daggerLibVersion"
