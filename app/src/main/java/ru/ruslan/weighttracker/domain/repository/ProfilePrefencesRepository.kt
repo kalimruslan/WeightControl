@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker
+package ru.ruslan.weighttracker.domain.repository
 
 interface ProfilePrefencesRepository {
     fun storeProfileId(profileId: Int)

@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class YotubeResponce(
+data class YoutubeResponce(
     @Json(name = "kind") val kind: String,
     @Json(name = "etag") val etag: String,
     @Json(name = "nextPageToken") val nextPageToken: String,

@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.videos.list.ui
+package ru.ruslan.weighttracker.ui.videos.list
 
 import android.content.Context
 import android.content.Intent
@@ -14,14 +14,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_videos.*
-import ru.ruslan.weighttracker.OnItemClickListener
+import ru.ruslan.weighttracker.ui.OnItemClickListener
+import ru.ruslan.weighttracker.ui.PaginationScrollListener
 import ru.ruslan.weighttracker.R
+import ru.ruslan.weighttracker.ui.videos.detail.VideoDetailActivity
 import ru.ruslan.weighttracker.util.Constants
-import ru.ruslan.weighttracker.util.PaginationScrollListener
+import ru.ruslan.weighttracker.ui.videos.list.vm.VideoListViewModel
+import ru.ruslan.weighttracker.ui.videos.list.vm.model.VideoUI
 import ru.ruslan.weighttracker.util.showToast
-import ru.ruslan.weighttracker.videos.detail.VideoDetailActivity
-import ru.ruslan.weighttracker.videos.list.vm.VideoListViewModel
-import ru.ruslan.weighttracker.videos.list.vm.model.VideoUI
 import javax.inject.Inject
 
 class VideosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener {
@@ -46,7 +46,7 @@ class VideosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_videos, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

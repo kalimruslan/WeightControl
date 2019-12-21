@@ -1,7 +1,7 @@
 package ru.ruslan.weighttracker.home.domain.usecase
 
 import android.util.Log
-import ru.ruslan.weighttracker.ProfilePrefencesRepository
+import ru.ruslan.weighttracker.domain.repository.ProfilePrefencesRepository
 import ru.ruslan.weighttracker.core.datatype.ResultType
 import ru.ruslan.weighttracker.home.domain.ProfileRepository
 import ru.ruslan.weighttracker.home.domain.model.PhotoEntity

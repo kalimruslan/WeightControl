@@ -1,26 +1,26 @@
-package ru.ruslan.weighttracker
+package ru.ruslan.weighttracker.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.home.ui.home.HomeFragment
 import ru.ruslan.weighttracker.home.ui.profile.ProfileActivity
-import ru.ruslan.weighttracker.videos.list.ui.VideosFragment
+import ru.ruslan.weighttracker.ui.videos.list.VideosFragment
 
 class MainActivity : DaggerAppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(main_toolbar)
         clickListeners()
 
         val toolbar = findViewById<Toolbar>(R.id.main_toolbar)

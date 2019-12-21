@@ -20,7 +20,7 @@ import ru.ruslan.weighttracker.data.datasource.api.VideoListNetworkDataSource
 import ru.ruslan.weighttracker.data.datasource.api.exceptions.NoConnectivityException
 import ru.ruslan.weighttracker.data.datasource.api.retrofit.YoutubeApi
 import ru.ruslan.weighttracker.data.repository.VideoListRepositoryImpl
-import ru.ruslan.weighttracker.videos.list.domain.VideoListRepository
+import ru.ruslan.weighttracker.domain.repository.VideoListRepository
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 

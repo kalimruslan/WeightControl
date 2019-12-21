@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.videos.list.ui
+package ru.ruslan.weighttracker.ui.videos.list
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_video.view.*
-import ru.ruslan.weighttracker.OnItemClickListener
+import ru.ruslan.weighttracker.ui.OnItemClickListener
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.util.showToast
-import ru.ruslan.weighttracker.videos.list.vm.model.VideoUI
+import ru.ruslan.weighttracker.ui.videos.list.vm.model.VideoUI
 
 class VideosAdapter(
     private val context: Context?,

@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker
+package ru.ruslan.weighttracker.ui
 
 import java.text.FieldPosition
 

@@ -1,17 +1,17 @@
 package ru.ruslan.weighttracker.data.repository.mapper
 
 import ru.ruslan.weighttracker.core.BaseMapper
-import ru.ruslan.weighttracker.data.datasource.api.model.response.YotubeResponce
+import ru.ruslan.weighttracker.data.datasource.api.model.response.YoutubeResponce
 import ru.ruslan.weighttracker.data.datasource.localdb.model.PhotoLocal
 import ru.ruslan.weighttracker.data.datasource.localdb.model.ProfileLocal
 import ru.ruslan.weighttracker.data.datasource.localdb.model.WeightLocal
+import ru.ruslan.weighttracker.domain.model.videolists.*
 import ru.ruslan.weighttracker.home.domain.model.PhotoEntity
 import ru.ruslan.weighttracker.home.domain.model.ProfileEntity
 import ru.ruslan.weighttracker.home.domain.model.WeightEntity
-import ru.ruslan.weighttracker.videos.list.domain.model.*
 
-object ApiToEntityMapper : BaseMapper<YotubeResponce, VideosEntity> {
-    override fun map(type: YotubeResponce?): VideosEntity? {
+object ApiToEntityMapper : BaseMapper<YoutubeResponce, VideosEntity> {
+    override fun map(type: YoutubeResponce?): VideosEntity? {
         var videosEntity: VideosEntity? = null
         if (type != null) {
             videosEntity = VideosEntity(
@@ -24,7 +24,7 @@ object ApiToEntityMapper : BaseMapper<YotubeResponce, VideosEntity> {
         return videosEntity
     }
 
-    private fun getVideosList(type: YotubeResponce): List<VideoEntity> {
+    private fun getVideosList(type: YoutubeResponce): List<VideoEntity> {
         return type.items.map { item ->
             val snippetThumbnailsEntity = SnippetThumbnailsEntity(
                 url = item.snippet?.thumbnails?.medium?.url!!,

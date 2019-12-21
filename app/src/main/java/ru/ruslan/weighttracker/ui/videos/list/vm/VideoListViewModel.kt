@@ -1,6 +1,5 @@
-package ru.ruslan.weighttracker.videos.list.vm
+package ru.ruslan.weighttracker.ui.videos.list.vm
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
@@ -8,10 +7,10 @@ import ru.ruslan.weighttracker.core.datatype.Result
 import ru.ruslan.weighttracker.core.datatype.ResultType
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.printLog
-import ru.ruslan.weighttracker.videos.list.domain.model.VideosEntity
-import ru.ruslan.weighttracker.videos.list.domain.usecase.GetVideoListUseCase
-import ru.ruslan.weighttracker.videos.list.vm.mapper.VideosEntityToUiMapper
-import ru.ruslan.weighttracker.videos.list.vm.model.VideoUI
+import ru.ruslan.weighttracker.domain.model.videolists.VideosEntity
+import ru.ruslan.weighttracker.domain.usecase.GetVideoListUseCase
+import ru.ruslan.weighttracker.ui.videos.list.vm.mapper.VideosEntityToUiMapper
+import ru.ruslan.weighttracker.ui.videos.list.vm.model.VideoUI
 import javax.inject.Inject
 
 class VideoListViewModel @Inject constructor(private val getVideoListUseCase: GetVideoListUseCase) : ViewModel() {

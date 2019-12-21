@@ -1,6 +1,6 @@
 package ru.ruslan.weighttracker.data.repository
 
-import ru.ruslan.weighttracker.ProfilePrefencesRepository
+import ru.ruslan.weighttracker.domain.repository.ProfilePrefencesRepository
 import ru.ruslan.weighttracker.data.datasource.sharedpreferences.ProfilePreferencesDataSource
 
 class ProfilePreferncesRepositoryImpl(

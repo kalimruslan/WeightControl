@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.videos.list.domain.model
+package ru.ruslan.weighttracker.domain.model.videolists
 
 data class SnippetThumbnailsEntity(
     val url: String,

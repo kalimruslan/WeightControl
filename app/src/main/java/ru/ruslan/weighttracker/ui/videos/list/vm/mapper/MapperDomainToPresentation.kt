@@ -1,8 +1,8 @@
-package ru.ruslan.weighttracker.videos.list.vm.mapper
+package ru.ruslan.weighttracker.ui.videos.list.vm.mapper
 
 import ru.ruslan.weighttracker.core.BaseMapper
-import ru.ruslan.weighttracker.videos.list.domain.model.VideoEntity
-import ru.ruslan.weighttracker.videos.list.vm.model.VideoUI
+import ru.ruslan.weighttracker.domain.model.videolists.VideoEntity
+import ru.ruslan.weighttracker.ui.videos.list.vm.model.VideoUI
 
 object VideosEntityToUiMapper: BaseMapper<List<VideoEntity>, List<VideoUI>> {
     override fun map(type: List<VideoEntity>?): List<VideoUI> {

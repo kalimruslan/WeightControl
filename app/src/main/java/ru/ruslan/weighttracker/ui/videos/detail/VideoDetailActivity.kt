@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.videos.detail
+package ru.ruslan.weighttracker.ui.videos.detail
 
 import android.content.Intent
 import android.graphics.Color
@@ -12,13 +12,15 @@ import com.google.android.youtube.player.YouTubePlayer
 import kotlinx.android.synthetic.main.activity_video_detail.*
 import ru.ruslan.weighttracker.BuildConfig
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.data.datasource.api.model.response.YotubeResponce
+import ru.ruslan.weighttracker.ui.videos.list.vm.model.VideoUI
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.showToast
-import ru.ruslan.weighttracker.videos.list.vm.model.VideoUI
 import kotlin.math.abs
 
 class VideoDetailActivity : YouTubeBaseActivity() {
+    fun showHideLoadingView(isLoading: Boolean) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private var video: VideoUI? = null
     private var youtubePlayer: YouTubePlayer? = null
