@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.videos.list.vm.model
+package ru.ruslan.weighttracker.ui.videos.list.vm.model
 
 class VideoUI(val title: String,
               val description: String,

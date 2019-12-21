@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker
+package ru.ruslan.weighttracker.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,7 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
-import ru.ruslan.weighttracker.videos.list.ui.VideosFragment
+import ru.ruslan.weighttracker.R
+import ru.ruslan.weighttracker.ui.videos.list.VideosFragment
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 

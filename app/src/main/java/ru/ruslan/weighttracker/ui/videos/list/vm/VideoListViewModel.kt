@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.videos.list.vm
+package ru.ruslan.weighttracker.ui.videos.list.vm
 
 import android.app.Application
 import android.util.Log
@@ -11,10 +11,10 @@ import ru.ruslan.weighttracker.data.datasource.api.retrofit.ApiFactory
 import ru.ruslan.weighttracker.data.repository.VideoListRepositoryImpl
 import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.printLog
-import ru.ruslan.weighttracker.videos.list.domain.model.VideosEntity
-import ru.ruslan.weighttracker.videos.list.domain.usecase.GetVideoListUseCase
-import ru.ruslan.weighttracker.videos.list.vm.mapper.VideosEntityToUiMapper
-import ru.ruslan.weighttracker.videos.list.vm.model.VideoUI
+import ru.ruslan.weighttracker.domain.model.videolists.VideosEntity
+import ru.ruslan.weighttracker.domain.usecase.GetVideoListUseCase
+import ru.ruslan.weighttracker.ui.videos.list.vm.mapper.VideosEntityToUiMapper
+import ru.ruslan.weighttracker.ui.videos.list.vm.model.VideoUI
 
 class VideoListViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -22,13 +22,14 @@ class VideoListViewModel(application: Application) : AndroidViewModel(applicatio
     private var totalPage = 0
     private var nextPageToken: String = ""
 
-    private val getVideoListUseCase: GetVideoListUseCase = GetVideoListUseCase(
-        VideoListRepositoryImpl(
-            VideoListNetworkDataSource(
-                ApiFactory.getRestClient(getApplication())
+    private val getVideoListUseCase: GetVideoListUseCase =
+        GetVideoListUseCase(
+            VideoListRepositoryImpl(
+                VideoListNetworkDataSource(
+                    ApiFactory.getRestClient(getApplication())
+                )
             )
         )
-    )
 
     private val videosMutableLiveData: MutableLiveData<List<VideoUI>> = MutableLiveData()
     val videosLiveData: LiveData<List<VideoUI>>

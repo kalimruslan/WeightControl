@@ -1,4 +1,6 @@
-package ru.ruslan.weighttracker.videos.list.domain.model
+package ru.ruslan.weighttracker.domain.model.videolists
+
+import ru.ruslan.weighttracker.domain.model.videolists.VideoEntity
 
 data class VideosEntity(val nextPageToken: String,
                         val resultPerPage: Int,

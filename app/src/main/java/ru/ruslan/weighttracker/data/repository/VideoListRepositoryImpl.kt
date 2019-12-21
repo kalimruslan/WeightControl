@@ -4,8 +4,8 @@ import ru.ruslan.weighttracker.core.datatype.Result
 import ru.ruslan.weighttracker.core.datatype.ResultType
 import ru.ruslan.weighttracker.data.datasource.api.VideoListNetworkDataSource
 import ru.ruslan.weighttracker.data.repository.mapper.ApiToEntityMapper
-import ru.ruslan.weighttracker.videos.list.domain.VideoListRepository
-import ru.ruslan.weighttracker.videos.list.domain.model.VideosEntity
+import ru.ruslan.weighttracker.domain.repository.VideoListRepository
+import ru.ruslan.weighttracker.domain.model.videolists.VideosEntity
 
 class VideoListRepositoryImpl(private val videoListNetworkDataSource: VideoListNetworkDataSource) :
     VideoListRepository {

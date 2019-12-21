@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.videos.detail
+package ru.ruslan.weighttracker.ui.videos.detail
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.activity_video_detail.*
 import ru.ruslan.weighttracker.BuildConfig
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.data.datasource.api.model.response.YoutubeModel
-import ru.ruslan.weighttracker.util.Constants
 import ru.ruslan.weighttracker.util.showToast
 import kotlin.math.abs
 

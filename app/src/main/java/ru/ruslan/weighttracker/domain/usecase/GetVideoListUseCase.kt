@@ -1,9 +1,9 @@
-package ru.ruslan.weighttracker.videos.list.domain.usecase
+package ru.ruslan.weighttracker.domain.usecase
 
 import ru.ruslan.weighttracker.core.datatype.Result
 import ru.ruslan.weighttracker.core.datatype.ResultType
-import ru.ruslan.weighttracker.videos.list.domain.VideoListRepository
-import ru.ruslan.weighttracker.videos.list.domain.model.VideosEntity
+import ru.ruslan.weighttracker.domain.repository.VideoListRepository
+import ru.ruslan.weighttracker.domain.model.videolists.VideosEntity
 
 class GetVideoListUseCase(private val remoteRepo: VideoListRepository?) {
 
