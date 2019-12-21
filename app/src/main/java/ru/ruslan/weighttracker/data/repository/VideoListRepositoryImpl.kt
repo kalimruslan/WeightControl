@@ -1,7 +1,7 @@
 package ru.ruslan.weighttracker.data.repository
 
-import ru.ruslan.weighttracker.core.datatype.Result
-import ru.ruslan.weighttracker.core.datatype.ResultType
+import ru.ruslan.weightracker.core.datatype.Result
+import ru.ruslan.weightracker.core.datatype.ResultType
 import ru.ruslan.weighttracker.data.datasource.api.VideoListNetworkDataSource
 import ru.ruslan.weighttracker.data.repository.mapper.ApiToEntityMapper
 import ru.ruslan.weighttracker.domain.repository.VideoListRepository

@@ -1,6 +1,6 @@
 package ru.ruslan.weighttracker.domain.repository
 
-import ru.ruslan.weighttracker.core.datatype.Result
+import ru.ruslan.weightracker.core.datatype.Result
 import ru.ruslan.weighttracker.data.datasource.localdb.model.ProfileLocal
 import ru.ruslan.weighttracker.domain.model.profile.PhotoEntity
 import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity

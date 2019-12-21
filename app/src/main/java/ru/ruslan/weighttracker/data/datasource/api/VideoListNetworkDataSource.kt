@@ -1,6 +1,6 @@
 package ru.ruslan.weighttracker.data.datasource.api
 
-import ru.ruslan.weighttracker.core.datatype.Result
+import ru.ruslan.weightracker.core.datatype.Result
 import ru.ruslan.weighttracker.data.datasource.api.exceptions.NoConnectivityException
 import ru.ruslan.weighttracker.data.datasource.api.exceptions.handleNetworkExceptions
 import ru.ruslan.weighttracker.data.datasource.api.model.response.YoutubeResponce

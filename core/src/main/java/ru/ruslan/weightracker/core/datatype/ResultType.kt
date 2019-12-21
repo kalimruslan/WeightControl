@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.core.datatype
+package ru.ruslan.weightracker.core.datatype
 
 enum class ResultType {
     ERROR,

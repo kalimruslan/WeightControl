@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.core.datatype
+package ru.ruslan.weightracker.core.datatype
 
 data class Result<out T>(var resultType: ResultType,
                                val data: T? = null,

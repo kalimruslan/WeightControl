@@ -1,7 +1,7 @@
 package ru.ruslan.weighttracker.domain.usecase
 
-import ru.ruslan.weighttracker.core.datatype.Result
-import ru.ruslan.weighttracker.core.datatype.ResultType
+import ru.ruslan.weightracker.core.datatype.Result
+import ru.ruslan.weightracker.core.datatype.ResultType
 import ru.ruslan.weighttracker.domain.model.videolists.VideosEntity
 import ru.ruslan.weighttracker.domain.repository.VideoListRepository
 import javax.inject.Inject

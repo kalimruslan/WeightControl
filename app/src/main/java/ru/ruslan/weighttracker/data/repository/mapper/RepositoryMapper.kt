@@ -1,6 +1,6 @@
 package ru.ruslan.weighttracker.data.repository.mapper
 
-import ru.ruslan.weighttracker.core.BaseMapper
+import ru.ruslan.weightracker.core.BaseMapper
 import ru.ruslan.weighttracker.data.datasource.api.model.response.YoutubeResponce
 import ru.ruslan.weighttracker.data.datasource.localdb.model.PhotoLocal
 import ru.ruslan.weighttracker.data.datasource.localdb.model.ProfileLocal
@@ -10,7 +10,8 @@ import ru.ruslan.weighttracker.domain.model.profile.PhotoEntity
 import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
 import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
 
-object ApiToEntityMapper : BaseMapper<YoutubeResponce, VideosEntity> {
+object ApiToEntityMapper :
+    ru.ruslan.weightracker.core.BaseMapper<YoutubeResponce, VideosEntity> {
     override fun map(type: YoutubeResponce?): VideosEntity? {
         var videosEntity: VideosEntity? = null
         if (type != null) {
@@ -46,7 +47,8 @@ object ApiToEntityMapper : BaseMapper<YoutubeResponce, VideosEntity> {
     }
 }
 
-object ProfileEntityToLocalMapper : BaseMapper<ProfileEntity, ProfileLocal> {
+object ProfileEntityToLocalMapper :
+    ru.ruslan.weightracker.core.BaseMapper<ProfileEntity, ProfileLocal> {
     override fun map(type: ProfileEntity?): ProfileLocal? {
         var profileLocal: ProfileLocal? = null
         type?.let {
@@ -80,7 +82,8 @@ object ProfileEntityToLocalMapper : BaseMapper<ProfileEntity, ProfileLocal> {
     }
 }
 
-object WeightEntityToLocalMapper : BaseMapper<WeightEntity, WeightLocal> {
+object WeightEntityToLocalMapper :
+    ru.ruslan.weightracker.core.BaseMapper<WeightEntity, WeightLocal> {
     override fun map(type: WeightEntity?): WeightLocal? {
         var weightLocal: WeightLocal? = null
         type?.let {
@@ -94,7 +97,8 @@ object WeightEntityToLocalMapper : BaseMapper<WeightEntity, WeightLocal> {
     }
 }
 
-object PhotoEntityToLocalMapper : BaseMapper<PhotoEntity, PhotoLocal> {
+object PhotoEntityToLocalMapper :
+    ru.ruslan.weightracker.core.BaseMapper<PhotoEntity, PhotoLocal> {
     override fun map(type: PhotoEntity?): PhotoLocal? {
         var photoLocal: PhotoLocal? = null
         type?.let {
@@ -108,7 +112,8 @@ object PhotoEntityToLocalMapper : BaseMapper<PhotoEntity, PhotoLocal> {
     }
 }
 
-object LocalToEntittMapper : BaseMapper<ProfileLocal, ProfileEntity> {
+object LocalToEntittMapper :
+    ru.ruslan.weightracker.core.BaseMapper<ProfileLocal, ProfileEntity> {
     override fun map(type: ProfileLocal?): ProfileEntity? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

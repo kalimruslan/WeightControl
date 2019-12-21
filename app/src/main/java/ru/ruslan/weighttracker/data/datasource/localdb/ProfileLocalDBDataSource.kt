@@ -1,8 +1,7 @@
 package ru.ruslan.weighttracker.data.datasource.localdb
 
 import android.database.sqlite.SQLiteConstraintException
-import android.util.Log
-import ru.ruslan.weighttracker.core.datatype.Result
+import ru.ruslan.weightracker.core.datatype.Result
 import ru.ruslan.weighttracker.data.datasource.localdb.dao.ProfileLocalDao
 import ru.ruslan.weighttracker.data.datasource.localdb.database.AppRoomDatabase
 import ru.ruslan.weighttracker.data.datasource.localdb.model.PhotoLocal
