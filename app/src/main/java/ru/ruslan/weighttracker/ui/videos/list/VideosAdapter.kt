@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_video.view.*
 import ru.ruslan.weighttracker.ui.OnItemClickListener
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.util.showToast
+import ru.ruslan.weighttracker.ui.util.showToast
 import ru.ruslan.weighttracker.ui.videos.list.vm.model.VideoUI
 
 class VideosAdapter(

@@ -5,8 +5,8 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.*
 import ru.ruslan.weighttracker.core.datatype.Result
 import ru.ruslan.weighttracker.core.datatype.ResultType
-import ru.ruslan.weighttracker.util.Constants
-import ru.ruslan.weighttracker.util.printLog
+import ru.ruslan.weighttracker.ui.util.Constants
+import ru.ruslan.weighttracker.ui.util.printLog
 import ru.ruslan.weighttracker.domain.model.videolists.VideosEntity
 import ru.ruslan.weighttracker.domain.usecase.GetVideoListUseCase
 import ru.ruslan.weighttracker.ui.videos.list.vm.mapper.VideosEntityToUiMapper

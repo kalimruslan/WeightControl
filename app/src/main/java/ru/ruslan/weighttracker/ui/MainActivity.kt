@@ -11,8 +11,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.home.ui.home.HomeFragment
-import ru.ruslan.weighttracker.home.ui.profile.ProfileActivity
+import ru.ruslan.weighttracker.ui.home.HomeFragment
+import ru.ruslan.weighttracker.ui.profile.ProfileActivity
 import ru.ruslan.weighttracker.ui.videos.list.VideosFragment
 
 class MainActivity : DaggerAppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {

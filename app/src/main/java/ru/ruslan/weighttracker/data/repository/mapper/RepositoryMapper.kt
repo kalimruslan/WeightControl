@@ -6,9 +6,9 @@ import ru.ruslan.weighttracker.data.datasource.localdb.model.PhotoLocal
 import ru.ruslan.weighttracker.data.datasource.localdb.model.ProfileLocal
 import ru.ruslan.weighttracker.data.datasource.localdb.model.WeightLocal
 import ru.ruslan.weighttracker.domain.model.videolists.*
-import ru.ruslan.weighttracker.home.domain.model.PhotoEntity
-import ru.ruslan.weighttracker.home.domain.model.ProfileEntity
-import ru.ruslan.weighttracker.home.domain.model.WeightEntity
+import ru.ruslan.weighttracker.domain.model.profile.PhotoEntity
+import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
+import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
 
 object ApiToEntityMapper : BaseMapper<YoutubeResponce, VideosEntity> {
     override fun map(type: YoutubeResponce?): VideosEntity? {

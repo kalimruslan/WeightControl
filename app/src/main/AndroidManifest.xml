@@ -34,7 +34,7 @@
         </activity>
 
         <activity android:name="ru.ruslan.weighttracker.ui.videos.detail.VideoDetailActivity"/>
-        <activity android:name=".home.ui.profile.ProfileActivity"/>
+        <activity android:name="ru.ruslan.weighttracker.ui.profile.ProfileActivity"/>
     </application>
 
 </manifest>

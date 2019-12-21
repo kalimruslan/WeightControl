@@ -3,7 +3,6 @@ package ru.ruslan.weighttracker.ui.videos.list
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,10 +17,10 @@ import ru.ruslan.weighttracker.ui.OnItemClickListener
 import ru.ruslan.weighttracker.ui.PaginationScrollListener
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.ui.videos.detail.VideoDetailActivity
-import ru.ruslan.weighttracker.util.Constants
+import ru.ruslan.weighttracker.ui.util.Constants
 import ru.ruslan.weighttracker.ui.videos.list.vm.VideoListViewModel
 import ru.ruslan.weighttracker.ui.videos.list.vm.model.VideoUI
-import ru.ruslan.weighttracker.util.showToast
+import ru.ruslan.weighttracker.ui.util.showToast
 import javax.inject.Inject
 
 class VideosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener {

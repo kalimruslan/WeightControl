@@ -1,17 +1,16 @@
 package ru.ruslan.weighttracker.data.repository
 
-import android.text.InputType
 import ru.ruslan.weighttracker.core.datatype.Result
 import ru.ruslan.weighttracker.core.datatype.ResultType
 import ru.ruslan.weighttracker.data.datasource.localdb.ProfileLocalDBDataSource
-import ru.ruslan.weighttracker.home.domain.ProfileRepository
+import ru.ruslan.weighttracker.domain.repository.ProfileRepository
 import ru.ruslan.weighttracker.data.datasource.localdb.model.ProfileLocal
 import ru.ruslan.weighttracker.data.repository.mapper.PhotoEntityToLocalMapper
 import ru.ruslan.weighttracker.data.repository.mapper.ProfileEntityToLocalMapper
 import ru.ruslan.weighttracker.data.repository.mapper.WeightEntityToLocalMapper
-import ru.ruslan.weighttracker.home.domain.model.PhotoEntity
-import ru.ruslan.weighttracker.home.domain.model.ProfileEntity
-import ru.ruslan.weighttracker.home.domain.model.WeightEntity
+import ru.ruslan.weighttracker.domain.model.profile.PhotoEntity
+import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
+import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
 
 class LocalProfileRepositoryImpl(
     private val localDataSource: ProfileLocalDBDataSource) :
