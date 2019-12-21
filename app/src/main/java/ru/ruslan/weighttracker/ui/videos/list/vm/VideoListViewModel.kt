@@ -92,6 +92,7 @@ class VideoListViewModel(application: Application) : AndroidViewModel(applicatio
             videosMutableLiveData.value = videosUI
         }
 
+        isLoadingNextPagesMutableLiveData.value = false
         updateLoadingLiveData(false)
     }
 
@@ -112,6 +113,12 @@ class VideoListViewModel(application: Application) : AndroidViewModel(applicatio
         } else {
             isLastLoadedPageMutableLiveData.value = true
         }
+    }
+
+    fun handleRefreshViews() {
+        currentPage = 1
+        isLastLoadedPageMutableLiveData.value = false
+        handleVideosLoad(Constants.VIDEO_PLAYLIST, "")
     }
 
 }
