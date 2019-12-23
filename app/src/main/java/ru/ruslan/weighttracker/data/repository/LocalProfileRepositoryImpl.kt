@@ -11,10 +11,9 @@ import ru.ruslan.weighttracker.data.repository.mapper.WeightEntityToLocalMapper
 import ru.ruslan.weighttracker.domain.model.profile.PhotoEntity
 import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
 import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
+import javax.inject.Inject
 
-class LocalProfileRepositoryImpl(
-    private val localDataSource: ProfileLocalDBDataSource) :
-    ProfileRepository {
+class LocalProfileRepositoryImpl (private val localDataSource: ProfileLocalDBDataSource) : ProfileRepository {
 
     override suspend fun saveWeight(weightEntity: WeightEntity) {
         localDataSource.saveWeight(WeightEntityToLocalMapper.map(weightEntity))

@@ -7,8 +7,9 @@ import ru.ruslan.weighttracker.domain.repository.ProfileRepository
 import ru.ruslan.weighttracker.domain.model.profile.PhotoEntity
 import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
 import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
+import javax.inject.Inject
 
-class SaveToProfileUseCase(private val profileRepository: ProfileRepository,
+class SaveToProfileUseCase @Inject constructor (private val profileRepository: ProfileRepository,
                            private val preferencesRepository: ProfilePrefencesRepository) {
     suspend fun saveWeight() {
         profileRepository.saveWeight(
