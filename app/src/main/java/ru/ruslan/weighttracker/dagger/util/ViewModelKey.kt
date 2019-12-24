@@ -1,5 +1,4 @@
-package ru.ruslan.weighttracker.di
-
+package ru.ruslan.weighttracker.dagger.util
 import androidx.lifecycle.ViewModel
 import dagger.MapKey
 import kotlin.reflect.KClass

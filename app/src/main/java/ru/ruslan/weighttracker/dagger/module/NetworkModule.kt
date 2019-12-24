@@ -1,11 +1,9 @@
-package ru.ruslan.weighttracker.di.modules
+package ru.ruslan.weighttracker.dagger.module
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -14,7 +12,6 @@ import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.moshi.MoshiConverterFactory
 import ru.ruslan.weighttracker.BuildConfig
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.data.datasource.api.VideoListNetworkDataSource
@@ -25,7 +22,7 @@ import ru.ruslan.weighttracker.domain.repository.VideoListRepository
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-@Module(includes = [AppModule::class])
+@Module(includes = [ApplicationModule::class])
 class NetworkModule {
 
     @Singleton

@@ -1,6 +1,5 @@
 package ru.ruslan.weighttracker.ui.profile
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders

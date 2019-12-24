@@ -1,11 +1,11 @@
 package ru.ruslan.weighttracker.ui.home.vm
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import javax.inject.Inject
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+class HomeViewModel @Inject constructor() : ViewModel() {
 
     private var isFabOpen: Boolean = false
     private val openCloseFabMld = MutableLiveData<Boolean>()

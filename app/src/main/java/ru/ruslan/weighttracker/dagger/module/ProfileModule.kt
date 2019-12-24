@@ -1,7 +1,6 @@
-package ru.ruslan.weighttracker.di.modules
+package ru.ruslan.weighttracker.dagger.module
 
 import android.content.SharedPreferences
-import androidx.core.view.ViewCompat
 import dagger.Module
 import dagger.Provides
 import ru.ruslan.weighttracker.data.datasource.localdb.ProfileLocalDBDataSource
@@ -13,7 +12,7 @@ import ru.ruslan.weighttracker.domain.repository.ProfilePrefencesRepository
 import ru.ruslan.weighttracker.domain.repository.ProfileRepository
 import javax.inject.Singleton
 
-@Module(includes = [AppModule::class])
+@Module(includes = [ApplicationModule::class])
 class ProfileModule {
 
     @Provides
