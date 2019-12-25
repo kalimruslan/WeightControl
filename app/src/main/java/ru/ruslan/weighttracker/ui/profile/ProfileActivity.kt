@@ -25,6 +25,9 @@ class ProfileActivity : DaggerAppCompatActivity() {
     }
 
     private fun observerLiveData() {
+        // test
         profileViewModel?.generateAndSetProfileData()
     }
+
+
 }
