@@ -19,4 +19,13 @@
     <string name="text_chooser_image">Select Picture</string>
     <string name="text_collapsing_toolbar">Мотивация</string>
     <string name="text_action_profile">Профиль</string>
+    <string name="fio">Ваше имя</string>
+    <string name="et_text_hint">Введите ваше имя</string>
+    <string name="hint_sex">Ваш пол</string>
+    <string name="hepler_tex_sex">Введите ваш пол</string>
+
+    <string-array name="sex_dropdown">
+        <item>Мужской</item>
+        <item>Женский</item>
+    </string-array>
 </resources>
