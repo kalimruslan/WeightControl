@@ -3,6 +3,7 @@ package ru.ruslan.weighttracker.dagger.component
 import android.app.Application
 import dagger.BindsInstance
 import dagger.Component
+import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import dagger.android.support.AndroidSupportInjectionModule
@@ -11,8 +12,8 @@ import ru.ruslan.weighttracker.dagger.module.*
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [ApplicationModule::class, AndroidSupportInjectionModule::class, ProfileModule::class,
-    ActivityBindingModule::class, FragmentBindingModule::class, DatabaseModule::class, NetworkModule::class])
+@Component(modules = [ApplicationModule::class, AndroidInjectionModule::class,
+    ActivityBindingModule::class, ProfileModule::class,  DatabaseModule::class, NetworkModule::class])
 interface ApplicationComponent : AndroidInjector<DaggerApplication> {
 
     fun inject(mainApplication: MainApplication)

@@ -1,24 +1,28 @@
 package ru.ruslan.weighttracker.dagger.module
 
 import dagger.Module
+import dagger.android.AndroidInjectionModule
 import dagger.android.ContributesAndroidInjector
+import dagger.android.support.AndroidSupportInjectionModule
+import ru.ruslan.weighttracker.dagger.provider.HomeFragmentProvider
+import ru.ruslan.weighttracker.dagger.provider.VideosFragmentProvider
 import ru.ruslan.weighttracker.dagger.util.ActivityScope
 import ru.ruslan.weighttracker.ui.MainActivity
 import ru.ruslan.weighttracker.ui.profile.ProfileActivity
 import ru.ruslan.weighttracker.ui.videos.detail.VideoDetailActivity
 
-@Module
-abstract class ActivityBindingModule {
+@Module(includes = [AndroidInjectionModule::class])
+interface ActivityBindingModule {
 
     @ActivityScope
-    @ContributesAndroidInjector(modules = [FragmentBindingModule::class])
-    abstract fun provideMainActivity(): MainActivity
+    @ContributesAndroidInjector(modules = [HomeFragmentProvider::class, VideosFragmentProvider::class])
+    fun provideMainActivity(): MainActivity
 
     @ActivityScope
-    @ContributesAndroidInjector(modules = [FragmentBindingModule::class])
-    abstract fun provideVideoDetailActivity(): VideoDetailActivity
+    @ContributesAndroidInjector
+    fun provideVideoDetailActivity(): VideoDetailActivity
 
     @ActivityScope
-    @ContributesAndroidInjector()
-    abstract fun provideProfileActivity(): ProfileActivity
+    @ContributesAndroidInjector
+    fun provideProfileActivity(): ProfileActivity
 }

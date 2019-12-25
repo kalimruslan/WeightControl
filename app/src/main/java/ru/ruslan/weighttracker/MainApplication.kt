@@ -1,27 +1,32 @@
 package ru.ruslan.weighttracker
 
+import android.app.Activity
+import android.app.Application
 import android.content.Context
 import androidx.multidex.MultiDex
 import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
 import ru.ruslan.weighttracker.dagger.component.DaggerApplicationComponent
+import javax.inject.Inject
 
-class MainApplication : DaggerApplication() {
+class MainApplication : Application(), HasAndroidInjector {
 
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        val component = DaggerApplicationComponent
-            .builder()
-            .application(this)
-            .build()
+    @Inject
+    lateinit var androidInjector: DispatchingAndroidInjector<Any>
 
-        component.inject(this)
-        return component
-    }
 
     override fun onCreate() {
         super.onCreate()
         MultiDex.install(this)
+        DaggerApplicationComponent
+            .builder()
+            .application(this)
+            .build()
+            .inject(this)
     }
+
+    override fun androidInjector(): AndroidInjector<Any> = androidInjector
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
