@@ -46,7 +46,7 @@
         app:layout_constraintTop_toBottomOf="@+id/til_name">
 
         <AutoCompleteTextView
-            android:id="@+id/filled_exposed_dropdown_editable"
+            android:id="@+id/tiet_sex"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>

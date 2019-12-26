@@ -9,11 +9,11 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     private var isFabOpen: Boolean = false
     private val openCloseFabMld = MutableLiveData<Boolean>()
-    private val profileMutableLiveData = MutableLiveData<ProfileUI>()
+    private val profileMutableLiveData = MutableLiveData<HomeUI>()
     val openCloseFabLd: LiveData<Boolean>
         get() = openCloseFabMld
 
-    val profileLiveData: LiveData<ProfileUI>
+    val profileLiveData: LiveData<HomeUI>
         get() = profileMutableLiveData
 
     init {
@@ -21,7 +21,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun updateProfileViews() {
-        val profile = ProfileUI(
+        val profile = HomeUI(
             "1 января 2019",
             "120 кг",
             "1 февраля 2019",

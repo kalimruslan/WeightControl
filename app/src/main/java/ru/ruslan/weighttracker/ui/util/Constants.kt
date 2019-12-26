@@ -9,4 +9,7 @@ object Constants {
     const val INTENT_TYPE_IMAGE = "image/*"
     const val RESULT_CAMERA = 501
     const val RESULT_GALLERY = 502
+
+    const val KEY_WEIGHT_MEASURE = "weight_measure"
+    const val KEY_HEIGHT_MEASURE = "height_measure"
 }

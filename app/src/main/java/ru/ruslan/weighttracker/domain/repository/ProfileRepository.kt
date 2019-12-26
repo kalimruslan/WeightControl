@@ -9,8 +9,8 @@ import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
 interface ProfileRepository {
     suspend fun saveWeight(weightEntity: WeightEntity)
     suspend fun savePhotoData(photoEntity: PhotoEntity)
-    suspend fun getProfileData(userId: String): ProfileLocal
-    suspend fun getAllProfileData(): List<ProfileLocal>
+    suspend fun getProfileData(userId: Int): Result<ProfileEntity>
+    suspend fun getAllProfileData(): Result<List<ProfileEntity>>
     fun clearProfile(userId: String)
     fun clearAllProfiles()
     suspend fun createProfile(profileEntity: ProfileEntity): Result<Int>

@@ -9,7 +9,6 @@ import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.content_home_photos.*
 import kotlinx.android.synthetic.main.dialog_choose_camera_or_gallery.*
@@ -22,7 +21,7 @@ import androidx.lifecycle.ViewModelProviders
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.ui.home.vm.HomeViewModel
-import ru.ruslan.weighttracker.ui.home.vm.ProfileUI
+import ru.ruslan.weighttracker.ui.home.vm.HomeUI
 import ru.ruslan.weighttracker.ui.util.*
 
 class HomeFragment : Fragment() {
@@ -91,7 +90,7 @@ class HomeFragment : Fragment() {
         iv_photo_after.loadImage(drawableId = R.drawable.test)
     }
 
-    private fun updateProfileViews(profile: ProfileUI?){
+    private fun updateProfileViews(profile: HomeUI?){
         profile?.let { prof ->
             tv_date_before.text = prof.dateBefore
             tv_date_after.text = prof.dateAfter

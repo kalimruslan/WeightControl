@@ -13,7 +13,7 @@ import ru.ruslan.weighttracker.data.utils.Constants
 
 @Database(
     entities = [ProfileLocal::class, PhotoLocal::class, WeightLocal::class],
-    version = 1,
+    version = 3,
     exportSchema = false
 )
 abstract class AppRoomDatabase : RoomDatabase() {

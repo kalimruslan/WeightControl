@@ -12,4 +12,17 @@ class ProfilePreferncesRepositoryImpl (private val profilePreferences: ProfilePr
 
     override fun retreiveProfileId() =
         profilePreferences.retreiveProfileId()
+
+    override fun storeWeightMeasure(unit: String) {
+        profilePreferences.storeWeightMeasure(unit)
+    }
+
+    override fun retrieveWeightMeasure(): String?  =
+        profilePreferences.retreiveWeightMeasure()
+
+    override fun storeHeightMeasure(unit: String) {
+        profilePreferences.storeHeightMeasure(unit)
+    }
+
+    override fun retrieveHeightMeasure(): String? = profilePreferences.retreiveHeightMeasure()
 }

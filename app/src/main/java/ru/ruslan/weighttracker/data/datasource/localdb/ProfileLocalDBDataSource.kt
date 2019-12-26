@@ -7,7 +7,6 @@ import ru.ruslan.weighttracker.data.datasource.localdb.model.PhotoLocal
 import ru.ruslan.weighttracker.data.datasource.localdb.model.ProfileLocal
 import ru.ruslan.weighttracker.data.datasource.localdb.model.WeightLocal
 import java.lang.Exception
-import javax.inject.Inject
 
 class ProfileLocalDBDataSource (private val roomDatabase: AppRoomDatabase) {
 
@@ -19,7 +18,7 @@ class ProfileLocalDBDataSource (private val roomDatabase: AppRoomDatabase) {
                     weight = weight.weight,
                     weightDate = weight.weightDate
                 )
-            } catch (ex: SQLiteConstraintException) {
+            } catch (ex: Exception) {
                 ex.printStackTrace()
             }
         }
@@ -43,6 +42,15 @@ class ProfileLocalDBDataSource (private val roomDatabase: AppRoomDatabase) {
         return try {
             val profileId = profileLocal?.let { roomDatabase.profileLocalDao().insertProfile(it) }
             Result.success(profileId?.toInt())
+        } catch (ex: Exception) {
+            Result.error(ex)
+        }
+    }
+
+    suspend fun getProfile(userId: Int): Result<ProfileLocal>{
+        return try {
+            val profileLocal = roomDatabase.profileLocalDao().getProfile(userId)
+            Result.success(profileLocal)
         } catch (ex: Exception) {
             Result.error(ex)
         }

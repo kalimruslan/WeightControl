@@ -1,6 +1,8 @@
 package ru.ruslan.weighttracker.ui.profile
 
 import android.os.Bundle
+import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.azoft.carousellayoutmanager.CarouselLayoutManager
@@ -8,10 +10,13 @@ import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener
 import com.azoft.carousellayoutmanager.CenterScrollListener
 import com.azoft.carousellayoutmanager.DefaultChildSelectionListener
 import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.content_profile_current_height.*
 import kotlinx.android.synthetic.main.content_profile_current_weight.*
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.ui.profile.vm.ProfileViewModel
+import ru.ruslan.weighttracker.ui.profile.vm.model.ProfileUI
+import ru.ruslan.weighttracker.ui.util.showToast
 import javax.inject.Inject
 
 class ProfileActivity : DaggerAppCompatActivity() {
@@ -29,7 +34,7 @@ class ProfileActivity : DaggerAppCompatActivity() {
         initVars()
         initViews()
         setListeners()
-        //observerLiveData()
+        observerLiveData()
     }
 
     private fun initViews() {
@@ -72,9 +77,23 @@ class ProfileActivity : DaggerAppCompatActivity() {
 
     private fun observerLiveData() {
         // test
-        profileViewModel?.generateAndSetProfileData()
+        profileViewModel?.checkIfUserExist()?.observe(this, Observer {value -> accountNotExist(value)})
+        profileViewModel?.getProfile()?.observe(this, Observer { profileUI -> populateProfileViews(profileUI)})
     }
 
+    private fun populateProfileViews(profileUI: ProfileUI?) {
+        tiet_name.setText(profileUI?.fio)
+        tiet_sex.setText(profileUI?.sex)
+    }
+
+    private fun accountNotExist(isExist: Boolean){
+        if(isExist) {
+            profileViewModel?.getProfile()
+            return
+        }
+
+        "Аккаунт не сущкствует".showToast(this)
+    }
 
 }
 

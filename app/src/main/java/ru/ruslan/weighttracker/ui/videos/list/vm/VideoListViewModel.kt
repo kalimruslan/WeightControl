@@ -7,7 +7,7 @@ import ru.ruslan.weightracker.core.datatype.ResultType
 import ru.ruslan.weighttracker.ui.util.Constants
 import ru.ruslan.weighttracker.domain.model.videolists.VideosEntity
 import ru.ruslan.weighttracker.domain.usecase.GetVideoListUseCase
-import ru.ruslan.weighttracker.ui.videos.list.vm.mapper.VideosEntityToUiMapper
+import ru.ruslan.weighttracker.ui.VideosEntityToUiMapper
 import ru.ruslan.weighttracker.ui.videos.list.vm.model.VideoUI
 import javax.inject.Inject
 

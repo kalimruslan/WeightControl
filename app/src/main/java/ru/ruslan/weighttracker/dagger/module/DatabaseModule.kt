@@ -18,7 +18,10 @@ class DatabaseModule {
             context.applicationContext,
             AppRoomDatabase::class.java,
             Constants.DB_NAME
-        ).allowMainThreadQueries().build()
+        )
+            .fallbackToDestructiveMigration()
+            .allowMainThreadQueries()
+            .build()
     }
 
     @Provides
