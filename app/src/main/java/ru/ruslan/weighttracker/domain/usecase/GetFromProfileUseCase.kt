@@ -9,20 +9,28 @@ import javax.inject.Inject
 
 class GetFromProfileUseCase @Inject constructor (private val profileRepository: ProfileRepository,
                                                  private val preferencesRepository: ProfilePrefencesRepository) {
-    suspend fun getCurrentProfile(): ProfileEntity? {
-        val measuresMap = emptyMap<String, String>()
-        measuresMap.toMutableMap().put(Constants.KEY_WEIGHT_MEASURE,
-            preferencesRepository.retrieveHeightMeasure()!!)
-        measuresMap.toMutableMap().put(Constants.KEY_HEIGHT_MEASURE,
+
+    interface Callback{
+        interface GetProfile{
+            fun getProfileSuccess(profileEntity: ProfileEntity?)
+            fun getProfileError()
+        }
+    }
+
+    suspend fun getCurrentProfile(listener: Callback.GetProfile) {
+        val measuresMap = mutableMapOf<String, String>()
+        measuresMap.put(Constants.KEY_WEIGHT_MEASURE,
+            preferencesRepository.retrieveWeightMeasure()!!)
+        measuresMap.put(Constants.KEY_HEIGHT_MEASURE,
             preferencesRepository.retrieveHeightMeasure()!!)
 
         val profielEntity = profileRepository.getProfileData(preferencesRepository.retreiveProfileId())
         if(profielEntity.resultType == ResultType.SUCCESS){
             profielEntity.data?.measuresMap = measuresMap
-            return profielEntity.data
+            listener.getProfileSuccess(profielEntity.data)
         }
 
-        return null
+        listener.getProfileError()
     }
 
 

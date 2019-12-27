@@ -34,6 +34,10 @@ class LocalProfileRepositoryImpl(private val localDataSource: ProfileLocalDBData
             Result.error(profileId.error)
     }
 
+    override suspend fun editProfile(profileId: Int, profileEntity: ProfileEntity){
+        localDataSource.editProfile(profileId, ProfileEntityToLocalMapper.map(profileEntity))
+    }
+
     override suspend fun getProfileData(userId: Int): Result<ProfileEntity> {
         val result = localDataSource.getProfile(userId = userId)
 

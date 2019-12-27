@@ -8,7 +8,7 @@ import ru.ruslan.weighttracker.data.datasource.localdb.model.ProfileLocal
 import ru.ruslan.weighttracker.data.datasource.localdb.model.WeightLocal
 import java.lang.Exception
 
-class ProfileLocalDBDataSource (private val roomDatabase: AppRoomDatabase) {
+class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
 
     suspend fun saveWeight(weightLocal: WeightLocal?) {
         weightLocal?.let { weight ->
@@ -47,7 +47,21 @@ class ProfileLocalDBDataSource (private val roomDatabase: AppRoomDatabase) {
         }
     }
 
-    suspend fun getProfile(userId: Int): Result<ProfileLocal>{
+    suspend fun editProfile(profileId: Int, profileLocal: ProfileLocal?) {
+        profileLocal?.let {
+            roomDatabase.profileLocalDao().updateProfile(
+                profileId,
+                profileLocal.fio,
+                profileLocal.dateBirth,
+                profileLocal.currHeight,
+                profileLocal.currWeight,
+                profileLocal.currIMT,
+                profileLocal.goalWeight
+            )
+        }
+    }
+
+    suspend fun getProfile(userId: Int): Result<ProfileLocal> {
         return try {
             val profileLocal = roomDatabase.profileLocalDao().getProfile(userId)
             Result.success(profileLocal)

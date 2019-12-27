@@ -6,6 +6,7 @@ import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
 import ru.ruslan.weighttracker.domain.model.videolists.VideoEntity
 import ru.ruslan.weighttracker.ui.profile.vm.model.ProfileUI
 import ru.ruslan.weighttracker.ui.videos.list.vm.model.VideoUI
+import kotlin.math.round
 
 object VideosEntityToUiMapper : BaseMapper<List<VideoEntity>, List<VideoUI>> {
     override fun map(type: List<VideoEntity>?): List<VideoUI> {
@@ -30,8 +31,26 @@ object ProfileEntityToUIMapper : BaseMapper<ProfileEntity, ProfileUI> {
                 currentWeight = it.currentWeight,
                 currentHeight = it.currentHeight,
                 sex = it.sex,
+                imt = round(it.currentIMT).toString(),
                 goalWeight = it.goalWeight,
                 measuresMap = it.measuresMap
+            )
+        }
+    }
+}
+
+object ProfileUIToEntityMapper: BaseMapper<ProfileUI, ProfileEntity>{
+    override fun map(type: ProfileUI?): ProfileEntity? {
+        return type?.let {
+            ProfileEntity(
+                fio = it.fio!!,
+                dateBirth = "05.02.1987",
+                currentWeight = it.currentWeight,
+                currentHeight = it.currentHeight,
+                sex = it.sex,
+                goalWeight = it.goalWeight,
+                weightEntity = null,
+                photoEntity = null
             )
         }
     }

@@ -29,6 +29,9 @@ class SliderAdapter: RecyclerView.Adapter<SliderItemViewHolder>() {
         notifyDataSetChanged()
     }
 
+    fun getCurrentData(position: Int) = data[position]
+    fun getPosition(item: String): Int = data.indexOf(item)
+
     interface OnItemClickListener{
         fun onItemClick(view: View)
     }

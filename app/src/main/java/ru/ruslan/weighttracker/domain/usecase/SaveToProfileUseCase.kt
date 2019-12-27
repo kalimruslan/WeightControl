@@ -1,6 +1,5 @@
 package ru.ruslan.weighttracker.domain.usecase
 
-import android.util.Log
 import ru.ruslan.weighttracker.domain.repository.ProfilePrefencesRepository
 import ru.ruslan.weightracker.core.datatype.ResultType
 import ru.ruslan.weighttracker.domain.repository.ProfileRepository
@@ -9,8 +8,27 @@ import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
 import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
 import javax.inject.Inject
 
-class SaveToProfileUseCase @Inject constructor (private val profileRepository: ProfileRepository,
-                           private val preferencesRepository: ProfilePrefencesRepository) {
+class SaveToProfileUseCase @Inject constructor(private val profileRepository: ProfileRepository,
+                                               private val preferencesRepository: ProfilePrefencesRepository) {
+
+    interface Callback {
+        interface Profile {
+            fun profileCreateSuccess()
+            fun profileCreateError()
+            fun profileEditSuccess()
+        }
+
+        interface Weight {
+            fun weightSaveSuccess()
+            fun weightSaveError()
+        }
+
+        interface Photo {
+            fun photoSaveSuccess()
+            fun photoSaveError()
+        }
+    }
+
     suspend fun saveWeight() {
         profileRepository.saveWeight(
             WeightEntity(
@@ -31,21 +49,24 @@ class SaveToProfileUseCase @Inject constructor (private val profileRepository: P
         )
     }
 
-    suspend fun insertProfile() {
-        val profileEntity =
-            ProfileEntity(
-                fio = "Руслан",
-                dateBirth = "05.02.1987",
-                currentWeight = 110.0,
-                currentHeight = 178.0,
-                goalWeight = 95.0
-            )
-        val profileId = profileRepository.createProfile(profileEntity = profileEntity)
-        if(profileId.resultType == ResultType.SUCCESS){
-            profileId.data?.let {
-                preferencesRepository.storeProfileId(profileId = it)
+    suspend fun insertProfile(profileEntity: ProfileEntity?, listener: Callback.Profile) {
+        profileEntity?.let {
+            profileRepository.createProfile(profileEntity = profileEntity).let { profileId ->
+                if (profileId.resultType == ResultType.SUCCESS) {
+                    profileId.data?.let {
+                        preferencesRepository.storeProfileId(profileId = it)
+                        listener.profileCreateSuccess()
+                    }
+                }
             }
         }
-        Log.d("PROFILE_ID", profileId.data.toString())
+    }
+
+    suspend fun editProfile(profileEntity: ProfileEntity?, listener: Callback.Profile) {
+        profileEntity?.let {
+            profileRepository.editProfile(profileId = preferencesRepository.retreiveProfileId(), profileEntity = profileEntity).let {
+                listener.profileEditSuccess()
+            }
+        }
     }
 }

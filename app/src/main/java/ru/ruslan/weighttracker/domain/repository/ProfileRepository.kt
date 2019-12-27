@@ -14,4 +14,5 @@ interface ProfileRepository {
     fun clearProfile(userId: String)
     fun clearAllProfiles()
     suspend fun createProfile(profileEntity: ProfileEntity): Result<Int>
+    suspend fun editProfile(profileId:Int,  profileEntity: ProfileEntity)
 }
