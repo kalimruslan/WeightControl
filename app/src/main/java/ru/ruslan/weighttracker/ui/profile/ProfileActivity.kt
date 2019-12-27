@@ -12,6 +12,7 @@ import com.azoft.carousellayoutmanager.CenterScrollListener
 import com.azoft.carousellayoutmanager.DefaultChildSelectionListener
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_profile.*
+import kotlinx.android.synthetic.main.activity_video_detail.*
 import kotlinx.android.synthetic.main.content_profile_current_height.*
 import kotlinx.android.synthetic.main.content_profile_current_weight.*
 import ru.ruslan.weighttracker.R
@@ -47,6 +48,10 @@ class ProfileActivity : DaggerAppCompatActivity() {
     }
 
     private fun initViews() {
+        profile_toolbar.setNavigationIcon(R.drawable.ic_close)
+        profile_toolbar.setNavigationOnClickListener { onBackPressed() }
+        profile_toolbar.title = resources.getString(R.string.profile)
+
         val arrayAdapter: ArrayAdapter<CharSequence> = ArrayAdapter(
             this, R.layout.item_sex_exposed_dropdown_popup,
             resources.getStringArray(R.array.sex_dropdown)
