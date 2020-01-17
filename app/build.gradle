@@ -43,22 +43,9 @@ android {
     }
 }
 
-dependencies {
-    def moshiVersion = "1.9.2"
-    def retrofit2_version = "2.7.0"
-    def okhttp3_version = "4.2.2"
-    def kotlinCoroutineVersion = "1.3.3"
-    def daggerLibVersion = "2.25.3"
-    def daggerAndroidLibVersion = "2.25.3"
-    def room_version = "2.1.0-alpha04"
-    def glide_version = "4.10.0"
-    def lifecycle_viewmodel = "2.2.0-alpha01"
-    def glide_transformation = "4.1.0"
-    def gpuimage_library = "1.4.1"
-    def multidex = "1.0.3"
-    def gsonVersion = "2.4.0"
-    def carouselVersion = "1.2.4"
+apply from: "$project.rootDir/deps/deps_versions.gradle"
 
+dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -70,45 +57,33 @@ dependencies {
 
     implementation "com.android.support:multidex:$multidex"
 
-    //Moshi
-    implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
-    implementation "com.squareup.moshi:moshi:$moshiVersion"
+    implementation moshi
+    implementation moshi_kotlin
+    kapt moshi_kodegen
 
-    implementation "com.squareup.retrofit2:converter-gson:$gsonVersion"
+    implementation gson
 
-    // Dagger2
-    implementation "com.google.dagger:dagger:$daggerLibVersion"
-    kapt "com.google.dagger:dagger-compiler:$daggerLibVersion"
-    implementation "com.google.dagger:dagger-android:$daggerAndroidLibVersion"
-    implementation "com.google.dagger:dagger-android-support:$daggerAndroidLibVersion"
-    kapt "com.google.dagger:dagger-android-processor:$daggerLibVersion"
+    implementation dagger
+    kapt dagger_compiler
+    implementation daggerAndroid
+    implementation daggerAndroidSupport
+    kapt daggerAndroidProcessor
+    implementation glide
+    implementation glide_transformation
 
-    //Glide
-    implementation "com.github.bumptech.glide:glide:$glide_version"
-    implementation "jp.wasabeef:glide-transformations:$glide_transformation"
-    implementation "jp.co.cyberagent.android.gpuimage:gpuimage-library:$gpuimage_library"
+    implementation coroutineDependencies.values()
 
-    //Kotlin Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutineVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutineVersion"
+    implementation okHttpDependencies.values()
 
-    //Okhttp3
-    implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+    implementation retrofitDependencies.values()
 
-    //Retrofit2
-    implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
-    implementation "com.squareup.retrofit2:converter-moshi:$retrofit2_version"
-    implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
-
-    implementation "com.azoft.carousellayoutmanager:carousel:$carouselVersion"
+    implementation carouselLayoutManager
 
     // Room components
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation "androidx.room:room-coroutines:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-    androidTestImplementation "androidx.room:room-testing:$room_version"
+    implementation room
+    implementation roomCoroutines
+    kapt roomCompiler
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
