@@ -6,7 +6,7 @@ import ru.ruslan.weighttracker.domain.model.profile.PhotoEntity
 import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
 import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
 
-interface ProfileRepository {
+interface ProfileLocalRepository {
     suspend fun saveWeight(weightEntity: WeightEntity)
     suspend fun savePhotoData(photoEntity: PhotoEntity)
     suspend fun getProfileData(userId: Int): Result<ProfileEntity>
@@ -15,4 +15,11 @@ interface ProfileRepository {
     fun clearAllProfiles()
     suspend fun createProfile(profileEntity: ProfileEntity): Result<Int>
     suspend fun editProfile(profileId:Int,  profileEntity: ProfileEntity)
+
+    fun storeProfileId(profileId: Int)
+    fun retrieveProfileId(): Int
+    fun storeWeightMeasure(unit: String)
+    fun retrieveWeightMeasure(): String?
+    fun storeHeightMeasure(unit: String)
+    fun retrieveHeightMeasure(): String?
 }

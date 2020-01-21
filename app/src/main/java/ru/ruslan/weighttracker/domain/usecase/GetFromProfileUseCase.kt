@@ -2,13 +2,11 @@ package ru.ruslan.weighttracker.domain.usecase
 
 import ru.ruslan.weightracker.core.datatype.ResultType
 import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
-import ru.ruslan.weighttracker.domain.repository.ProfilePrefencesRepository
-import ru.ruslan.weighttracker.domain.repository.ProfileRepository
+import ru.ruslan.weighttracker.domain.repository.ProfileLocalRepository
 import ru.ruslan.weighttracker.ui.util.Constants
 import javax.inject.Inject
 
-class GetFromProfileUseCase @Inject constructor (private val profileRepository: ProfileRepository,
-                                                 private val preferencesRepository: ProfilePrefencesRepository) {
+class GetFromProfileUseCase @Inject constructor (private val profileLocalRepository: ProfileLocalRepository) {
 
     interface Callback{
         interface GetProfile{
@@ -20,19 +18,19 @@ class GetFromProfileUseCase @Inject constructor (private val profileRepository: 
     suspend fun getCurrentProfile(listener: Callback.GetProfile) {
         val measuresMap = mutableMapOf<String, String>()
         measuresMap.put(Constants.KEY_WEIGHT_MEASURE,
-            preferencesRepository.retrieveWeightMeasure()!!)
+            profileLocalRepository.retrieveWeightMeasure()!!)
         measuresMap.put(Constants.KEY_HEIGHT_MEASURE,
-            preferencesRepository.retrieveHeightMeasure()!!)
+            profileLocalRepository.retrieveHeightMeasure()!!)
 
-        val profielEntity = profileRepository.getProfileData(preferencesRepository.retreiveProfileId())
-        if(profielEntity.resultType == ResultType.SUCCESS){
-            profielEntity.data?.measuresMap = measuresMap
-            listener.getProfileSuccess(profielEntity.data)
+        val profileEntity = profileLocalRepository.getProfileData(profileLocalRepository.retrieveProfileId())
+        if(profileEntity.resultType == ResultType.SUCCESS){
+            profileEntity.data?.measuresMap = measuresMap
+            listener.getProfileSuccess(profileEntity.data)
         }
 
         listener.getProfileError()
     }
 
 
-    fun checkIfUserExist(): Boolean = preferencesRepository.retreiveProfileId() > 0
+    fun checkIfUserExist(): Boolean = profileLocalRepository.retrieveProfileId() > 0
 }

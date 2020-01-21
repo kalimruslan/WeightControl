@@ -3,8 +3,8 @@ package ru.ruslan.weighttracker.data.repository
 import ru.ruslan.weightracker.core.datatype.Result
 import ru.ruslan.weightracker.core.datatype.ResultType
 import ru.ruslan.weighttracker.data.datasource.localdb.ProfileLocalDBDataSource
-import ru.ruslan.weighttracker.domain.repository.ProfileRepository
-import ru.ruslan.weighttracker.data.datasource.localdb.model.ProfileLocal
+import ru.ruslan.weighttracker.data.datasource.sharedpreferences.ProfilePreferencesDataSource
+import ru.ruslan.weighttracker.domain.repository.ProfileLocalRepository
 import ru.ruslan.weighttracker.data.repository.mapper.PhotoEntityToLocalMapper
 import ru.ruslan.weighttracker.data.repository.mapper.ProfileEntityToLocalMapper
 import ru.ruslan.weighttracker.data.repository.mapper.ProfileLocalToEntityMapper
@@ -12,10 +12,10 @@ import ru.ruslan.weighttracker.data.repository.mapper.WeightEntityToLocalMapper
 import ru.ruslan.weighttracker.domain.model.profile.PhotoEntity
 import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
 import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
-import javax.inject.Inject
 
-class LocalProfileRepositoryImpl(private val localDataSource: ProfileLocalDBDataSource) :
-    ProfileRepository {
+class ProfileLocalRepositoryImpl(private val localDataSource: ProfileLocalDBDataSource,
+                                 private val profilePreferences: ProfilePreferencesDataSource) :
+    ProfileLocalRepository {
 
     override suspend fun saveWeight(weightEntity: WeightEntity) {
         localDataSource.saveWeight(WeightEntityToLocalMapper.map(weightEntity))
@@ -58,4 +58,24 @@ class LocalProfileRepositoryImpl(private val localDataSource: ProfileLocalDBData
     override fun clearAllProfiles() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    override fun storeProfileId(profileId: Int) {
+        profilePreferences.storeProfileId(profileId)
+    }
+
+    override fun retrieveProfileId() =
+        profilePreferences.retrieveProfileId()
+
+    override fun storeWeightMeasure(unit: String) {
+        profilePreferences.storeWeightMeasure(unit)
+    }
+
+    override fun retrieveWeightMeasure(): String?  =
+        profilePreferences.retrieveWeightMeasure()
+
+    override fun storeHeightMeasure(unit: String) {
+        profilePreferences.storeHeightMeasure(unit)
+    }
+
+    override fun retrieveHeightMeasure(): String? = profilePreferences.retrieveHeightMeasure()
 }

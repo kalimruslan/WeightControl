@@ -1,15 +1,13 @@
 package ru.ruslan.weighttracker.domain.usecase
 
-import ru.ruslan.weighttracker.domain.repository.ProfilePrefencesRepository
 import ru.ruslan.weightracker.core.datatype.ResultType
-import ru.ruslan.weighttracker.domain.repository.ProfileRepository
+import ru.ruslan.weighttracker.domain.repository.ProfileLocalRepository
 import ru.ruslan.weighttracker.domain.model.profile.PhotoEntity
 import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
 import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
 import javax.inject.Inject
 
-class SaveToProfileUseCase @Inject constructor(private val profileRepository: ProfileRepository,
-                                               private val preferencesRepository: ProfilePrefencesRepository) {
+class SaveToProfileUseCase @Inject constructor(private val profileLocalRepository: ProfileLocalRepository) {
 
     interface Callback {
         interface Profile {
@@ -30,9 +28,9 @@ class SaveToProfileUseCase @Inject constructor(private val profileRepository: Pr
     }
 
     suspend fun saveWeight() {
-        profileRepository.saveWeight(
+        profileLocalRepository.saveWeight(
             WeightEntity(
-                preferencesRepository.retreiveProfileId(),
+                profileLocalRepository.retrieveProfileId(),
                 113.0,
                 "01.01.2019"
             )
@@ -40,9 +38,9 @@ class SaveToProfileUseCase @Inject constructor(private val profileRepository: Pr
     }
 
     suspend fun savePhoto() {
-        profileRepository.savePhotoData(
+        profileLocalRepository.savePhotoData(
             PhotoEntity(
-                preferencesRepository.retreiveProfileId(),
+                profileLocalRepository.retrieveProfileId(),
                 "www",
                 "01.01.2019"
             )
@@ -51,10 +49,10 @@ class SaveToProfileUseCase @Inject constructor(private val profileRepository: Pr
 
     suspend fun insertProfile(profileEntity: ProfileEntity?, listener: Callback.Profile) {
         profileEntity?.let {
-            profileRepository.createProfile(profileEntity = profileEntity).let { profileId ->
+            profileLocalRepository.createProfile(profileEntity = profileEntity).let { profileId ->
                 if (profileId.resultType == ResultType.SUCCESS) {
                     profileId.data?.let {
-                        preferencesRepository.storeProfileId(profileId = it)
+                        profileLocalRepository.storeProfileId(profileId = it)
                         listener.profileCreateSuccess()
                     }
                 }
@@ -64,7 +62,7 @@ class SaveToProfileUseCase @Inject constructor(private val profileRepository: Pr
 
     suspend fun editProfile(profileEntity: ProfileEntity?, listener: Callback.Profile) {
         profileEntity?.let {
-            profileRepository.editProfile(profileId = preferencesRepository.retreiveProfileId(), profileEntity = profileEntity).let {
+            profileLocalRepository.editProfile(profileId = profileLocalRepository.retrieveProfileId(), profileEntity = profileEntity).let {
                 listener.profileEditSuccess()
             }
         }

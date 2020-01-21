@@ -17,7 +17,7 @@ class ProfilePreferencesDataSource (private val preferences: SharedPreferences) 
             .apply()
     }
 
-    fun retreiveProfileId() = preferences.getInt(KEY_PROFILE_ID, 0)
+    fun retrieveProfileId() = preferences.getInt(KEY_PROFILE_ID, 0)
 
     fun storeWeightMeasure(unit: String) {
         preferences
@@ -26,7 +26,7 @@ class ProfilePreferencesDataSource (private val preferences: SharedPreferences) 
             .apply()
     }
 
-    fun retreiveWeightMeasure(): String? = preferences.getString(KEY_WEIGHT_MEASUER, "кг.")
+    fun retrieveWeightMeasure(): String? = preferences.getString(KEY_WEIGHT_MEASUER, "кг.")
 
     fun storeHeightMeasure(unit: String) {
         preferences
@@ -35,5 +35,5 @@ class ProfilePreferencesDataSource (private val preferences: SharedPreferences) 
             .apply()
     }
 
-    fun retreiveHeightMeasure() : String? = preferences.getString(KEY_WEIGHT_MEASUER, "см.")
+    fun retrieveHeightMeasure() : String? = preferences.getString(KEY_WEIGHT_MEASUER, "см.")
 }
