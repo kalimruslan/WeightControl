@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import dagger.android.support.AndroidSupportInjection
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_videos.*
 import ru.ruslan.weighttracker.ui.OnItemClickListener
@@ -23,7 +25,7 @@ import ru.ruslan.weighttracker.ui.videos.list.vm.model.VideoUI
 import ru.ruslan.weighttracker.ui.util.showToast
 import javax.inject.Inject
 
-class VideosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener {
+class VideosFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var ctx: Context
     private var adapter: VideosAdapter? = null
@@ -40,6 +42,7 @@ class VideosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
         super.onAttach(context)
         ctx = context
     }
