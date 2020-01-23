@@ -108,6 +108,7 @@ class VideoListViewModel @Inject constructor(private val getVideoListUseCase: Ge
         currentPage = 1
         isLastLoadedPageMutableLiveData.value = false
         handleVideosLoad(Constants.VIDEO_PLAYLIST, "")
+        // test2
     }
 
 
