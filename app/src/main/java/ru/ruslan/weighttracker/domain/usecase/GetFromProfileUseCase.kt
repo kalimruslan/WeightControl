@@ -26,6 +26,7 @@ class GetFromProfileUseCase @Inject constructor (private val profileLocalReposit
         if(profileEntity.resultType == ResultType.SUCCESS){
             profileEntity.data?.measuresMap = measuresMap
             listener.getProfileSuccess(profileEntity.data)
+            return
         }
 
         listener.getProfileError()
