@@ -17,14 +17,22 @@ import android.content.Intent
 import android.app.Activity.RESULT_OK
 import android.graphics.Bitmap
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import dagger.android.AndroidInjection
+import dagger.android.support.AndroidSupportInjection
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.ui.home.vm.HomeViewModel
 import ru.ruslan.weighttracker.ui.home.vm.HomeUI
 import ru.ruslan.weighttracker.ui.util.*
+import ru.ruslan.weighttracker.ui.videos.list.vm.VideoListViewModel
+import javax.inject.Inject
 
 class HomeFragment : Fragment() {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var glideOptions: RequestOptions
     private lateinit var fabAnimOpen: Animation
@@ -66,7 +74,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initVars() {
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
 
         glideOptions = RequestOptions()
         glideOptions.apply {

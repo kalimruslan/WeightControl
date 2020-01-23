@@ -1,6 +1,7 @@
 package ru.ruslan.weighttracker.dagger.module
 
 import android.content.SharedPreferences
+import androidx.core.content.res.FontResourcesParserCompat
 import dagger.Module
 import dagger.Provides
 import ru.ruslan.weighttracker.data.datasource.localdb.ProfileLocalDBDataSource
@@ -10,7 +11,7 @@ import ru.ruslan.weighttracker.data.repository.ProfileLocalRepositoryImpl
 import ru.ruslan.weighttracker.domain.repository.ProfileLocalRepository
 import javax.inject.Singleton
 
-@Module(includes = [ApplicationModule::class])
+@Module(includes = [ViewModelModule::class])
 class ProfileModule {
 
     @Provides
@@ -23,7 +24,6 @@ class ProfileModule {
     fun provideProfileLocalDBDataSource(roomDatabase: AppRoomDatabase): ProfileLocalDBDataSource =
         ProfileLocalDBDataSource(roomDatabase)
 
-    @Singleton
     @Provides
     fun provideProfilePreferencesDataSource(
         preferences: SharedPreferences): ProfilePreferencesDataSource =

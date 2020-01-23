@@ -85,7 +85,7 @@ class VideoListViewModel @Inject constructor(private val getVideoListUseCase: Ge
         updateLoadingLiveData(false)
     }
 
-    private fun updateLoadingLiveData(isLoading: Boolean) {
+    fun updateLoadingLiveData(isLoading: Boolean) {
         isLoadingMutableLiveData.value = isLoading
     }
 
