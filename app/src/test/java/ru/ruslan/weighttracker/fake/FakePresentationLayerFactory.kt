@@ -1,15 +1,20 @@
 package ru.ruslan.weighttracker.fake
 
+import ru.ruslan.weighttracker.data.datasource.api.model.response.*
+import ru.ruslan.weighttracker.domain.model.videolists.*
+import ru.ruslan.weighttracker.ui.videos.list.vm.model.VideoUI
+import java.util.*
+import java.util.concurrent.ThreadLocalRandom
+
+
 object FakePresentationLayerFactory {
-    fun notEmptyString(): String {
-        return "testString"
+
+    fun makeVideoUI(itemsSize: Int): List<VideoUI>? {
+        val list = mutableListOf<VideoUI>()
+        repeat(itemsSize){
+            list.add(VideoUI())
+        }
+        return list
     }
 
-    fun emptyString(): String {
-        return ""
-    }
-
-    fun randomInt(): Int {
-        return 1
-    }
 }

@@ -1,14 +1,11 @@
 package ru.ruslan.weighttracker.ui.videos.list.vm
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.verify
-import kotlinx.coroutines.runBlocking
 import org.junit.Before
-import org.junit.Rule
+
+import org.junit.Assert.*
 import org.junit.Test
 import ru.ruslan.weightracker.core.datatype.Result
 import ru.ruslan.weighttracker.domain.usecase.GetVideoListUseCase
@@ -17,44 +14,50 @@ import ru.ruslan.weighttracker.fake.FakePresentationLayerFactory
 
 class VideoListViewModelTest {
 
-    @get:Rule var rule = InstantTaskExecutorRule()
-
     @MockK
     private lateinit var getVideoListUseCase: GetVideoListUseCase
 
     private lateinit var viewModel: VideoListViewModel
 
     @Before
-    fun setUp(){
-        MockKAnnotations.init(this, true)
+    fun setUp() {
+        MockKAnnotations.init(true)
         viewModel = VideoListViewModel(getVideoListUseCase)
     }
 
     @Test
-    fun `handle videos load when page token is empty`(){
-        val playList = FakePresentationLayerFactory.notEmptyString()
-        val pageToken: String = FakePresentationLayerFactory.emptyString()
+    fun `when success result for videos load, then videos live data set mapping ui model`() {
+        val playlist = "testPlaylist"
+        val pageToken = "testToken"
+        val expectedVideosEntity = FakeDomainLayerFactory.makeVideosEntity(3)
+        val expectedVideosUI = FakePresentationLayerFactory.makeVideoUI(3)
 
-        viewModel.handleVideosLoad(playList, pageToken)
-
-        verify { viewModel.updateLoadingLiveData(true) }
+        coEvery{getVideoListUseCase.getVideosByPlaylist(playlist, pageToken)} returns
+             Result.success(expectedVideosEntity)
     }
 
     @Test
-    fun `handle videos load when page token is not empty`(){
-        val playList = FakePresentationLayerFactory.notEmptyString()
-        val pageToken: String = FakePresentationLayerFactory.notEmptyString()
-        val expectedVideosEntity = FakeDomainLayerFactory.makeVideosEntity(10)
-        val expectedResultSuccess = Result.success(expectedVideosEntity)
+    fun `when error result for videos load, then error live data set error message`() {
 
-        coEvery{getVideoListUseCase.getVideosByPlaylist(playList, pageToken)} returns expectedResultSuccess
-        every { viewModel.updateLoadingLiveData(any()) } returns Unit
-
-        runBlocking {  viewModel.handleVideosLoad(playList, pageToken) }
-
-        verify{viewModel.updateLoadingLiveData(true)}
-
-        //tect
     }
 
+    @Test
+    fun `when has next page token and current page less that total page, then show hide loading view model set true `() {
+
+    }
+
+    @Test
+    fun `when has next page token and current page more or equals that total page, then show hide loading view model set false `() {
+
+    }
+
+    @Test
+    fun `when handle refresh view, then is last loaded view model set false`(){
+
+    }
+
+    @Test
+    fun `when handle refresh view, then execute handle videos load`(){
+
+    }
 }
