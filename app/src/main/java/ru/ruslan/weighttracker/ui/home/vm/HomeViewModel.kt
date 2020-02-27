@@ -1,5 +1,6 @@
 package ru.ruslan.weighttracker.ui.home.vm
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -38,5 +39,9 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             openCloseFabMld.value = true
             true
         }
+    }
+
+    fun handleCameraResult(data: Uri?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
+import dagger.android.support.DaggerFragment
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.ui.home.vm.HomeViewModel
@@ -29,7 +30,7 @@ import ru.ruslan.weighttracker.ui.util.*
 import ru.ruslan.weighttracker.ui.videos.list.vm.VideoListViewModel
 import javax.inject.Inject
 
-class HomeFragment : Fragment() {
+class HomeFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -180,14 +181,15 @@ class HomeFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == Constants.RESULT_CAMERA && resultCode == RESULT_OK && data != null){
-            homeContext?.let {setAfterImageView(ImageUtil.convertUriToBitmap(homeContext, data.data))}
+            homeContext?.let {
+                homeViewModel.handleCameraResult(data.data)
+            }
         }
         else if(requestCode == Constants.RESULT_GALLERY && resultCode == RESULT_OK && data != null){
             homeContext?.let {setAfterImageView(data.extras?.get("data") as Bitmap) }
         }
     }
 
-    // TODO Что-то это не срабатывает
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
                                             grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
