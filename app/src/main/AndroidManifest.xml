@@ -36,8 +36,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="ru.ruslan.weighttracker.ui.videos.detail.VideoDetailActivity"/>
-        <activity android:name="ru.ruslan.weighttracker.ui.profile.ProfileActivity"/>
+        <activity android:name=".ui.videos.detail.VideoDetailActivity"/>
+        <activity android:name=".ui.profile.ProfileActivity"/>
+        <activity android:name=".ui.camera.CameraActivity"/>
     </application>
 
 </manifest>

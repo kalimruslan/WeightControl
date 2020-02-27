@@ -17,11 +17,6 @@ android {
     }
     buildTypes {
         buildTypes.each {
-            /*Properties properties = new Properties()
-            properties.load(project.rootProject.file("local.properties").newDataInputStream())
-            it.buildConfigField 'String', "API_KEY", properties.getProperty("youtube_api_key", "")
-            it.buildConfigField 'String', "BASE_URL", properties.getProperty("youtube_url", "")
-            it.buildConfigField 'String', "CHANNEL_ID", properties.getProperty("youtube_channel_id", "")*/
             it.buildConfigField("String", "API_KEY", '"AIzaSyCDyJli99VLtMSS-bQa1yCzMxsNqCIm2_E"')
             it.buildConfigField("String", "BASE_URL", '"https://www.googleapis.com/youtube/"')
             it.buildConfigField("String", "CHANNEL_ID", '"PLh13OF-FPwGGKuAfUfTksOgbeqWernIkV"')
@@ -74,6 +69,7 @@ dependencies {
     implementation okHttpDependencies.values()
     implementation retrofitDependencies.values()
     implementation carouselLayoutManager
+    implementation cameraXDependencies.values()
 
     // Room components
     implementation room

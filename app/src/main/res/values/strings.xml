@@ -37,6 +37,9 @@
     <string name="text_error_accaunt_edit">Произошла ошибка при изменении профиля</string>
     <string name="text_default_height_measuer">см</string>
     <string name="text_default_weight_measure">кг</string>
+    <string name="save_image">Сохранить фото</string>
+    <string name="toggle_camera_lens">Выбор камеры</string>
+    <string name="image_popup">Предварительный просмотр</string>
 
     <string-array name="sex_dropdown">
         <item>Мужской</item>
