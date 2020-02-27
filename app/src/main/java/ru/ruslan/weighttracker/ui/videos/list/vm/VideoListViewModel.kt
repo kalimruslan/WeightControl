@@ -46,7 +46,7 @@ class VideoListViewModel @Inject constructor(private val getVideoListUseCase: Ge
         handleVideosLoad(Constants.VIDEO_PLAYLIST, "")
     }
 
-    fun handleVideosLoad(playlist: String, pageToken: String) {
+    private fun handleVideosLoad(playlist: String, pageToken: String) {
         nextPageToken = pageToken
         if (pageToken.isEmpty())
             updateLoadingLiveData(true)
