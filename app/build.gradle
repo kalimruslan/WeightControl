@@ -88,3 +88,9 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha01'
     implementation project(path: ':core')
 }
+
+//task copyFiles(type: Copy){
+//    from 'src'
+//    into 'target'
+//    include '**/*.java', '**/*.kt', '**/*.properties'
+//}

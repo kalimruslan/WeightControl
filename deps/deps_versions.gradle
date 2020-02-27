@@ -86,7 +86,6 @@ ext{
             'testJunit' : "androidx.test.ext:junit:1.1.1",
             'espressoCore' : "androidx.test.espresso:espresso-core:$espresso_version",
             'espressoContrib' : "androidx.test.espresso:espresso-contrib:$espresso_version",
-            'archCoreTesting' : "androidx.arch.core:core-testing:$archCoreTestingVersion",
             'mockAndroid' : "io.mockk:mockk-android:$mockKVersion",
     ]
 
