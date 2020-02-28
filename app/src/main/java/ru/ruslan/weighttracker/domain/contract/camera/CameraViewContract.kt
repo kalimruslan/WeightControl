@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.domain.contract
+package ru.ruslan.weighttracker.domain.contract.camera
 
 interface CameraViewContract {
     interface View{
