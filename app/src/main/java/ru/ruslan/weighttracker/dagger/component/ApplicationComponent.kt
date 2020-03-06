@@ -6,6 +6,7 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import ru.ruslan.weighttracker.MainApplication
 import ru.ruslan.weighttracker.dagger.module.*
+import ru.ruslan.weighttracker.dagger.subcomponents.CameraSubComponent
 import javax.inject.Singleton
 
 @Singleton
@@ -17,9 +18,12 @@ import javax.inject.Singleton
         ViewModelModule::class,
         NetworkModule::class,
         ProfileModule::class,
-        UIModule::class]
+        UIModule::class,
+        SubComponentsModule::class]
 )
 interface ApplicationComponent {
+
+    fun getCameraComponent(): CameraSubComponent.Factory
 
     fun inject(mainApplication: MainApplication)
 

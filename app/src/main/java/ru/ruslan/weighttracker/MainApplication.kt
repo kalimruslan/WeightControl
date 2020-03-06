@@ -14,15 +14,16 @@ class MainApplication : Application(), HasAndroidInjector {
 
     @Inject
     lateinit var androidInjector: DispatchingAndroidInjector<Any>
+    private lateinit var applicationComponent: ApplicationComponent
 
     override fun onCreate() {
         super.onCreate()
         MultiDex.install(this)
-        DaggerApplicationComponent
+        applicationComponent =  DaggerApplicationComponent
             .builder()
             .application(this)
             .build()
-            .inject(this)
+        applicationComponent.inject(this)
     }
 
 
@@ -32,4 +33,6 @@ class MainApplication : Application(), HasAndroidInjector {
         super.attachBaseContext(base)
         MultiDex.install(this)
     }
+
+    fun getAppComponent(): ApplicationComponent = applicationComponent
 }

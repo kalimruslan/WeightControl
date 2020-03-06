@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
+import dagger.android.support.DaggerFragment
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.ui.home.vm.HomeViewModel
@@ -29,7 +30,7 @@ import ru.ruslan.weighttracker.ui.util.*
 import ru.ruslan.weighttracker.ui.videos.list.vm.VideoListViewModel
 import javax.inject.Inject
 
-class HomeFragment : Fragment() {
+class HomeFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -56,7 +57,8 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = LayoutInflater.from(container?.context).inflate(R.layout.home_fragment, container, false)
+        val view = LayoutInflater.from(container?.context)
+            .inflate(R.layout.home_fragment, container, false)
         initVars()
         return view
     }
@@ -94,11 +96,11 @@ class HomeFragment : Fragment() {
     private fun initViews() {
         initChooseAppDialog()
 
-        iv_photo_before.loadImage(drawableId = R.drawable.test)
-        iv_photo_after.loadImage(drawableId = R.drawable.test)
+        iv_photo_before.loadImage(drawableId = R.drawable.img_placeholder)
+        iv_photo_after.loadImage(drawableId = R.drawable.img_placeholder)
     }
 
-    private fun updateProfileViews(profile: HomeUI?){
+    private fun updateProfileViews(profile: HomeUI?) {
         profile?.let { prof ->
             tv_date_before.text = prof.dateBefore
             tv_date_after.text = prof.dateAfter
@@ -110,31 +112,33 @@ class HomeFragment : Fragment() {
     private fun initChooseAppDialog() {
         chooseDialog = homeContext?.let { Dialog(it, R.style.AppTheme) }
         chooseDialog?.apply {
-            window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
             window?.setGravity(Gravity.BOTTOM)
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             setCancelable(true)
             setContentView(R.layout.dialog_choose_camera_or_gallery)
-            llCamera.setOnClickListener{tryOpenCamera()}
-            llGallery.setOnClickListener{tryOpenGallery()}
-            iv_choose_close.setOnClickListener{this.dismiss()}
+            llCamera.setOnClickListener { tryOpenCamera() }
+            llGallery.setOnClickListener { tryOpenGallery() }
+            iv_choose_close.setOnClickListener { this.dismiss() }
         }
     }
 
-   private fun setListeners() {
-        fab_main.setOnClickListener{ homeViewModel.handleFabMain() }
-        fab_photo.setOnClickListener{showChooseDialog()}
+    private fun setListeners() {
+        fab_main.setOnClickListener { homeViewModel.handleFabMain() }
+        fab_photo.setOnClickListener { showChooseDialog() }
     }
 
-    private fun openCloseFabMenu(isOpen: Boolean){
-        if(isOpen){
+    private fun openCloseFabMenu(isOpen: Boolean) {
+        if (isOpen) {
             fab_photo.startAnimation(fabAnimOpen)
             fab_weight.startAnimation(fabAnimOpen)
             fab_main.startAnimation(fabAnimClock)
             fab_photo.isClickable = true
             fab_photo.isClickable = true
-        }
-        else{
+        } else {
             fab_photo.startAnimation(fabAnimClose)
             fab_weight.startAnimation(fabAnimClose)
             fab_main.startAnimation(fabAnimAntiClock)
@@ -148,26 +152,24 @@ class HomeFragment : Fragment() {
     }
 
     private fun tryOpenCamera() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if(PermissionUtils.checkAndRequestCameraPermissions(homeContext)){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (PermissionUtils.checkAndRequestCameraPermissions(homeContext)) {
                 RouterUtil.openCamera(this)
                 chooseDialog?.dismiss()
             }
-        }
-        else{
+        } else {
             RouterUtil.openCamera(this)
             chooseDialog?.dismiss()
         }
     }
 
     private fun tryOpenGallery() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if(PermissionUtils.checkAndRequestExternalPermission(homeContext)){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (PermissionUtils.checkAndRequestExternalPermission(homeContext)) {
                 RouterUtil.openGallery(this)
                 chooseDialog?.dismiss()
             }
-        }
-        else{
+        } else {
             RouterUtil.openGallery(this)
             chooseDialog?.dismiss()
         }
@@ -179,25 +181,24 @@ class HomeFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == Constants.RESULT_CAMERA && resultCode == RESULT_OK && data != null){
-            homeContext?.let {setAfterImageView(ImageUtil.convertUriToBitmap(homeContext, data.data))}
-        }
-        else if(requestCode == Constants.RESULT_GALLERY && resultCode == RESULT_OK && data != null){
-            homeContext?.let {setAfterImageView(data.extras?.get("data") as Bitmap) }
+        if (requestCode == Constants.RESULT_CAMERA && resultCode == RESULT_OK && data != null) {
+            homeContext?.let {
+                homeViewModel.handleCameraResult(data.data)
+            }
+        } else if (requestCode == Constants.RESULT_GALLERY && resultCode == RESULT_OK && data != null) {
+            homeContext?.let { setAfterImageView(data.extras?.get("data") as Bitmap) }
         }
     }
 
-    // TODO Что-то это не срабатывает
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
                                             grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == PermissionUtils.CODE_CAMERA_PERMISSION){
-            if(grantResults.isNotEmpty()){
+        if (requestCode == PermissionUtils.CODE_CAMERA_PERMISSION) {
+            if (grantResults.isNotEmpty()) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) tryOpenCamera()
             }
-        }
-        else if(requestCode == PermissionUtils.CODE_EXTERNAL_PERMISSION){
-            if(grantResults.isNotEmpty()){
+        } else if (requestCode == PermissionUtils.CODE_EXTERNAL_PERMISSION) {
+            if (grantResults.isNotEmpty()) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) tryOpenGallery()
             }
         }
