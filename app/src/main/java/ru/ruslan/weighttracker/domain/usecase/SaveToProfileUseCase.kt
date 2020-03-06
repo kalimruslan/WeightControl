@@ -37,14 +37,15 @@ class SaveToProfileUseCase @Inject constructor(private val profileLocalRepositor
         )
     }
 
-    suspend fun savePhoto() {
+    suspend fun savePhotoData(dateString: String, filePath:String, listener: Callback.Photo) {
         profileLocalRepository.savePhotoData(
             PhotoEntity(
                 profileLocalRepository.retrieveProfileId(),
-                "www",
-                "01.01.2019"
+                filePath,
+                dateString
             )
         )
+        listener.photoSaveSuccess()
     }
 
     suspend fun insertProfile(profileEntity: ProfileEntity?, listener: Callback.Profile) {

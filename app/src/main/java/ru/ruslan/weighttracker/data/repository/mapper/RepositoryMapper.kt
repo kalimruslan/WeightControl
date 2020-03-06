@@ -61,7 +61,7 @@ object ProfileEntityToLocalMapper : BaseMapper<ProfileEntity, ProfileLocal> {
                 if (it.photoEntity != null) {
                     PhotoLocal(
                         profileId = it.photoEntity.profileId,
-                        photoUrl = it.photoEntity.photoUrl,
+                        photoUrl = it.photoEntity.photoPath,
                         photoDate = it.photoEntity.photoDate
                     )
                 } else null
@@ -101,7 +101,7 @@ object PhotoEntityToLocalMapper : BaseMapper<PhotoEntity, PhotoLocal> {
         type?.let {
             photoLocal = PhotoLocal(
                 profileId = it.profileId,
-                photoUrl = it.photoUrl,
+                photoUrl = it.photoPath,
                 photoDate = it.photoDate
             )
         }

@@ -8,7 +8,6 @@ interface CameraContract {
     interface View : BaseView{
         fun initVars()
         fun openCameraPreview()
-        fun openCameraResult(uri: Uri)
     }
 
     interface Presenter : BasePresenter<View>{

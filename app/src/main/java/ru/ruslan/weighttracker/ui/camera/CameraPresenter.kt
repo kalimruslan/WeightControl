@@ -1,8 +1,9 @@
 package ru.ruslan.weighttracker.ui.camera
 
 import ru.ruslan.weighttracker.domain.contract.camera.CameraContract
+import javax.inject.Inject
 
-class CameraPresenter : CameraContract.Presenter {
+class CameraPresenter @Inject constructor() : CameraContract.Presenter {
 
     private lateinit var cameraView: CameraContract.View
 

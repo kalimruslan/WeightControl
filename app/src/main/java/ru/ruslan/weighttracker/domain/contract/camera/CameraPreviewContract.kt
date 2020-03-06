@@ -12,8 +12,9 @@ interface CameraPreviewContract {
         fun disableAllActions()
         fun takeAPicture(file: File)
         fun showErrorImageSaveToast()
-        fun tryToOpenResultFragment(savedFile: File)
         fun enableActions()
+        fun initVars()
+        fun closeThisFragment()
     }
 
     interface Presenter :
