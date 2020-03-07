@@ -13,7 +13,8 @@ import java.util.*
 import javax.inject.Inject
 
 @CameraScope
-class CameraPresenter @Inject constructor(private val saveToProfileUseCase: SaveToProfileUseCase) : CameraContract.Presenter {
+class CameraPresenter @Inject constructor(private val saveToProfileUseCase: SaveToProfileUseCase) :
+    CameraContract.Presenter {
 
     private lateinit var cameraPreviewView: CameraContract.View
     private val fileUtils: FileUtils by lazy { FileUtils() }
@@ -41,16 +42,31 @@ class CameraPresenter @Inject constructor(private val saveToProfileUseCase: Save
     override fun imageSavedToFile(file: File) {
         val dateString = Calendar.getInstance().time.toString("dd.MM.yyyy")
         CoroutineScope(Dispatchers.Main).launch {
-            saveToProfileUseCase.savePhotoData(dateString, file.path,  object : SaveToProfileUseCase.Callback.Photo{
-                override fun photoSaveSuccess() {
-                    cameraPreviewView.closeThisFragment()
-                    //TODO тут надо спросить пользователя ввести текущий вес
-                }
+            saveToProfileUseCase.savePhotoData(
+                dateString,
+                file.path,
+                "113",
+                object : SaveToProfileUseCase.Callback.Photo {
+                    override fun photoSaveSuccess() {
+                        cameraPreviewView.closeThisFragment()
+                    }
 
-                override fun photoSaveError() {
-                }
-            })
+                    override fun photoSaveError() {
+                    }
+                })
         }
+    }
+
+    override fun onPause() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    // TODO нужно удалить сфотканное фото
+    override fun negativeButtonForInputWeightClicked(file: File) {
+
+    }
+
+    override fun positiveButtonForInputWeightClicked(file: File, weightStr: String) {
 
     }
 

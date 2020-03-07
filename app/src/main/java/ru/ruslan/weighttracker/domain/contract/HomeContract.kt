@@ -23,6 +23,7 @@ interface HomeContract {
         fun fabPhotoViewClicked()
         fun cameraViewClicked()
         fun galleryViewClicked()
+        fun onPause()
     }
 
 }

@@ -13,6 +13,7 @@ interface CameraContract {
         fun enableActions()
         fun initVars()
         fun closeThisFragment()
+        fun needToInputWeightForPhoto(file: File)
     }
 
     interface Presenter : BasePresenter<View>{
@@ -20,5 +21,8 @@ interface CameraContract {
         fun takePhotoViewClicked()
         fun imageSavedToFile(file: File)
         fun errorSavedImageToFile()
+        fun positiveButtonForInputWeightClicked(file: File, weightStr: String)
+        fun negativeButtonForInputWeightClicked(file: File)
+        fun onPause()
     }
 }
