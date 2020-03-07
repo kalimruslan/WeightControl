@@ -1,6 +1,7 @@
 package ru.ruslan.weighttracker.domain.usecase
 
 import ru.ruslan.weightracker.core.datatype.ResultType
+import ru.ruslan.weighttracker.domain.model.PhotoDataEntity
 import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
 import ru.ruslan.weighttracker.domain.repository.ProfileLocalRepository
 import ru.ruslan.weighttracker.ui.util.Constants
@@ -12,6 +13,9 @@ class GetFromProfileUseCase @Inject constructor (private val profileLocalReposit
         interface GetProfile{
             fun getProfileSuccess(profileEntity: ProfileEntity?)
             fun getProfileError()
+        }
+        interface GetDataForPhoto{
+            fun success(photoDataEntity: PhotoDataEntity)
         }
     }
 
@@ -30,6 +34,11 @@ class GetFromProfileUseCase @Inject constructor (private val profileLocalReposit
         }
 
         listener.getProfileError()
+    }
+
+    suspend fun getDataForPhoto(listener: Callback.GetDataForPhoto){
+        val photoDataEntity = profileLocalRepository.getPhotoData(profileLocalRepository.retrieveProfileId())
+        listener.success(photoDataEntity)
     }
 
 

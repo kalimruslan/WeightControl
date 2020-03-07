@@ -22,8 +22,5 @@ abstract class UIModule {
     internal abstract fun provideProfileActivity(): ProfileActivity
 
     @ContributesAndroidInjector
-    abstract fun provideHomeFragment(): HomeFragment
-
-    @ContributesAndroidInjector
     abstract fun provideVideosFragment() : VideosFragment
 }

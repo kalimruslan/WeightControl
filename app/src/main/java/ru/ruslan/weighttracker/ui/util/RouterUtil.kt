@@ -1,10 +1,13 @@
 package ru.ruslan.weighttracker.ui.util
 
+import android.app.Activity
 import android.content.Intent
-import android.provider.MediaStore
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.ui.camera.CameraActivity
+import ru.ruslan.weighttracker.ui.profile.ProfileActivity
+import kotlin.reflect.KClass
 
 object RouterUtil {
     fun openCamera(fragment: Fragment) {
@@ -22,5 +25,12 @@ object RouterUtil {
                 fragment.getString(R.string.text_chooser_image)
             ), Constants.RESULT_GALLERY
         )
+    }
+
+    fun openActivity(activity: Activity, destination: Class<AppCompatActivity>, shouldFinish: Boolean){
+        val intent: Intent = Intent(activity, destination)
+        activity.startActivity(intent)
+        if(shouldFinish)
+            activity.finish()
     }
 }

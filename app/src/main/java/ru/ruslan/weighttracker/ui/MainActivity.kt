@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.ui.home.HomeFragment
 import ru.ruslan.weighttracker.ui.profile.ProfileActivity
+import ru.ruslan.weighttracker.ui.util.startActivityExt
 import ru.ruslan.weighttracker.ui.videos.list.VideosFragment
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.action_profile -> startActivity(Intent(this, ProfileActivity::class.java))
+            R.id.action_profile -> startActivityExt<ProfileActivity>(this)
         }
         return true
     }
@@ -72,5 +73,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             commit()
         }
         supportActionBar?.title = title
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }
