@@ -9,6 +9,7 @@ import ru.ruslan.weighttracker.data.repository.mapper.PhotoEntityToLocalMapper
 import ru.ruslan.weighttracker.data.repository.mapper.ProfileEntityToLocalMapper
 import ru.ruslan.weighttracker.data.repository.mapper.ProfileLocalToEntityMapper
 import ru.ruslan.weighttracker.data.repository.mapper.WeightEntityToLocalMapper
+import ru.ruslan.weighttracker.domain.model.PhotoDataEntity
 import ru.ruslan.weighttracker.domain.model.profile.PhotoEntity
 import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
 import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
@@ -21,8 +22,13 @@ class ProfileLocalRepositoryImpl(private val localDataSource: ProfileLocalDBData
         localDataSource.saveWeight(WeightEntityToLocalMapper.map(weightEntity))
     }
 
-    override suspend fun savePhotoData(photoEntity: PhotoEntity) {
-        localDataSource.savePhotoData(PhotoEntityToLocalMapper.map(photoEntity))
+    override suspend fun savePhotoData(photoEntity: PhotoEntity): Result<Int> {
+        val photoId = localDataSource.savePhotoData(PhotoEntityToLocalMapper.map(photoEntity))
+
+        return if (photoId.resultType == ResultType.SUCCESS)
+            Result.success(photoId.data)
+        else
+            Result.error(photoId.error)
     }
 
     override suspend fun createProfile(profileEntity: ProfileEntity): Result<Int> {
@@ -45,6 +51,21 @@ class ProfileLocalRepositoryImpl(private val localDataSource: ProfileLocalDBData
             Result.success(ProfileLocalToEntityMapper.map(result.data))
          else
             Result.error(result.error)
+    }
+
+    override suspend fun getPhotoData(userId: Int): PhotoDataEntity {
+        var photoDataEntity: PhotoDataEntity = PhotoDataEntity()
+        val photoResult = localDataSource.getLastPhotoData(true, userId)
+        if(photoResult.resultType == ResultType.SUCCESS) {
+            val photoObj = photoResult.data
+            val weightResult = localDataSource.getWeight(userId, photoObj?.id!!)
+            if(weightResult.resultType == ResultType.SUCCESS){
+                val weightObj = weightResult.data
+                photoDataEntity = PhotoDataEntity(photoDate = photoObj.photoDate, photoPath = photoObj.photoUrl, weightOnPhoto = weightObj?.weight!!)
+            }
+        }
+
+        return photoDataEntity
     }
 
     override suspend fun getAllProfileData(): Result<List<ProfileEntity>> {

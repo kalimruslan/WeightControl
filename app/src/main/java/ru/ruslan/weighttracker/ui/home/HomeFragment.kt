@@ -1,116 +1,76 @@
 package ru.ruslan.weighttracker.ui.home
 
 import android.app.Dialog
-import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.fragment.app.Fragment
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.content_home_photos.*
 import kotlinx.android.synthetic.main.dialog_choose_camera_or_gallery.*
 import kotlinx.android.synthetic.main.home_fragment.*
-import android.content.Intent
-import android.app.Activity.RESULT_OK
-import android.graphics.Bitmap
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import dagger.android.AndroidInjection
-import dagger.android.support.AndroidSupportInjection
-import dagger.android.support.DaggerFragment
+import androidx.fragment.app.Fragment
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
+import ru.ruslan.weighttracker.MainApplication
+import ru.ruslan.weighttracker.ui.util.Constants
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.ui.home.vm.HomeViewModel
-import ru.ruslan.weighttracker.ui.home.vm.HomeUI
+import ru.ruslan.weighttracker.dagger.scope.HomeScope
+import ru.ruslan.weighttracker.domain.contract.HomeContract
+import ru.ruslan.weighttracker.ui.camera.CameraActivity
 import ru.ruslan.weighttracker.ui.util.*
-import ru.ruslan.weighttracker.ui.videos.list.vm.VideoListViewModel
 import javax.inject.Inject
 
-class HomeFragment : DaggerFragment() {
+@HomeScope
+class HomeFragment : Fragment(), HomeContract.VIew {
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var presenter: HomeContract.Presenter
 
     private lateinit var glideOptions: RequestOptions
     private lateinit var fabAnimOpen: Animation
     private lateinit var fabAnimClose: Animation
     private lateinit var fabAnimClock: Animation
     private lateinit var fabAnimAntiClock: Animation
-    private var homeContext: Context? = null
     private var chooseDialog: Dialog? = null
-
-    private lateinit var homeViewModel: HomeViewModel
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        homeContext = context
-    }
 
     companion object {
         @JvmStatic
         fun newInstance() = HomeFragment()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (context?.applicationContext as MainApplication).getAppComponent().getHomeComponent().create().inject(this)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = LayoutInflater.from(container?.context)
+        return LayoutInflater.from(container?.context)
             .inflate(R.layout.home_fragment, container, false)
-        initVars()
-        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews()
-        setListeners()
-        observerLiveData()
+        presenter.setView(this)
     }
 
-    private fun observerLiveData() {
-        homeViewModel.openCloseFabLd.observe(this, Observer(::openCloseFabMenu))
-        homeViewModel.profileLiveData.observe(this, Observer(::updateProfileViews))
-    }
+    override fun initViews() {
+        fabAnimOpen = AnimationUtils.loadAnimation(context, R.anim.fab_open)
+        fabAnimClose = AnimationUtils.loadAnimation(context, R.anim.fab_close)
+        fabAnimClock = AnimationUtils.loadAnimation(context, R.anim.fab_rotate_clock)
+        fabAnimAntiClock = AnimationUtils.loadAnimation(context, R.anim.fab_rotate_anticlock)
 
-    private fun initVars() {
-        homeViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
-
-        glideOptions = RequestOptions()
-        glideOptions.apply {
-            fitCenter()
-            transform(RoundedCornersTransformation(30, 10))
-            placeholder(R.drawable.img_placeholder)
-            error(R.drawable.img_placeholder)
-            fallback(R.drawable.img_placeholder)
-        }
-
-        fabAnimOpen = AnimationUtils.loadAnimation(homeContext, R.anim.fab_open)
-        fabAnimClose = AnimationUtils.loadAnimation(homeContext, R.anim.fab_close)
-        fabAnimClock = AnimationUtils.loadAnimation(homeContext, R.anim.fab_rotate_clock)
-        fabAnimAntiClock = AnimationUtils.loadAnimation(homeContext, R.anim.fab_rotate_anticlock)
-    }
-
-    private fun initViews() {
         initChooseAppDialog()
 
         iv_photo_before.loadImage(drawableId = R.drawable.img_placeholder)
         iv_photo_after.loadImage(drawableId = R.drawable.img_placeholder)
     }
 
-    private fun updateProfileViews(profile: HomeUI?) {
-        profile?.let { prof ->
-            tv_date_before.text = prof.dateBefore
-            tv_date_after.text = prof.dateAfter
-            tv_weight_before.text = prof.weigthBefore
-            tv_weight_after.text = prof.weigthAfter
-        }
-    }
-
     private fun initChooseAppDialog() {
-        chooseDialog = homeContext?.let { Dialog(it, R.style.AppTheme) }
+        chooseDialog = context?.let { Dialog(it, R.style.AppTheme) }
         chooseDialog?.apply {
             window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -120,18 +80,58 @@ class HomeFragment : DaggerFragment() {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             setCancelable(true)
             setContentView(R.layout.dialog_choose_camera_or_gallery)
-            llCamera.setOnClickListener { tryOpenCamera() }
-            llGallery.setOnClickListener { tryOpenGallery() }
+            llCamera.setOnClickListener { presenter.cameraViewClicked() }
+            llGallery.setOnClickListener { presenter.galleryViewClicked() }
             iv_choose_close.setOnClickListener { this.dismiss() }
         }
     }
 
-    private fun setListeners() {
-        fab_main.setOnClickListener { homeViewModel.handleFabMain() }
-        fab_photo.setOnClickListener { showChooseDialog() }
+    override fun setListeners() {
+        iv_photo_before.setOnClickListener { presenter.photoBeforeViewClicked() }
+        iv_photo_after.setOnClickListener { presenter.photoAfterViewClicked() }
+
+        fab_main.setOnClickListener { presenter.fabMainViewClicked() }
+        fab_photo.setOnClickListener { presenter.fabPhotoViewClicked() }
     }
 
-    private fun openCloseFabMenu(isOpen: Boolean) {
+    override fun updatePictureViews(profile: HomeUI?,
+                                    requestCode: Int) {
+       profile?.let {
+           when(requestCode){
+               Constants.BEFORE_PHOTO_RESULT -> {
+                   tv_date_before.text = it.photoDate
+                   tv_weight_before.text = it.weightOnPhoto
+                   iv_photo_before.loadImage(imageUri = it.photoPath!!)
+               }
+               Constants.AFTER_PHOTO_RESULT -> {
+                   tv_date_after.text = it.photoDate
+                   tv_weight_after.text = it.weightOnPhoto
+                   iv_photo_after.loadImage(imageUri = it.photoPath!!)
+               }
+           }
+       }
+    }
+
+    override fun startCameraScreen(needResult: Boolean, requestCode: Int) {
+        if (needResult) {
+            when (requestCode) {
+                Constants.BEFORE_PHOTO_RESULT -> {
+                    this.startActivityForResultExt<CameraActivity>(
+                        context!!,
+                        Constants.BEFORE_PHOTO_RESULT
+                    )
+                }
+                Constants.AFTER_PHOTO_RESULT -> {
+                    this.startActivityForResultExt<CameraActivity>(
+                        context!!,
+                        Constants.AFTER_PHOTO_RESULT
+                    )
+                }
+            }
+        } else activity?.startActivityExt<CameraActivity>(context!!)
+    }
+
+    override fun openCloseFabMenu(isOpen: Boolean) {
         if (isOpen) {
             fab_photo.startAnimation(fabAnimOpen)
             fab_weight.startAnimation(fabAnimOpen)
@@ -147,25 +147,25 @@ class HomeFragment : DaggerFragment() {
         }
     }
 
-    private fun showChooseDialog() {
+    override fun showChooseDialog() {
         chooseDialog?.show()
     }
 
-    private fun tryOpenCamera() {
+    override fun tryOpenCamera() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (PermissionUtils.checkAndRequestCameraPermissions(homeContext)) {
-                RouterUtil.openCamera(this)
+            if (PermissionUtils.checkAndRequestCameraPermissions(context)) {
+                startCameraScreen(false)
                 chooseDialog?.dismiss()
             }
         } else {
-            RouterUtil.openCamera(this)
+            startCameraScreen(false)
             chooseDialog?.dismiss()
         }
     }
 
-    private fun tryOpenGallery() {
+    override fun tryOpenGallery() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (PermissionUtils.checkAndRequestExternalPermission(homeContext)) {
+            if (PermissionUtils.checkAndRequestExternalPermission(context)) {
                 RouterUtil.openGallery(this)
                 chooseDialog?.dismiss()
             }
@@ -175,18 +175,13 @@ class HomeFragment : DaggerFragment() {
         }
     }
 
-    private fun setAfterImageView(bitmap: Bitmap?) {
-        iv_photo_after.setImageBitmap(bitmap)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == Constants.RESULT_CAMERA && resultCode == RESULT_OK && data != null) {
-            homeContext?.let {
-                homeViewModel.handleCameraResult(data.data)
-            }
-        } else if (requestCode == Constants.RESULT_GALLERY && resultCode == RESULT_OK && data != null) {
-            homeContext?.let { setAfterImageView(data.extras?.get("data") as Bitmap) }
+        when (requestCode) {
+            Constants.BEFORE_PHOTO_RESULT ->
+                presenter.getDataForPicture(Constants.BEFORE_PHOTO_RESULT)
+            Constants.AFTER_PHOTO_RESULT ->
+                presenter.getDataForPicture(Constants.AFTER_PHOTO_RESULT)
         }
     }
 

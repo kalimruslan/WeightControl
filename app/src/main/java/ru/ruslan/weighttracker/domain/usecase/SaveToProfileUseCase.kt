@@ -7,7 +7,8 @@ import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
 import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
 import javax.inject.Inject
 
-class SaveToProfileUseCase @Inject constructor(private val profileLocalRepository: ProfileLocalRepository) {
+class SaveToProfileUseCase @Inject constructor(
+    private val profileLocalRepository: ProfileLocalRepository) {
 
     interface Callback {
         interface Profile {
@@ -27,25 +28,26 @@ class SaveToProfileUseCase @Inject constructor(private val profileLocalRepositor
         }
     }
 
-    suspend fun saveWeight() {
-        profileLocalRepository.saveWeight(
-            WeightEntity(
-                profileLocalRepository.retrieveProfileId(),
-                113.0,
-                "01.01.2019"
-            )
-        )
+    suspend fun saveWeight(weightEntity: WeightEntity?) {
+        weightEntity?.let {
+            profileLocalRepository.saveWeight(it)
+        }
     }
 
-    suspend fun savePhotoData(dateString: String, filePath:String, listener: Callback.Photo) {
+    suspend fun savePhotoData(dateString: String, filePath: String, listener: Callback.Photo) {
         profileLocalRepository.savePhotoData(
-            PhotoEntity(
-                profileLocalRepository.retrieveProfileId(),
-                filePath,
-                dateString
-            )
-        )
-        listener.photoSaveSuccess()
+            PhotoEntity(profileLocalRepository.retrieveProfileId(), filePath, dateString)
+        ).let { photoId ->
+            if (photoId.resultType == ResultType.SUCCESS) {
+                photoId.data?.let {
+                    saveWeight(WeightEntity(profileId = profileLocalRepository.retrieveProfileId(),
+                        photoId = it,
+                        weight = 113.0,
+                        weightDate = dateString))
+                    listener.photoSaveSuccess()
+                }
+            }
+        }
     }
 
     suspend fun insertProfile(profileEntity: ProfileEntity?, listener: Callback.Profile) {
@@ -63,7 +65,10 @@ class SaveToProfileUseCase @Inject constructor(private val profileLocalRepositor
 
     suspend fun editProfile(profileEntity: ProfileEntity?, listener: Callback.Profile) {
         profileEntity?.let {
-            profileLocalRepository.editProfile(profileId = profileLocalRepository.retrieveProfileId(), profileEntity = profileEntity).let {
+            profileLocalRepository.editProfile(
+                profileId = profileLocalRepository.retrieveProfileId(),
+                profileEntity = profileEntity
+            ).let {
                 listener.profileEditSuccess()
             }
         }

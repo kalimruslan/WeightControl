@@ -1,11 +1,9 @@
-package ru.ruslan.weighttracker.domain.contract.camera
+package ru.ruslan.weighttracker.domain.contract
 
-import ru.ruslan.weighttracker.domain.contract.BasePresenter
-import ru.ruslan.weighttracker.domain.contract.BaseView
 import java.io.File
 
-interface CameraPreviewContract {
-    interface View : BaseView {
+interface CameraContract {
+    interface View : BaseView{
         fun startCamera()
         fun setListeners()
         fun toggleFrontBackCamera()
@@ -17,12 +15,10 @@ interface CameraPreviewContract {
         fun closeThisFragment()
     }
 
-    interface Presenter :
-        BasePresenter<View> {
+    interface Presenter : BasePresenter<View>{
         fun actionCameraLensViewClicked()
         fun takePhotoViewClicked()
         fun imageSavedToFile(file: File)
         fun errorSavedImageToFile()
-
     }
 }

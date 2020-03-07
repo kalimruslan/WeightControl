@@ -12,4 +12,7 @@ object Constants {
 
     const val KEY_WEIGHT_MEASURE = "weight_measure"
     const val KEY_HEIGHT_MEASURE = "height_measure"
+
+    const val BEFORE_PHOTO_RESULT = 10
+    const val AFTER_PHOTO_RESULT = 20
 }

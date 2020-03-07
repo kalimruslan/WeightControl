@@ -1,6 +1,5 @@
 package ru.ruslan.weighttracker.data.datasource.localdb
 
-import android.database.sqlite.SQLiteConstraintException
 import ru.ruslan.weightracker.core.datatype.Result
 import ru.ruslan.weighttracker.data.datasource.localdb.database.AppRoomDatabase
 import ru.ruslan.weighttracker.data.datasource.localdb.model.PhotoLocal
@@ -15,6 +14,7 @@ class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
             try {
                 roomDatabase.profileLocalDao().saveWeight(
                     profileId = weight.profileId,
+                    photoId = weight.photoId,
                     weight = weight.weight,
                     weightDate = weight.weightDate
                 )
@@ -24,18 +24,14 @@ class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
         }
     }
 
-    suspend fun savePhotoData(photoLocal: PhotoLocal?) {
-        photoLocal?.let { photo ->
-            try {
-                roomDatabase.profileLocalDao().savePhoto(
-                    profileId = photo.profileId,
-                    photoUrl = photo.photoUrl,
-                    photoDate = photo.photoDate
-                )
-            } catch (ex: SQLiteConstraintException) {
-                ex.printStackTrace()
-            }
+    suspend fun savePhotoData(photoLocal: PhotoLocal?) : Result<Int> {
+        return try {
+            val photoId = photoLocal?.let { roomDatabase.profileLocalDao().savePhoto(it) }
+            Result.success(photoId?.toInt())
+        } catch (ex: Exception) {
+            Result.error(ex)
         }
+
     }
 
     suspend fun insertProfile(profileLocal: ProfileLocal?): Result<Int> {
@@ -70,4 +66,27 @@ class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
         }
     }
 
+    fun getLastPhotoData(onlyLast: Boolean, userId: Int): Result<PhotoLocal> {
+        return try {
+            val photoLocal: PhotoLocal? = if(onlyLast){
+                roomDatabase.profileLocalDao().getLastPhotoLocal(userId)
+            } else{
+                roomDatabase.profileLocalDao().getPhotoLocal(userId)
+            }
+
+            Result.success(photoLocal)
+        } catch (ex: Exception) {
+            Result.error(ex)
+        }
+    }
+
+    fun getWeight(userId: Int, photoId: Int = 0): Result<WeightLocal>{
+        return try {
+            val weightLocal: WeightLocal? = roomDatabase.profileLocalDao().getWeightByPhotoId(userId, photoId)
+
+            Result.success(weightLocal)
+        } catch (ex: Exception) {
+            Result.error(ex)
+        }
+    }
 }
