@@ -8,31 +8,37 @@ import kotlinx.android.synthetic.main.item_slider.view.*
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.data.datasource.sharedpreferences.ProfilePreferencesDataSource
 
-class SliderAdapter: RecyclerView.Adapter<SliderItemViewHolder>() {
+class SliderAdapter(private val listener: OnItemCLickListener): RecyclerView.Adapter<SliderAdapter.ViewHolder>() {
 
-    private val data: ArrayList<String> = ArrayList()
+    private var data: List<String> = emptyList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SliderItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_slider, parent, false)
-        return SliderItemViewHolder(itemView)
+        return ViewHolder(itemView)
     }
 
     override fun getItemCount(): Int = data.size
 
-    override fun onBindViewHolder(holder: SliderItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.item.tv_item.text = data[position]
+        holder.item.setOnClickListener { v ->
+            listener.clickItem(position)
+        }
     }
 
     fun setData(data: ArrayList<String>){
-        this.data.clear()
-        this.data.addAll(data)
+        this.data = data
         notifyDataSetChanged()
     }
 
     fun getCurrentData(position: Int) = data[position]
     fun getPosition(item: String): Int = data.indexOf(item)
 
-    interface OnItemClickListener{
-        fun onItemClick(view: View)
+    interface OnItemCLickListener {
+        fun clickItem(pos: Int)
+    }
+
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val item = itemView
     }
 }

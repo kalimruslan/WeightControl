@@ -29,7 +29,7 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
 
     override fun openNextScreen(userExist: Boolean) {
         CoroutineScope(Dispatchers.Main).launch {
-            delay(2000)
+            delay(1000)
             if(userExist) startActivityExt<MainActivity>(this@SplashActivity)
             else startActivityExt<ProfileActivity>(this@SplashActivity)
             finish()

@@ -37,6 +37,8 @@ class ProfileViewModel @Inject constructor(private val saveToProfileUseCase: Sav
         return isUserExistMutableLiveData
     }
 
+    fun userIsExist(): Boolean = getFromProfileUseCase.checkIfUserExist()
+
     fun getProfile(): LiveData<ProfileUI> {
         viewModelScope.launch(Dispatchers.IO) {
             getFromProfileUseCase.getCurrentProfile(object :
