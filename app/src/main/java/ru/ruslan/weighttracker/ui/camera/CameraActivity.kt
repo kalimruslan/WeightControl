@@ -39,7 +39,7 @@ class CameraActivity : AppCompatActivity(), CameraContract.View {
         presenter.setView(this)
         setSupportActionBar(camera_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        camera_toolbar.title = "Камера"
+        camera_toolbar.title = getString(R.string.title_camera)
 
     }
 
@@ -52,7 +52,7 @@ class CameraActivity : AppCompatActivity(), CameraContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            android.R.id.home -> onBackPressed()
+            android.R.id.home -> finish()
             R.id.action_camera_lens -> presenter.actionCameraLensViewClicked()
         }
         return true
@@ -188,8 +188,4 @@ class CameraActivity : AppCompatActivity(), CameraContract.View {
         finish()
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
-    }
 }

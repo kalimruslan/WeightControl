@@ -47,6 +47,7 @@
     <string name="button_text_cancel">Отмена</string>
     <string name="text_design_by_ruslan_kalimulin">Разработчик: Руслан Калимуллин</string>
     <string name="text_logo">Логотип</string>
+    <string name="title_camera">Камера</string>
 
     <string-array name="sex_dropdown">
         <item>Мужской</item>
