@@ -13,6 +13,8 @@ interface HomeContract {
         fun showChooseDialog()
         fun tryOpenCamera()
         fun tryOpenGallery()
+        fun showToastForUserNotExist()
+        fun startProfileScreen()
     }
 
     interface Presenter : BasePresenter<VIew>{
@@ -23,7 +25,6 @@ interface HomeContract {
         fun fabPhotoViewClicked()
         fun cameraViewClicked()
         fun galleryViewClicked()
-        fun onPause()
     }
 
 }

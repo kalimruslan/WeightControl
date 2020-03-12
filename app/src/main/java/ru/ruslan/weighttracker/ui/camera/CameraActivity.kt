@@ -1,12 +1,11 @@
 package ru.ruslan.weighttracker.ui.camera
 
-import android.content.DialogInterface
+import android.app.Activity
 import android.graphics.Matrix
 import android.os.Bundle
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
@@ -42,25 +41,6 @@ class CameraActivity : AppCompatActivity(), CameraContract.View {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         camera_toolbar.title = "Камера"
 
-        showDialog()
-    }
-
-    private fun showDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Выбор есть всегда")
-            .setMessage("Выбери пищу")
-            .setCancelable(true)
-            .setPositiveButton("Вкусная пища") { dialog, id ->
-                Toast.makeText(this, "Вы сделали правильный выбор",
-                    Toast.LENGTH_LONG).show()
-            }
-            .setNegativeButton("Здоровая пища",
-                DialogInterface.OnClickListener { dialog, id ->
-                    Toast.makeText(this, "Возможно вы правы",
-                        Toast.LENGTH_LONG).show()
-                })
-        builder.create()
-        builder.show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -170,41 +150,28 @@ class CameraActivity : AppCompatActivity(), CameraContract.View {
             })
     }
 
-    override fun needToInputWeightForPhoto(file: File) {
+    override fun needToInputWeightForPhoto() {
         val dialogLayout = layoutInflater.inflate(R.layout.dialog_input_weight_for_photo, null)
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Выбор есть всегда")
-            .setMessage("Выбери пищу")
-            .setCancelable(true)
-            .setPositiveButton("Вкусная пища") { dialog, id ->
-                Toast.makeText(this, "Вы сделали правильный выбор",
-                    Toast.LENGTH_LONG).show()
-            }
-            .setNegativeButton("Здоровая пища",
-                DialogInterface.OnClickListener { dialog, id ->
-                    Toast.makeText(this, "Возможно вы правы",
-                        Toast.LENGTH_LONG).show()
-                })
-        builder.create()
-        builder.show()
+        val alertDialog = AlertDialog.Builder(this).setView(dialogLayout).show()
 
 
-
-       /* dialogLayout.buttonSubmit.setOnClickListener {
+        dialogLayout.buttonSubmit.setOnClickListener {
             if(dialogLayout.edt_comment.text.isNotEmpty()){
-                presenter.positiveButtonForInputWeightClicked(file, dialogLayout.edt_comment.text.toString())
-                dialogBuilder.dismiss()
+                presenter.positiveButtonForInputWeightClicked(dialogLayout.edt_comment.text.toString())
+                alertDialog.dismiss()
             }
             else{
                 "Введите вес".showToast(this)
             }
         }
         dialogLayout.buttonCancel.setOnClickListener {
-            presenter.negativeButtonForInputWeightClicked(file)
-            dialogBuilder.dismiss()
+            finish()
+            alertDialog.dismiss()
         }
-        dialogBuilder.setView(dialogLayout)
-        dialogBuilder.show()*/
+    }
+
+    override fun allowToTakePhoto() {
+        iv_take_photo.visibility = View.VISIBLE
     }
 
     private fun getMetadata() = ImageCapture.Metadata().apply {
@@ -217,7 +184,7 @@ class CameraActivity : AppCompatActivity(), CameraContract.View {
     }
 
     override fun closeThisFragment() {
-        setResult(Constants.BEFORE_PHOTO_RESULT)
+        setResult(Activity.RESULT_OK)
         finish()
     }
 

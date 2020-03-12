@@ -20,12 +20,14 @@ class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFr
 
     override fun setView(view: HomeContract.VIew) {
         homeView = view
-        homeView.initViews()
-        homeView.setListeners()
-    }
-
-    override fun onPause() {
-        coroutineScope.cancel()
+        if(!getFromProfileUseCase.checkIfUserExist()){
+            homeView.showToastForUserNotExist()
+            homeView.startProfileScreen()
+        }
+        else{
+            homeView.initViews()
+            homeView.setListeners()
+        }
     }
 
     override fun getDataForPicture(requestCode: Int) {

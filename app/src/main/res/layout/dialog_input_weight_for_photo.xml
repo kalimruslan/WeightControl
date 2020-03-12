@@ -15,7 +15,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:padding="@dimen/indent_8dp"
-        android:text="Введите ваш вес"
+        android:textSize="@dimen/size_22sp"
+        android:text="@string/alert_title_input_weight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,8 +28,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:hint="Введите ваш вес"
-        android:inputType="number"
+        android:hint="@string/hint_input_weight"
+        android:inputType="numberDecimal"
         android:padding="@dimen/indent_8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +42,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        android:text="Сохранить"
+        android:text="@string/button_text_save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edt_comment" />
@@ -53,7 +54,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Отмена"
+        android:text="@string/button_text_cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edt_comment" />
