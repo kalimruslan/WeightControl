@@ -20,6 +20,7 @@ import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.dagger.scope.HomeScope
 import ru.ruslan.weighttracker.domain.contract.HomeContract
 import ru.ruslan.weighttracker.ui.camera.CameraActivity
+import ru.ruslan.weighttracker.ui.profile.ProfileActivity
 import ru.ruslan.weighttracker.ui.util.*
 import javax.inject.Inject
 
@@ -29,7 +30,6 @@ class HomeFragment : Fragment(), HomeContract.VIew {
     @Inject
     lateinit var presenter: HomeContract.Presenter
 
-    private lateinit var glideOptions: RequestOptions
     private lateinit var fabAnimOpen: Animation
     private lateinit var fabAnimClose: Animation
     private lateinit var fabAnimClock: Animation
@@ -55,6 +55,16 @@ class HomeFragment : Fragment(), HomeContract.VIew {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.setView(this)
+    }
+
+    override fun showToastForUserNotExist() {
+        context?.let { getString(R.string.toast_profile_not_found).showToast(it) }
+    }
+
+    override fun startProfileScreen() {
+        context?.let {
+            this.startActivityExt<ProfileActivity>(it)
+        }
     }
 
     override fun initViews() {
@@ -87,11 +97,26 @@ class HomeFragment : Fragment(), HomeContract.VIew {
     }
 
     override fun setListeners() {
-        iv_photo_before.setOnClickListener { presenter.photoBeforeViewClicked() }
-        iv_photo_after.setOnClickListener { presenter.photoAfterViewClicked() }
+        iv_photo_before.setOnClickListener {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (PermissionUtils.checkAndRequestCameraPermissions(context))
+                    presenter.photoBeforeViewClicked()
+            } else presenter.photoBeforeViewClicked()
+        }
+        iv_photo_after.setOnClickListener {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (PermissionUtils.checkAndRequestCameraPermissions(context))
+                    presenter.photoAfterViewClicked()
+            } else presenter.photoAfterViewClicked()
 
-        fab_main.setOnClickListener { presenter.fabMainViewClicked() }
-        fab_photo.setOnClickListener { presenter.fabPhotoViewClicked() }
+        }
+
+        fab_main.setOnClickListener {
+            presenter.fabMainViewClicked()
+        }
+        fab_photo.setOnClickListener {
+            presenter.fabPhotoViewClicked()
+        }
     }
 
     override fun updatePictureViews(profile: HomeUI?,
@@ -100,12 +125,12 @@ class HomeFragment : Fragment(), HomeContract.VIew {
            when(requestCode){
                Constants.BEFORE_PHOTO_RESULT -> {
                    tv_date_before.text = it.photoDate
-                   tv_weight_before.text = it.weightOnPhoto
+                   tv_weight_before.text = "${it.weightOnPhoto} кг."
                    iv_photo_before.loadImage(imageUri = it.photoPath!!)
                }
                Constants.AFTER_PHOTO_RESULT -> {
                    tv_date_after.text = it.photoDate
-                   tv_weight_after.text = it.weightOnPhoto
+                   tv_weight_after.text = "${it.weightOnPhoto} кг."
                    iv_photo_after.loadImage(imageUri = it.photoPath!!)
                }
            }
@@ -182,20 +207,6 @@ class HomeFragment : Fragment(), HomeContract.VIew {
                 presenter.getDataForPicture(Constants.BEFORE_PHOTO_RESULT)
             Constants.AFTER_PHOTO_RESULT ->
                 presenter.getDataForPicture(Constants.AFTER_PHOTO_RESULT)
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
-                                            grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PermissionUtils.CODE_CAMERA_PERMISSION) {
-            if (grantResults.isNotEmpty()) {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) tryOpenCamera()
-            }
-        } else if (requestCode == PermissionUtils.CODE_EXTERNAL_PERMISSION) {
-            if (grantResults.isNotEmpty()) {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) tryOpenGallery()
-            }
         }
     }
 }

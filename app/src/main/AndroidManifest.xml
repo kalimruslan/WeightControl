@@ -28,6 +28,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ui.splash.SplashScreen">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,10 +42,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.videos.detail.VideoDetailActivity"/>
-        <activity android:name=".ui.profile.ProfileActivity"/>
-        <activity android:name=".ui.camera.CameraActivity"/>
+        <activity android:name=".ui.videos.detail.VideoDetailActivity" />
+        <activity android:name=".ui.profile.ProfileActivity" />
+        <activity android:name=".ui.camera.CameraActivity" />
     </application>
 
 </manifest>

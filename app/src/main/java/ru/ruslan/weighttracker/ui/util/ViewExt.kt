@@ -52,6 +52,10 @@ inline fun <reified T : Activity> Activity.startActivityExt(context: Context) {
     startActivity(Intent(context, T::class.java))
 }
 
+inline fun <reified T : Activity> Fragment.startActivityExt(context: Context) {
+    startActivity(Intent(context, T::class.java))
+}
+
 inline fun <reified T: Activity> Fragment.startActivityForResultExt(context: Context, resultCode: Int){
     val intent: Intent = Intent(context, T::class.java)
     startActivityForResult(intent, resultCode)

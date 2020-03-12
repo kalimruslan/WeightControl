@@ -31,7 +31,6 @@ class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
         } catch (ex: Exception) {
             Result.error(ex)
         }
-
     }
 
     suspend fun insertProfile(profileLocal: ProfileLocal?): Result<Int> {

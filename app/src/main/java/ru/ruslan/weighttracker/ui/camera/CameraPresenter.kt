@@ -13,16 +13,19 @@ import java.util.*
 import javax.inject.Inject
 
 @CameraScope
-class CameraPresenter @Inject constructor(private val saveToProfileUseCase: SaveToProfileUseCase) : CameraContract.Presenter {
+class CameraPresenter @Inject constructor(private val saveToProfileUseCase: SaveToProfileUseCase) :
+    CameraContract.Presenter {
 
     private lateinit var cameraPreviewView: CameraContract.View
     private val fileUtils: FileUtils by lazy { FileUtils() }
+    private var inputWeight: String = "0.0"
 
     override fun setView(view: CameraContract.View) {
         cameraPreviewView = view
         cameraPreviewView.initVars()
         cameraPreviewView.startCamera()
         cameraPreviewView.setListeners()
+        cameraPreviewView.needToInputWeightForPhoto()
     }
 
     override fun actionCameraLensViewClicked() {
@@ -41,17 +44,22 @@ class CameraPresenter @Inject constructor(private val saveToProfileUseCase: Save
     override fun imageSavedToFile(file: File) {
         val dateString = Calendar.getInstance().time.toString("dd.MM.yyyy")
         CoroutineScope(Dispatchers.Main).launch {
-            saveToProfileUseCase.savePhotoData(dateString, file.path,  object : SaveToProfileUseCase.Callback.Photo{
-                override fun photoSaveSuccess() {
-                    cameraPreviewView.closeThisFragment()
-                    //TODO тут надо спросить пользователя ввести текущий вес
-                }
+            saveToProfileUseCase.savePhotoData(dateString, file.path, inputWeight,
+                object : SaveToProfileUseCase.Callback.Photo {
+                    override fun photoSaveSuccess() {
+                        cameraPreviewView.closeThisFragment()
+                    }
 
-                override fun photoSaveError() {
-                }
-            })
+                    override fun photoSaveError() {
+                    }
+                })
         }
+    }
 
+
+    override fun positiveButtonForInputWeightClicked(weightStr: String) {
+        inputWeight = weightStr
+        cameraPreviewView.allowToTakePhoto()
     }
 
     override fun errorSavedImageToFile() {

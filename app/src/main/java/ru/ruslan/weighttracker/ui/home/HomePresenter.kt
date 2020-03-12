@@ -1,8 +1,6 @@
 package ru.ruslan.weighttracker.ui.home
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import ru.ruslan.weighttracker.dagger.scope.HomeScope
 import ru.ruslan.weighttracker.domain.contract.HomeContract
 import ru.ruslan.weighttracker.domain.model.PhotoDataEntity
@@ -17,15 +15,23 @@ class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFr
 
     private lateinit var homeView: HomeContract.VIew
     private var isFabOpen: Boolean = false
+    private var parentJob: Job = Job()
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + parentJob)
 
     override fun setView(view: HomeContract.VIew) {
         homeView = view
-        homeView.initViews()
-        homeView.setListeners()
+        if(!getFromProfileUseCase.checkIfUserExist()){
+            homeView.showToastForUserNotExist()
+            homeView.startProfileScreen()
+        }
+        else{
+            homeView.initViews()
+            homeView.setListeners()
+        }
     }
 
     override fun getDataForPicture(requestCode: Int) {
-        CoroutineScope(Dispatchers.Main).launch {
+        parentJob = coroutineScope.launch {
             getFromProfileUseCase.getDataForPhoto(object : GetFromProfileUseCase.Callback.GetDataForPhoto{
                 override fun success(photoDataEntity: PhotoDataEntity) {
                     homeView.updatePictureViews(PhotoDataEntityToHomeUIMapper.map(photoDataEntity), requestCode)

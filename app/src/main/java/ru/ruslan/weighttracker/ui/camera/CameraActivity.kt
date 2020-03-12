@@ -1,16 +1,16 @@
 package ru.ruslan.weighttracker.ui.camera
 
+import android.app.Activity
 import android.graphics.Matrix
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.Surface
-import android.view.ViewGroup
+import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import kotlinx.android.synthetic.main.activity_camera.*
+import kotlinx.android.synthetic.main.dialog_input_weight_for_photo.view.*
 import ru.ruslan.weighttracker.MainApplication
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.dagger.scope.CameraScope
@@ -40,6 +40,7 @@ class CameraActivity : AppCompatActivity(), CameraContract.View {
         setSupportActionBar(camera_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         camera_toolbar.title = "Камера"
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -149,6 +150,30 @@ class CameraActivity : AppCompatActivity(), CameraContract.View {
             })
     }
 
+    override fun needToInputWeightForPhoto() {
+        val dialogLayout = layoutInflater.inflate(R.layout.dialog_input_weight_for_photo, null)
+        val alertDialog = AlertDialog.Builder(this).setView(dialogLayout).show()
+
+
+        dialogLayout.buttonSubmit.setOnClickListener {
+            if(dialogLayout.edt_comment.text.isNotEmpty()){
+                presenter.positiveButtonForInputWeightClicked(dialogLayout.edt_comment.text.toString())
+                alertDialog.dismiss()
+            }
+            else{
+                "Введите вес".showToast(this)
+            }
+        }
+        dialogLayout.buttonCancel.setOnClickListener {
+            finish()
+            alertDialog.dismiss()
+        }
+    }
+
+    override fun allowToTakePhoto() {
+        iv_take_photo.visibility = View.VISIBLE
+    }
+
     private fun getMetadata() = ImageCapture.Metadata().apply {
         isReversedHorizontal = lensFacing == CameraX.LensFacing.FRONT
     }
@@ -159,7 +184,7 @@ class CameraActivity : AppCompatActivity(), CameraContract.View {
     }
 
     override fun closeThisFragment() {
-        setResult(Constants.BEFORE_PHOTO_RESULT)
+        setResult(Activity.RESULT_OK)
         finish()
     }
 

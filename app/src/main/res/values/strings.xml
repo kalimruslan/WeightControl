@@ -2,7 +2,6 @@
     <string name="app_name">WeightTracker</string>
     <string name="text_no_internet_connection">НЕт соединения с интернетом</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="text_please_wait">Пожалуйста, подождите ...</string>
     <string name="text_home">Главная</string>
@@ -41,6 +40,11 @@
     <string name="toggle_camera_lens">Выбор камеры</string>
     <string name="image_popup">Предварительный просмотр</string>
     <string name="image_capture_failed">Ошибка при сохранении файла</string>
+    <string name="toast_profile_not_found">Профиль не найден</string>
+    <string name="alert_title_input_weight">Введите ваш вес</string>
+    <string name="hint_input_weight">Введите ваш вес</string>
+    <string name="button_text_save">Сохранить</string>
+    <string name="button_text_cancel">Отмена</string>
 
     <string-array name="sex_dropdown">
         <item>Мужской</item>
