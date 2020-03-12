@@ -1,11 +1,13 @@
 package ru.ruslan.weighttracker.ui.profile
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.RecyclerView
 import com.azoft.carousellayoutmanager.CarouselLayoutManager
 import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener
 import com.azoft.carousellayoutmanager.CenterScrollListener
@@ -16,12 +18,10 @@ import kotlinx.android.synthetic.main.activity_video_detail.*
 import kotlinx.android.synthetic.main.content_profile_current_height.*
 import kotlinx.android.synthetic.main.content_profile_current_weight.*
 import ru.ruslan.weighttracker.R
+import ru.ruslan.weighttracker.ui.MainActivity
 import ru.ruslan.weighttracker.ui.profile.vm.ProfileViewModel
 import ru.ruslan.weighttracker.ui.profile.vm.model.ProfileUI
-import ru.ruslan.weighttracker.ui.util.Constants
-import ru.ruslan.weighttracker.ui.util.EnumCommand
-import ru.ruslan.weighttracker.ui.util.hideKeyboard
-import ru.ruslan.weighttracker.ui.util.showToast
+import ru.ruslan.weighttracker.ui.util.*
 import javax.inject.Inject
 
 class ProfileActivity : DaggerAppCompatActivity() {
@@ -29,10 +29,6 @@ class ProfileActivity : DaggerAppCompatActivity() {
     private var profileViewModel: ProfileViewModel? = null
     @Inject
     lateinit var viewModelFatory: ViewModelProvider.Factory
-    private var carouselHeightLayoutManager =
-        CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL, true)
-    private var carouselWeightLayoutManager =
-        CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL, true)
     private val dataHeight = (140..210).toList().map { it.toString() } as ArrayList<String>
     private val dataWeight = (40..150).toList().map { it.toString() } as ArrayList<String>
     private var heightSliderAdapter: SliderAdapter? = null
@@ -49,8 +45,14 @@ class ProfileActivity : DaggerAppCompatActivity() {
 
     private fun initViews() {
         profile_toolbar.setNavigationIcon(R.drawable.ic_close)
-        profile_toolbar.setNavigationOnClickListener { onBackPressed() }
+        profile_toolbar.setNavigationOnClickListener {
+            if(profileViewModel?.userIsExist()!!)
+                startActivityExt<MainActivity>(this)
+            onBackPressed()
+        }
         profile_toolbar.title = resources.getString(R.string.profile)
+
+        val padding: Int = ScreenUtil.getScreenWidth(this) / 2 - ScreenUtil.dpToPx(this, 40)
 
         val arrayAdapter: ArrayAdapter<CharSequence> = ArrayAdapter(
             this, R.layout.item_sex_exposed_dropdown_popup,
@@ -58,56 +60,76 @@ class ProfileActivity : DaggerAppCompatActivity() {
         )
         auto_complete_textview_sex.setAdapter(arrayAdapter)
 
-        carouselHeightLayoutManager.setPostLayoutListener(CarouselZoomPostLayoutListener())
-        carouselHeightLayoutManager.maxVisibleItems = 3
-        rv_curr_height.layoutManager = carouselHeightLayoutManager
-        rv_curr_height.adapter = heightSliderAdapter
+        heightSliderAdapter = SliderAdapter(object : SliderAdapter.OnItemCLickListener {
+            @SuppressLint("SetTextI18n")
+            override fun clickItem(pos: Int) {
+                tv_height.text = "${dataHeight[pos]} + ${getString(R.string.text_default_height_measuer)}"
+                rv_curr_height.smoothScrollToPosition(pos)
+            }
+        })
+        rv_curr_height.apply {
+            setPadding(padding, 0, padding, 0)
+            layoutManager = SliderLayoutManager(context, scaleDown = true, needListener = false)
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                @SuppressLint("SetTextI18n")
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                        tv_height.text = "${dataHeight[(recyclerView.layoutManager as SliderLayoutManager).findFirstVisibleItemPosition()]} ${getString(
+                                R.string.text_default_height_measuer)}"
+                }
+            })
+            adapter = heightSliderAdapter
+        }
         heightSliderAdapter?.setData(dataHeight)
 
 
-        carouselWeightLayoutManager.setPostLayoutListener(CarouselZoomPostLayoutListener())
-        carouselWeightLayoutManager.maxVisibleItems = 3
-        rv_curr_weight.layoutManager = carouselWeightLayoutManager
-        rv_curr_weight.adapter = weightSliderAdapter
+        weightSliderAdapter = SliderAdapter(object : SliderAdapter.OnItemCLickListener {
+            @SuppressLint("SetTextI18n")
+            override fun clickItem(pos: Int) {
+                tv_weight.text = "${dataWeight[pos]} ${getString(R.string.text_default_weight_measure)}"
+                rv_curr_weight.smoothScrollToPosition(pos)
+            }
+        })
+
+        rv_curr_weight.apply {
+            setPadding(padding, 0, padding, 0)
+            layoutManager = SliderLayoutManager(context, scaleDown = true, needListener = false)
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                @SuppressLint("SetTextI18n")
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                        tv_weight.text =
+                            "${dataWeight[(recyclerView.layoutManager as SliderLayoutManager).findFirstVisibleItemPosition()]} ${getString(
+                                R.string.text_default_weight_measure)}"
+
+                }
+            })
+            adapter = weightSliderAdapter
+        }
         weightSliderAdapter?.setData(dataWeight)
     }
 
     private fun initVars() {
-        heightSliderAdapter = SliderAdapter()
-        weightSliderAdapter = SliderAdapter()
         profileViewModel =
             ViewModelProviders.of(this, viewModelFatory).get(ProfileViewModel::class.java)
     }
 
     private fun setListeners() {
-        rv_curr_height.addOnScrollListener(CenterScrollListener())
-        rv_curr_weight.addOnScrollListener(CenterScrollListener())
-
-        DefaultChildSelectionListener.initCenterItemListener({ rv, _, v ->
-            val position = rv.getChildLayoutPosition(v)
-            tv_height.text = dataHeight[position]
-        }, rv_curr_height, carouselHeightLayoutManager)
-
-        DefaultChildSelectionListener.initCenterItemListener({ rv, _, v ->
-            val position = rv.getChildLayoutPosition(v)
-            tv_weight.text = dataWeight[position]
-        }, rv_curr_weight, carouselWeightLayoutManager)
-
         btn_create_profile.setOnClickListener {
             if (profileViewModel?.checkDataValidation(
                     tiet_name.text.toString(),
                     auto_complete_textview_sex.text.toString(),
                     tv_height.text.toString(),
-                    tv_weight.text.toString()
-                )!!
+                    tv_weight.text.toString())!!
             ) {
                 profileViewModel?.manageProfile(
                     EnumCommand.CREATE_PROFILE,
                     tiet_name.text.toString(),
                     auto_complete_textview_sex.text.toString(),
                     tv_height.text.toString(),
-                    tv_weight.text.toString()
-                )
+                    tv_weight.text.toString())
             }
         }
 
@@ -117,9 +139,12 @@ class ProfileActivity : DaggerAppCompatActivity() {
         }
 
         btn_edit_profile.setOnClickListener {
-            if (profileViewModel?.checkDataValidation(tiet_name.text.toString(),
+            if (profileViewModel?.checkDataValidation(
+                    tiet_name.text.toString(),
                     auto_complete_textview_sex.text.toString(), tv_height.text.toString(),
-                    tv_weight.text.toString())!!) {
+                    tv_weight.text.toString()
+                )!!
+            ) {
                 profileViewModel?.manageProfile(
                     EnumCommand.EDIT_PROFILE,
                     tiet_name.text.toString(),
@@ -154,9 +179,6 @@ class ProfileActivity : DaggerAppCompatActivity() {
             tv_imt.text = it.imt
             rv_curr_height.smoothScrollToPosition(heightSliderAdapter?.getPosition(it.currentHeight.toInt().toString())!!)
             rv_curr_weight.smoothScrollToPosition(weightSliderAdapter?.getPosition(it.currentWeight.toInt().toString())!!)
-
-            tv_weight_measure.text = it.measuresMap?.get(Constants.KEY_WEIGHT_MEASURE) ?: ""
-            tv_height_measure.text = it.measuresMap?.get(Constants.KEY_HEIGHT_MEASURE) ?: ""
         }
     }
 

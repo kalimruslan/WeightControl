@@ -1,5 +1,6 @@
 package ru.ruslan.weighttracker.ui.home
 
+import android.app.Activity.RESULT_OK
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -43,7 +44,8 @@ class HomeFragment : Fragment(), HomeContract.VIew {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (context?.applicationContext as MainApplication).getAppComponent().getHomeComponent().create().inject(this)
+        (context?.applicationContext as MainApplication).getAppComponent().getHomeComponent()
+            .create().inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -111,20 +113,20 @@ class HomeFragment : Fragment(), HomeContract.VIew {
 
     override fun updatePictureViews(profile: HomeUI?,
                                     requestCode: Int) {
-       profile?.let {
-           when(requestCode){
-               Constants.BEFORE_PHOTO_RESULT -> {
-                   tv_date_before.text = it.photoDate
-                   tv_weight_before.text = "${it.weightOnPhoto} кг."
-                   iv_photo_before.loadImage(imageUri = it.photoPath!!)
-               }
-               Constants.AFTER_PHOTO_RESULT -> {
-                   tv_date_after.text = it.photoDate
-                   tv_weight_after.text = "${it.weightOnPhoto} кг."
-                   iv_photo_after.loadImage(imageUri = it.photoPath!!)
-               }
-           }
-       }
+        profile?.let {
+            when (requestCode) {
+                Constants.BEFORE_PHOTO_RESULT -> {
+                    tv_date_before.text = it.photoDate
+                    tv_weight_before.text = "${it.weightOnPhoto} кг."
+                    iv_photo_before.loadImage(imageUri = it.photoPath!!)
+                }
+                Constants.AFTER_PHOTO_RESULT -> {
+                    tv_date_after.text = it.photoDate
+                    tv_weight_after.text = "${it.weightOnPhoto} кг."
+                    iv_photo_after.loadImage(imageUri = it.photoPath!!)
+                }
+            }
+        }
     }
 
     override fun startCameraScreen(needResult: Boolean, requestCode: Int) {
@@ -192,11 +194,13 @@ class HomeFragment : Fragment(), HomeContract.VIew {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            Constants.BEFORE_PHOTO_RESULT ->
-                presenter.getDataForPicture(Constants.BEFORE_PHOTO_RESULT)
-            Constants.AFTER_PHOTO_RESULT ->
-                presenter.getDataForPicture(Constants.AFTER_PHOTO_RESULT)
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                Constants.BEFORE_PHOTO_RESULT ->
+                    presenter.getDataForPicture(Constants.BEFORE_PHOTO_RESULT)
+                Constants.AFTER_PHOTO_RESULT ->
+                    presenter.getDataForPicture(Constants.AFTER_PHOTO_RESULT)
+            }
         }
     }
 }
