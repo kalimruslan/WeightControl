@@ -8,6 +8,7 @@ import ru.ruslan.weighttracker.MainApplication
 import ru.ruslan.weighttracker.dagger.module.*
 import ru.ruslan.weighttracker.dagger.subcomponents.CameraSubComponent
 import ru.ruslan.weighttracker.dagger.subcomponents.HomeSubComponent
+import ru.ruslan.weighttracker.dagger.subcomponents.SplashSubComponent
 import javax.inject.Singleton
 
 @Singleton
@@ -26,6 +27,7 @@ interface ApplicationComponent {
 
     fun getCameraComponent(): CameraSubComponent.Factory
     fun getHomeComponent(): HomeSubComponent.Factory
+    fun getSplashComponent(): SplashSubComponent.Factory
 
     fun inject(mainApplication: MainApplication)
 

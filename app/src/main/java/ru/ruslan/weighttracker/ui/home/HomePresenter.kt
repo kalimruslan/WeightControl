@@ -20,21 +20,19 @@ class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFr
 
     override fun setView(view: HomeContract.VIew) {
         homeView = view
-        if(!getFromProfileUseCase.checkIfUserExist()){
-            homeView.showToastForUserNotExist()
-            homeView.startProfileScreen()
-        }
-        else{
-            homeView.initViews()
-            homeView.setListeners()
-        }
+        homeView.initViews()
+        homeView.setListeners()
     }
 
     override fun getDataForPicture(requestCode: Int) {
         parentJob = coroutineScope.launch {
-            getFromProfileUseCase.getDataForPhoto(object : GetFromProfileUseCase.Callback.GetDataForPhoto{
+            getFromProfileUseCase.getDataForPhoto(object :
+                GetFromProfileUseCase.Callback.GetDataForPhoto {
                 override fun success(photoDataEntity: PhotoDataEntity) {
-                    homeView.updatePictureViews(PhotoDataEntityToHomeUIMapper.map(photoDataEntity), requestCode)
+                    homeView.updatePictureViews(
+                        PhotoDataEntityToHomeUIMapper.map(photoDataEntity),
+                        requestCode
+                    )
                 }
             })
         }
