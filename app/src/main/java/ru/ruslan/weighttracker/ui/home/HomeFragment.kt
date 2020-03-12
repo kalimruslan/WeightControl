@@ -57,16 +57,6 @@ class HomeFragment : Fragment(), HomeContract.VIew {
         presenter.setView(this)
     }
 
-    override fun showToastForUserNotExist() {
-        context?.let { getString(R.string.toast_profile_not_found).showToast(it) }
-    }
-
-    override fun startProfileScreen() {
-        context?.let {
-            this.startActivityExt<ProfileActivity>(it)
-        }
-    }
-
     override fun initViews() {
         fabAnimOpen = AnimationUtils.loadAnimation(context, R.anim.fab_open)
         fabAnimClose = AnimationUtils.loadAnimation(context, R.anim.fab_close)

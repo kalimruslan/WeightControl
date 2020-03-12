@@ -45,6 +45,8 @@
     <string name="hint_input_weight">Введите ваш вес</string>
     <string name="button_text_save">Сохранить</string>
     <string name="button_text_cancel">Отмена</string>
+    <string name="text_design_by_ruslan_kalimulin">Разработчик: Руслан Калимуллин</string>
+    <string name="text_logo">Логотип</string>
 
     <string-array name="sex_dropdown">
         <item>Мужской</item>
