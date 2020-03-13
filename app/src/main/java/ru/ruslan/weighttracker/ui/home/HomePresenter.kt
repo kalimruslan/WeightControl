@@ -1,5 +1,8 @@
 package ru.ruslan.weighttracker.ui.home
 
+import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.*
 import ru.ruslan.weighttracker.dagger.scope.HomeScope
 import ru.ruslan.weighttracker.domain.contract.HomeContract
@@ -7,6 +10,7 @@ import ru.ruslan.weighttracker.domain.model.PhotoDataEntity
 import ru.ruslan.weighttracker.domain.usecase.GetFromProfileUseCase
 import ru.ruslan.weighttracker.ui.PhotoDataEntityToHomeUIMapper
 import ru.ruslan.weighttracker.ui.util.Constants
+import java.io.File
 import javax.inject.Inject
 
 @HomeScope
@@ -24,18 +28,26 @@ class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFr
         homeView.setListeners()
     }
 
-    override fun getDataForPicture(requestCode: Int) {
+    override fun getDataForPicture(requestCode: Int, filesDir: File) {
         parentJob = coroutineScope.launch {
             getFromProfileUseCase.getDataForPhoto(object :
                 GetFromProfileUseCase.Callback.GetDataForPhoto {
                 override fun success(photoDataEntity: PhotoDataEntity) {
-                    homeView.updatePictureViews(
-                        PhotoDataEntityToHomeUIMapper.map(photoDataEntity),
-                        requestCode
-                    )
+                    val homeUI = PhotoDataEntityToHomeUIMapper.map(photoDataEntity)
+                    saveToJsonFile(homeUI, requestCode, filesDir)
+                    homeView.updatePictureViews(homeUI, requestCode)
                 }
             })
         }
+    }
+
+    private fun saveToJsonFile(homeUI: HomeUI?, requestCode: Int, filesDir: File) {
+        val fileName = if(requestCode == Constants.BEFORE_PHOTO_RESULT) "before.json"
+        else "after.json"
+        //val json = Gson().toJson(homeUI)
+        val file = File("${filesDir.path}/$fileName" )
+        val jsonPretty: String = GsonBuilder().setPrettyPrinting().create().toJson(homeUI)
+        file.writeText(jsonPretty)
     }
 
     override fun photoBeforeViewClicked() {

@@ -3,25 +3,22 @@ package ru.ruslan.weighttracker.ui.home
 import android.app.Activity.RESULT_OK
 import android.app.Dialog
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.content_home_photos.*
 import kotlinx.android.synthetic.main.dialog_choose_camera_or_gallery.*
 import kotlinx.android.synthetic.main.home_fragment.*
 import androidx.fragment.app.Fragment
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import ru.ruslan.weighttracker.MainApplication
 import ru.ruslan.weighttracker.ui.util.Constants
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.dagger.scope.HomeScope
 import ru.ruslan.weighttracker.domain.contract.HomeContract
 import ru.ruslan.weighttracker.ui.camera.CameraActivity
-import ru.ruslan.weighttracker.ui.profile.ProfileActivity
 import ru.ruslan.weighttracker.ui.util.*
 import javax.inject.Inject
 
@@ -197,9 +194,9 @@ class HomeFragment : Fragment(), HomeContract.VIew {
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 Constants.BEFORE_PHOTO_RESULT ->
-                    presenter.getDataForPicture(Constants.BEFORE_PHOTO_RESULT)
+                    presenter.getDataForPicture(Constants.BEFORE_PHOTO_RESULT, activity?.cacheDir!!)
                 Constants.AFTER_PHOTO_RESULT ->
-                    presenter.getDataForPicture(Constants.AFTER_PHOTO_RESULT)
+                    presenter.getDataForPicture(Constants.AFTER_PHOTO_RESULT, activity?.cacheDir!!)
             }
         }
     }

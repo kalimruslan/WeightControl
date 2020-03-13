@@ -1,6 +1,7 @@
 package ru.ruslan.weighttracker.domain.contract
 
 import ru.ruslan.weighttracker.ui.home.HomeUI
+import java.io.File
 
 interface HomeContract {
     interface VIew: BaseView{
@@ -16,7 +17,7 @@ interface HomeContract {
     }
 
     interface Presenter : BasePresenter<VIew>{
-        fun getDataForPicture(requestCode: Int)
+        fun getDataForPicture(requestCode: Int, filesDir: File)
         fun photoBeforeViewClicked()
         fun photoAfterViewClicked()
         fun fabMainViewClicked()
