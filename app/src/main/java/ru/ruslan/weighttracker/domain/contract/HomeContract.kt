@@ -24,6 +24,7 @@ interface HomeContract {
         fun fabPhotoViewClicked()
         fun cameraViewClicked()
         fun galleryViewClicked()
+        fun getSavedObjects(cacheDir: File)
     }
 
 }

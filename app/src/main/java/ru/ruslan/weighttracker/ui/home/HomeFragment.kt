@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -54,6 +53,7 @@ class HomeFragment : Fragment(), HomeContract.VIew {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.setView(this)
+        presenter.getSavedObjects(activity?.cacheDir!!)
     }
 
     override fun initViews() {

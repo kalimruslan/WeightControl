@@ -1,6 +1,5 @@
 package ru.ruslan.weighttracker.ui.home
 
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.*
@@ -44,10 +43,26 @@ class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFr
     private fun saveToJsonFile(homeUI: HomeUI?, requestCode: Int, filesDir: File) {
         val fileName = if(requestCode == Constants.BEFORE_PHOTO_RESULT) "before.json"
         else "after.json"
-        //val json = Gson().toJson(homeUI)
         val file = File("${filesDir.path}/$fileName" )
         val jsonPretty: String = GsonBuilder().setPrettyPrinting().create().toJson(homeUI)
         file.writeText(jsonPretty)
+    }
+
+    override fun getSavedObjects(cacheDir: File) {
+        var file = File("${cacheDir.path}/before.json" )
+        if(file.exists())
+            homeView.updatePictureViews(parseJsonFile(file), Constants.BEFORE_PHOTO_RESULT)
+
+        file = File("${cacheDir.path}/after.json" )
+        if(file.exists())
+            homeView.updatePictureViews(parseJsonFile(file), Constants.AFTER_PHOTO_RESULT)
+
+    }
+
+    private fun parseJsonFile(file: File) : HomeUI {
+        val bufferedReader = file.bufferedReader()
+        val inputString = bufferedReader.use { it.readText() }
+        return Gson().fromJson(inputString, HomeUI::class.java)
     }
 
     override fun photoBeforeViewClicked() {
