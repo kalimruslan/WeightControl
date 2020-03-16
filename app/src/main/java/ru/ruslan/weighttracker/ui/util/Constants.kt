@@ -15,4 +15,8 @@ object Constants {
 
     const val BEFORE_PHOTO_RESULT = 10
     const val AFTER_PHOTO_RESULT = 20
+
+    const val SORT_DATE = "sort_date"
+    const val SORT_WEIGHT = "sort_weight"
+    const val SORT_PHOTO = "sort_photo"
 }

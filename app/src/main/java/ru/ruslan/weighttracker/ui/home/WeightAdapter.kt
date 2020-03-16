@@ -1,16 +1,20 @@
 package ru.ruslan.weighttracker.ui.home
 
 import android.annotation.SuppressLint
+import android.provider.SyncStateContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_weight.view.*
 import ru.ruslan.weighttracker.R
+import ru.ruslan.weighttracker.ui.util.Constants
 
 class WeightAdapter(private val listener: WeightItemClickListener) : RecyclerView.Adapter<WeightAdapter.ViewHolder>() {
 
     private var list: MutableList<HomeUI> = mutableListOf()
+    private var sortDescDate = false
+    private var sortDescWeight = false
 
     interface WeightItemClickListener{
         fun weightItemClick(position: Int)
@@ -35,6 +39,32 @@ class WeightAdapter(private val listener: WeightItemClickListener) : RecyclerVie
     }
 
     fun getItemByPosition(position: Int): HomeUI = list[position]
+
+    fun sort(type: String) {
+        when(type){
+            Constants.SORT_DATE -> {
+                sortDescDate = if(sortDescDate) {
+                    list.sortByDescending { it.photoDate }
+                    false
+                } else {
+                    list.sortBy { it.photoDate }
+                    true
+                }
+            }
+            Constants.SORT_WEIGHT ->{
+                sortDescWeight = if(sortDescWeight) {
+                    list.sortByDescending { it.weightOnPhoto?.toDouble()  }
+                    false
+                } else {
+                    list.sortBy { it.weightOnPhoto?.toDouble()  }
+                    true
+                }
+            }
+            Constants.SORT_PHOTO ->
+                list.sortBy { it.photoId > 0 }
+        }
+        notifyDataSetChanged()
+    }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val item = itemView

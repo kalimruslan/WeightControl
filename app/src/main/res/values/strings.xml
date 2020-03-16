@@ -49,6 +49,9 @@
     <string name="text_logo">Логотип</string>
     <string name="title_camera">Камера</string>
     <string name="text_my_weights_list">Мои взвешивания</string>
+    <string name="sort_date">По дате</string>
+    <string name="sort_weight">По весу</string>
+    <string name="sort_photo">По фото</string>
 
     <string-array name="sex_dropdown">
         <item>Мужской</item>

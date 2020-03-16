@@ -1,10 +1,16 @@
 package ru.ruslan.weighttracker.ui.home
 
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.*
+import android.widget.ImageView
+import android.widget.PopupMenu
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.view.menu.MenuPopupHelper
 import kotlinx.android.synthetic.main.content_home_photos.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -20,7 +26,7 @@ import ru.ruslan.weighttracker.ui.util.*
 import javax.inject.Inject
 
 @HomeScope
-class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClickListener {
+class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClickListener, PopupMenu.OnMenuItemClickListener {
 
     @Inject
     lateinit var presenter: HomeContract.Presenter
@@ -76,8 +82,8 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
                 if (PermissionUtils.checkAndRequestCameraPermissions(context))
                     presenter.photoAfterViewClicked()
             } else presenter.photoAfterViewClicked()
-
         }
+        iv_more_weight_block.setOnClickListener{presenter.moreViewClicked(iv_more_weight_block)}
     }
 
     override fun updatePictureViews(profile: HomeUI?,
@@ -104,6 +110,23 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
 
     override fun populateWeightAdapter(weights: List<HomeUI>?) {
         weights?.let { weightAdapter?.setList(it) }
+    }
+
+    override fun showSortingPopup(view: ImageView) {
+        val wrapper: ContextWrapper = ContextThemeWrapper(context, R.style.MyPopupOtherStyle)
+        val popupMenu = PopupMenu(wrapper, view)
+        popupMenu.menuInflater.inflate(R.menu.sort_popup_menu, popupMenu.menu)
+        popupMenu.setOnMenuItemClickListener(this)
+        popupMenu.show()
+    }
+
+    override fun onMenuItemClick(menuItem: MenuItem?): Boolean {
+        when(menuItem?.itemId){
+            R.id.sortDate -> context?.let { weightAdapter?.sort(Constants.SORT_DATE)}
+            R.id.sortWeight -> context?.let { weightAdapter?.sort(Constants.SORT_WEIGHT)}
+            R.id.sortPhoto -> context?.let { weightAdapter?.sort(Constants.SORT_PHOTO) }
+        }
+        return false
     }
 
     override fun startCameraScreen(needResult: Boolean, requestCode: Int) {

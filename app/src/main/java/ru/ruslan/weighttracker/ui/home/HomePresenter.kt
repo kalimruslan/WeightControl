@@ -1,5 +1,6 @@
 package ru.ruslan.weighttracker.ui.home
 
+import android.widget.ImageView
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.*
@@ -88,4 +89,7 @@ class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFr
         homeView.startCameraScreen(needResult = true, requestCode = Constants.AFTER_PHOTO_RESULT)
     }
 
+    override fun moreViewClicked(view: ImageView) {
+        homeView.showSortingPopup(view)
+    }
 }

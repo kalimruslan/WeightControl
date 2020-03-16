@@ -1,5 +1,6 @@
 package ru.ruslan.weighttracker.domain.contract
 
+import android.widget.ImageView
 import ru.ruslan.weighttracker.ui.home.HomeUI
 import java.io.File
 
@@ -11,6 +12,7 @@ interface HomeContract {
         fun startCameraScreen(needResult: Boolean, requestCode: Int = 0)
         fun errorForLoadingWeightList(errorText: String)
         fun populateWeightAdapter(weights: List<HomeUI>?)
+        fun showSortingPopup(view: ImageView)
     }
 
     interface Presenter : BasePresenter<VIew>{
@@ -19,6 +21,7 @@ interface HomeContract {
         fun photoAfterViewClicked()
         fun getSavedObjects(cacheDir: File)
         fun getWeightList()
+        fun moreViewClicked(view: ImageView)
     }
 
 }
