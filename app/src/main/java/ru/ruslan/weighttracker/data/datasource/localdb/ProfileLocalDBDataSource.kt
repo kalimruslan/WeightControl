@@ -9,24 +9,9 @@ import java.lang.Exception
 
 class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
 
-    suspend fun saveWeight(weightLocal: WeightLocal?) {
-        weightLocal?.let { weight ->
-            try {
-                roomDatabase.profileLocalDao().saveWeight(
-                    profileId = weight.profileId,
-                    photoId = weight.photoId,
-                    weight = weight.weight,
-                    weightDate = weight.weightDate
-                )
-            } catch (ex: Exception) {
-                ex.printStackTrace()
-            }
-        }
-    }
-
     suspend fun savePhotoData(photoLocal: PhotoLocal?) : Result<Int> {
         return try {
-            val photoId = photoLocal?.let { roomDatabase.profileLocalDao().savePhoto(it) }
+            val photoId = photoLocal?.let { roomDatabase.photoLocalDao().savePhoto(it) }
             Result.success(photoId?.toInt())
         } catch (ex: Exception) {
             Result.error(ex)
@@ -68,9 +53,9 @@ class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
     fun getLastPhotoData(onlyLast: Boolean, userId: Int): Result<PhotoLocal> {
         return try {
             val photoLocal: PhotoLocal? = if(onlyLast){
-                roomDatabase.profileLocalDao().getLastPhotoLocal(userId)
+                roomDatabase.photoLocalDao().getLastPhotoLocal(userId)
             } else{
-                roomDatabase.profileLocalDao().getPhotoLocal(userId)
+                roomDatabase.photoLocalDao().getPhotoLocal(userId)
             }
 
             Result.success(photoLocal)
@@ -79,10 +64,33 @@ class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
         }
     }
 
-    fun getWeight(userId: Int, photoId: Int = 0): Result<WeightLocal>{
-        return try {
-            val weightLocal: WeightLocal? = roomDatabase.profileLocalDao().getWeightByPhotoId(userId, photoId)
+    suspend fun saveWeight(weightLocal: WeightLocal?) {
+        weightLocal?.let { weight ->
+            try {
+                roomDatabase.weightLocalDao().saveWeight(
+                    profileId = weight.profileId,
+                    photoId = weight.photoId,
+                    weight = weight.weight,
+                    weightDate = weight.weightDate
+                )
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
+        }
+    }
 
+    fun getWeightByPhoto(userId: Int, photoId: Int = 0): Result<WeightLocal>{
+        return try {
+            val weightLocal: WeightLocal? = roomDatabase.weightLocalDao().getWeightByPhotoId(userId, photoId)
+            Result.success(weightLocal)
+        } catch (ex: Exception) {
+            Result.error(ex)
+        }
+    }
+
+    fun getAllWeights(userId: Int): Result<List<WeightLocal>>{
+        return try {
+            val weightLocal: List<WeightLocal>? = roomDatabase.weightLocalDao().getAllWeight(userId)
             Result.success(weightLocal)
         } catch (ex: Exception) {
             Result.error(ex)

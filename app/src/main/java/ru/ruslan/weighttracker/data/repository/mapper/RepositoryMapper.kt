@@ -129,5 +129,12 @@ object ProfileLocalToEntityMapper : BaseMapper<ProfileLocal, ProfileEntity> {
         }
         return profileEntity
     }
+}
 
+object WeightLocalToWeightEntity : BaseMapper<List<WeightLocal>, List<WeightEntity>>{
+    override fun map(type: List<WeightLocal>?): List<WeightEntity>? {
+        return type?.map { item ->
+            WeightEntity(item.profileId, item.photoId, item.weight, item.weightDate)
+        }
+    }
 }

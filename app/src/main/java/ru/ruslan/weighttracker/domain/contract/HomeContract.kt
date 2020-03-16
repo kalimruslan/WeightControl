@@ -7,24 +7,18 @@ interface HomeContract {
     interface VIew: BaseView{
         fun initViews()
         fun setListeners()
-        fun openCloseFabMenu(isOpen: Boolean)
-        fun updatePictureViews(profile: HomeUI?,
-                               requestCode: Int)
+        fun updatePictureViews(profile: HomeUI?, requestCode: Int)
         fun startCameraScreen(needResult: Boolean, requestCode: Int = 0)
-        fun showChooseDialog()
-        fun tryOpenCamera()
-        fun tryOpenGallery()
+        fun errorForLoadingWeightList(errorText: String)
+        fun populateWeightAdapter(weights: List<HomeUI>?)
     }
 
     interface Presenter : BasePresenter<VIew>{
         fun getDataForPicture(requestCode: Int, filesDir: File)
         fun photoBeforeViewClicked()
         fun photoAfterViewClicked()
-        fun fabMainViewClicked()
-        fun fabPhotoViewClicked()
-        fun cameraViewClicked()
-        fun galleryViewClicked()
         fun getSavedObjects(cacheDir: File)
+        fun getWeightList()
     }
 
 }

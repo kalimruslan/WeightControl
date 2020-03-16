@@ -6,8 +6,10 @@ import kotlinx.coroutines.*
 import ru.ruslan.weighttracker.dagger.scope.HomeScope
 import ru.ruslan.weighttracker.domain.contract.HomeContract
 import ru.ruslan.weighttracker.domain.model.PhotoDataEntity
+import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
 import ru.ruslan.weighttracker.domain.usecase.GetFromProfileUseCase
 import ru.ruslan.weighttracker.ui.PhotoDataEntityToHomeUIMapper
+import ru.ruslan.weighttracker.ui.WeightEntityToHomeUI
 import ru.ruslan.weighttracker.ui.util.Constants
 import java.io.File
 import javax.inject.Inject
@@ -17,7 +19,6 @@ class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFr
     HomeContract.Presenter {
 
     private lateinit var homeView: HomeContract.VIew
-    private var isFabOpen: Boolean = false
     private var parentJob: Job = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + parentJob)
 
@@ -35,6 +36,20 @@ class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFr
                     val homeUI = PhotoDataEntityToHomeUIMapper.map(photoDataEntity)
                     saveToJsonFile(homeUI, requestCode, filesDir)
                     homeView.updatePictureViews(homeUI, requestCode)
+                }
+            })
+        }
+    }
+
+    override fun getWeightList() {
+        parentJob = coroutineScope.launch {
+            getFromProfileUseCase.getWeightsDataList(object : GetFromProfileUseCase.Callback.GetWeightDataList{
+                override fun success(list: List<WeightEntity>?) {
+                    homeView.populateWeightAdapter(WeightEntityToHomeUI.map(list))
+                }
+
+                override fun error(e: String) {
+                    homeView.errorForLoadingWeightList(e)
                 }
             })
         }
@@ -73,25 +88,4 @@ class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFr
         homeView.startCameraScreen(needResult = true, requestCode = Constants.AFTER_PHOTO_RESULT)
     }
 
-    override fun cameraViewClicked() {
-        homeView.tryOpenCamera()
-    }
-
-    override fun galleryViewClicked() {
-        homeView.tryOpenGallery()
-    }
-
-    override fun fabMainViewClicked() {
-        isFabOpen = if (isFabOpen) {
-            homeView.openCloseFabMenu(false)
-            false
-        } else {
-            homeView.openCloseFabMenu(true)
-            true
-        }
-    }
-
-    override fun fabPhotoViewClicked() {
-        homeView.showChooseDialog()
-    }
 }

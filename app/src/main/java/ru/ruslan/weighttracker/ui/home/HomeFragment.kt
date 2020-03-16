@@ -1,17 +1,15 @@
 package ru.ruslan.weighttracker.ui.home
 
 import android.app.Activity.RESULT_OK
-import android.app.Dialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.*
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import kotlinx.android.synthetic.main.content_home_photos.*
-import kotlinx.android.synthetic.main.dialog_choose_camera_or_gallery.*
-import kotlinx.android.synthetic.main.home_fragment.*
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.content_home_weight.*
 import ru.ruslan.weighttracker.MainApplication
 import ru.ruslan.weighttracker.ui.util.Constants
 import ru.ruslan.weighttracker.R
@@ -22,16 +20,12 @@ import ru.ruslan.weighttracker.ui.util.*
 import javax.inject.Inject
 
 @HomeScope
-class HomeFragment : Fragment(), HomeContract.VIew {
+class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClickListener {
 
     @Inject
     lateinit var presenter: HomeContract.Presenter
 
-    private lateinit var fabAnimOpen: Animation
-    private lateinit var fabAnimClose: Animation
-    private lateinit var fabAnimClock: Animation
-    private lateinit var fabAnimAntiClock: Animation
-    private var chooseDialog: Dialog? = null
+    private var weightAdapter: WeightAdapter? = null
 
     companion object {
         @JvmStatic
@@ -53,35 +47,20 @@ class HomeFragment : Fragment(), HomeContract.VIew {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.setView(this)
+        presenter.getWeightList()
         presenter.getSavedObjects(activity?.cacheDir!!)
     }
 
     override fun initViews() {
-        fabAnimOpen = AnimationUtils.loadAnimation(context, R.anim.fab_open)
-        fabAnimClose = AnimationUtils.loadAnimation(context, R.anim.fab_close)
-        fabAnimClock = AnimationUtils.loadAnimation(context, R.anim.fab_rotate_clock)
-        fabAnimAntiClock = AnimationUtils.loadAnimation(context, R.anim.fab_rotate_anticlock)
-
-        initChooseAppDialog()
-
         iv_photo_before.loadImage(drawableId = R.drawable.img_placeholder)
         iv_photo_after.loadImage(drawableId = R.drawable.img_placeholder)
-    }
 
-    private fun initChooseAppDialog() {
-        chooseDialog = context?.let { Dialog(it, R.style.AppTheme) }
-        chooseDialog?.apply {
-            window?.setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            window?.setGravity(Gravity.BOTTOM)
-            requestWindowFeature(Window.FEATURE_NO_TITLE)
-            setCancelable(true)
-            setContentView(R.layout.dialog_choose_camera_or_gallery)
-            llCamera.setOnClickListener { presenter.cameraViewClicked() }
-            llGallery.setOnClickListener { presenter.galleryViewClicked() }
-            iv_choose_close.setOnClickListener { this.dismiss() }
+        weightAdapter =  WeightAdapter(this@HomeFragment)
+
+        rv_my_weight.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(DividerItemDecoration(rv_my_weight.context, DividerItemDecoration.VERTICAL))
+            adapter = weightAdapter
         }
     }
 
@@ -98,13 +77,6 @@ class HomeFragment : Fragment(), HomeContract.VIew {
                     presenter.photoAfterViewClicked()
             } else presenter.photoAfterViewClicked()
 
-        }
-
-        fab_main.setOnClickListener {
-            presenter.fabMainViewClicked()
-        }
-        fab_photo.setOnClickListener {
-            presenter.fabPhotoViewClicked()
         }
     }
 
@@ -126,67 +98,29 @@ class HomeFragment : Fragment(), HomeContract.VIew {
         }
     }
 
+    override fun errorForLoadingWeightList(errorText: String) {
+        context?.let { errorText.showToast(it) }
+    }
+
+    override fun populateWeightAdapter(weights: List<HomeUI>?) {
+        weights?.let { weightAdapter?.setList(it) }
+    }
+
     override fun startCameraScreen(needResult: Boolean, requestCode: Int) {
         if (needResult) {
             when (requestCode) {
                 Constants.BEFORE_PHOTO_RESULT -> {
                     this.startActivityForResultExt<CameraActivity>(
                         context!!,
-                        Constants.BEFORE_PHOTO_RESULT
-                    )
+                        Constants.BEFORE_PHOTO_RESULT)
                 }
                 Constants.AFTER_PHOTO_RESULT -> {
                     this.startActivityForResultExt<CameraActivity>(
                         context!!,
-                        Constants.AFTER_PHOTO_RESULT
-                    )
+                        Constants.AFTER_PHOTO_RESULT)
                 }
             }
         } else activity?.startActivityExt<CameraActivity>(context!!)
-    }
-
-    override fun openCloseFabMenu(isOpen: Boolean) {
-        if (isOpen) {
-            fab_photo.startAnimation(fabAnimOpen)
-            fab_weight.startAnimation(fabAnimOpen)
-            fab_main.startAnimation(fabAnimClock)
-            fab_photo.isClickable = true
-            fab_photo.isClickable = true
-        } else {
-            fab_photo.startAnimation(fabAnimClose)
-            fab_weight.startAnimation(fabAnimClose)
-            fab_main.startAnimation(fabAnimAntiClock)
-            fab_photo.isClickable = false
-            fab_photo.isClickable = false
-        }
-    }
-
-    override fun showChooseDialog() {
-        chooseDialog?.show()
-    }
-
-    override fun tryOpenCamera() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (PermissionUtils.checkAndRequestCameraPermissions(context)) {
-                startCameraScreen(false)
-                chooseDialog?.dismiss()
-            }
-        } else {
-            startCameraScreen(false)
-            chooseDialog?.dismiss()
-        }
-    }
-
-    override fun tryOpenGallery() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (PermissionUtils.checkAndRequestExternalPermission(context)) {
-                RouterUtil.openGallery(this)
-                chooseDialog?.dismiss()
-            }
-        } else {
-            RouterUtil.openGallery(this)
-            chooseDialog?.dismiss()
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -199,5 +133,9 @@ class HomeFragment : Fragment(), HomeContract.VIew {
                     presenter.getDataForPicture(Constants.AFTER_PHOTO_RESULT, activity?.cacheDir!!)
             }
         }
+    }
+
+    override fun weightItemClick(position: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
