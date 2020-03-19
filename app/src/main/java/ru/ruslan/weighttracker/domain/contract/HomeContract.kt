@@ -22,6 +22,7 @@ interface HomeContract {
         fun getSavedObjects(cacheDir: File)
         fun getWeightList()
         fun moreViewClicked(view: ImageView)
+        fun recyclerItemDropped(photoId: CharSequence)
     }
 
 }

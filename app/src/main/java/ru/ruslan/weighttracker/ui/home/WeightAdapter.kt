@@ -1,7 +1,6 @@
 package ru.ruslan.weighttracker.ui.home
 
 import android.annotation.SuppressLint
-import android.provider.SyncStateContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +17,8 @@ class WeightAdapter(private val listener: WeightItemClickListener) : RecyclerVie
 
     interface WeightItemClickListener{
         fun weightItemClick(position: Int)
+        fun weightItemLongClicked(position: Int, item: View,
+                                  homeUI: HomeUI)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -72,6 +73,10 @@ class WeightAdapter(private val listener: WeightItemClickListener) : RecyclerVie
         @SuppressLint("SetTextI18n")
         fun onBind(listener: WeightItemClickListener, position: Int, homeUI: HomeUI){
             item.setOnClickListener { listener.weightItemClick(position) }
+            item.setOnLongClickListener {
+                listener.weightItemLongClicked(position, item, homeUI)
+                true
+            }
 
             item.tvDate.text = homeUI.photoDate
             item.tvWeight.text = "${homeUI.weightOnPhoto} кг."

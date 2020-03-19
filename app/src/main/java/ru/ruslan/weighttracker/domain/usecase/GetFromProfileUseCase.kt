@@ -1,6 +1,5 @@
 package ru.ruslan.weighttracker.domain.usecase
 
-import ru.ruslan.weightracker.core.datatype.Result
 import ru.ruslan.weightracker.core.datatype.ResultType
 import ru.ruslan.weighttracker.domain.model.PhotoDataEntity
 import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
@@ -50,6 +49,7 @@ class GetFromProfileUseCase @Inject constructor (private val profileLocalReposit
     suspend fun getWeightsDataList(listener: Callback.GetWeightDataList){
         val listDataEntity = profileLocalRepository.getAllWeightsForUser(profileLocalRepository.retrieveProfileId())
         if(listDataEntity.resultType == ResultType.SUCCESS){
+            // TODO Получить данные фотки
             listener.success(listDataEntity.data)
         }
         else{
