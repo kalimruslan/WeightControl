@@ -71,6 +71,8 @@ dependencies {
     implementation carouselLayoutManager
     implementation cameraXDependencies.values()
 
+    implementation swipeView
+
     // Room components
     implementation room
     implementation roomCoroutines

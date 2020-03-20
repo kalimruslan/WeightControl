@@ -15,6 +15,7 @@ ext{
     gsonVersion = "2.4.0"
     carouselVersion = "1.2.4"
     jsr330Version = '1'
+    swipeviewVersion = '0.6.0'
 
     // Testing
     junitVersion = '4.12'
@@ -94,5 +95,7 @@ ext{
             'espressoContrib' : "androidx.test.espresso:espresso-contrib:$espresso_version",
             'mockAndroid' : "io.mockk:mockk-android:$mockKVersion",
     ]
+
+    swipeView = "berhane.biniam.swipeview:swipeview:$swipeviewVersion"
 
 }
