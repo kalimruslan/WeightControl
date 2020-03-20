@@ -37,7 +37,7 @@ class ProfileLocalRepositoryImpl(private val localDataSource: ProfileLocalDBData
             Result.error(profileId.error)
     }
 
-    override suspend fun editProfile(profileId: Int, profileEntity: ProfileEntity){
+    override suspend fun editProfile(profileId: Int, profileEntity: ProfileEntity) {
         localDataSource.editProfile(profileId, ProfileEntityToLocalMapper.map(profileEntity))
     }
 
@@ -46,19 +46,42 @@ class ProfileLocalRepositoryImpl(private val localDataSource: ProfileLocalDBData
 
         return if (result.resultType == ResultType.SUCCESS)
             Result.success(ProfileLocalToEntityMapper.map(result.data))
-         else
+        else
             Result.error(result.error)
     }
 
     override suspend fun getPhotoData(userId: Int): PhotoDataEntity {
         var photoDataEntity: PhotoDataEntity = PhotoDataEntity()
         val photoResult = localDataSource.getLastPhotoData(true, userId)
-        if(photoResult.resultType == ResultType.SUCCESS) {
+        if (photoResult.resultType == ResultType.SUCCESS) {
             val photoObj = photoResult.data
-            val weightResult = localDataSource.getWeightByPhoto(userId, photoObj?.id!!)
-            if(weightResult.resultType == ResultType.SUCCESS){
+            val weightResult = localDataSource.getWeightByPhoto(photoObj?.id!!)
+            if (weightResult.resultType == ResultType.SUCCESS) {
                 val weightObj = weightResult.data
-                photoDataEntity = PhotoDataEntity(photoDate = photoObj.photoDate, photoPath = photoObj.photoUrl, weightOnPhoto = weightObj?.weight!!)
+                photoDataEntity = PhotoDataEntity(
+                    photoDate = photoObj.photoDate,
+                    photoPath = photoObj.photoUrl,
+                    weightOnPhoto = weightObj?.weight!!
+                )
+            }
+        }
+
+        return photoDataEntity
+    }
+
+    override suspend fun getPhotoDataByPhotoId(photoId: Int): PhotoDataEntity {
+        var photoDataEntity: PhotoDataEntity = PhotoDataEntity()
+        val weight = localDataSource.getWeightByPhoto(photoId)
+        if (weight.resultType == ResultType.SUCCESS) {
+            val photo = localDataSource.getPhotoById(photoId)
+            if (photo.resultType == ResultType.SUCCESS) {
+                val photoObj = photo.data
+                if (photoObj != null) {
+                    photoDataEntity = PhotoDataEntity(
+                        photoDate = photoObj.photoDate,
+                        photoPath = photoObj.photoUrl,
+                        weightOnPhoto = weight.data?.weight!!)
+                }
             }
         }
 
@@ -67,7 +90,7 @@ class ProfileLocalRepositoryImpl(private val localDataSource: ProfileLocalDBData
 
     override suspend fun getAllWeightsForUser(profileId: Int): Result<List<WeightEntity>> {
         var result = localDataSource.getAllWeights(profileId)
-        return if(result.resultType == ResultType.SUCCESS)
+        return if (result.resultType == ResultType.SUCCESS)
             Result.success(WeightLocalToWeightEntity.map(result.data))
         else
             Result.error(result.error)
@@ -98,7 +121,7 @@ class ProfileLocalRepositoryImpl(private val localDataSource: ProfileLocalDBData
         profilePreferences.storeWeightMeasure(unit)
     }
 
-    override fun retrieveWeightMeasure(): String?  =
+    override fun retrieveWeightMeasure(): String? =
         profilePreferences.retrieveWeightMeasure()
 
     override fun storeHeightMeasure(unit: String) {

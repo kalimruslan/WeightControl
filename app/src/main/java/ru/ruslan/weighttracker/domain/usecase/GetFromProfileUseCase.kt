@@ -46,10 +46,14 @@ class GetFromProfileUseCase @Inject constructor (private val profileLocalReposit
         listener.success(photoDataEntity)
     }
 
+    suspend fun getDataByPhotoId(photoId: Int, listener: Callback.GetDataForPhoto){
+        val photoDataEntity = profileLocalRepository.getPhotoDataByPhotoId(photoId)
+        listener.success(photoDataEntity)
+    }
+
     suspend fun getWeightsDataList(listener: Callback.GetWeightDataList){
         val listDataEntity = profileLocalRepository.getAllWeightsForUser(profileLocalRepository.retrieveProfileId())
         if(listDataEntity.resultType == ResultType.SUCCESS){
-            // TODO Получить данные фотки
             listener.success(listDataEntity.data)
         }
         else{

@@ -18,4 +18,7 @@ interface PhotoLocalDao {
 
     @Query("SELECT * FROM photos WHERE profile_id = :userId ORDER BY id DESC LIMIT 1")
     fun getLastPhotoLocal(userId: Int): PhotoLocal?
+
+    @Query("SELECT * FROM photos WHERE id = :photoId")
+    fun getPhotoById(photoId: Int): PhotoLocal?
 }

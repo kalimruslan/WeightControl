@@ -52,6 +52,9 @@
     <string name="sort_date">По дате</string>
     <string name="sort_weight">По весу</string>
     <string name="sort_photo">По фото</string>
+    <string name="text_no_photo_for_this_case">Для этого взвешивания нет фото</string>
+    <string name="text_cancel_weight_adding">Отмена добавления веса</string>
+    <string name="text_add_weight_successfull">Данные успешно сохранены</string>
 
     <string-array name="sex_dropdown">
         <item>Мужской</item>

@@ -9,6 +9,7 @@ import ru.ruslan.weighttracker.domain.contract.HomeContract
 import ru.ruslan.weighttracker.domain.model.PhotoDataEntity
 import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
 import ru.ruslan.weighttracker.domain.usecase.GetFromProfileUseCase
+import ru.ruslan.weighttracker.domain.usecase.SaveToProfileUseCase
 import ru.ruslan.weighttracker.ui.PhotoDataEntityToHomeUIMapper
 import ru.ruslan.weighttracker.ui.WeightEntityToHomeUI
 import ru.ruslan.weighttracker.ui.util.Constants
@@ -16,7 +17,8 @@ import java.io.File
 import javax.inject.Inject
 
 @HomeScope
-class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFromProfileUseCase) :
+class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFromProfileUseCase,
+                                        private var saveToProfileUseCase: SaveToProfileUseCase) :
     HomeContract.Presenter {
 
     private lateinit var homeView: HomeContract.VIew
@@ -42,8 +44,29 @@ class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFr
         }
     }
 
-    override fun recyclerItemDropped(photoId: CharSequence) {
+    override fun addWeightButtonClicked() {
+        homeView.openBottomSheetDialogForWeight()
+    }
 
+    override fun saveNewWeight(weight: Int, date: String) {
+        parentJob = coroutineScope.launch {
+            saveToProfileUseCase.saveWeight(weight = weight.toDouble(), date = date)
+            delay(500)
+            getWeightList()
+        }
+    }
+
+    override fun recyclerItemDropped(photoId: String, requestCode: Int, filesDir: File) {
+        parentJob = coroutineScope.launch {
+            getFromProfileUseCase.getDataByPhotoId(photoId = photoId.toInt(), listener =  object :
+                GetFromProfileUseCase.Callback.GetDataForPhoto {
+                override fun success(photoDataEntity: PhotoDataEntity) {
+                    val homeUI = PhotoDataEntityToHomeUIMapper.map(photoDataEntity)
+                    saveToJsonFile(homeUI, requestCode, filesDir)
+                    homeView.updatePictureViews(homeUI, requestCode)
+                }
+            })
+        }
     }
 
     override fun getWeightList() {

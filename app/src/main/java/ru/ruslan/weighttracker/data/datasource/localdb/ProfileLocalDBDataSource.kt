@@ -79,9 +79,9 @@ class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
         }
     }
 
-    fun getWeightByPhoto(userId: Int, photoId: Int = 0): Result<WeightLocal>{
+    suspend fun getWeightByPhoto(photoId: Int = 0): Result<WeightLocal>{
         return try {
-            val weightLocal: WeightLocal? = roomDatabase.weightLocalDao().getWeightByPhotoId(userId, photoId)
+            val weightLocal: WeightLocal? = roomDatabase.weightLocalDao().getWeightByPhotoId(photoId)
             Result.success(weightLocal)
         } catch (ex: Exception) {
             Result.error(ex)
@@ -96,4 +96,14 @@ class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
             Result.error(ex)
         }
     }
+
+    suspend fun getPhotoById(photoId: Int): Result<PhotoLocal> {
+        return try {
+            val photoLocal: PhotoLocal? = roomDatabase.photoLocalDao().getPhotoById(photoId)
+            Result.success(photoLocal)
+        } catch (ex: Exception) {
+            Result.error(ex)
+        }
+    }
+
 }

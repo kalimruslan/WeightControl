@@ -81,7 +81,7 @@ class WeightAdapter(private val listener: WeightItemClickListener) : RecyclerVie
             item.tvDate.text = homeUI.photoDate
             item.tvWeight.text = "${homeUI.weightOnPhoto} кг."
             if(homeUI.photoId > 0) item.ivHasPhoto.visibility = View.VISIBLE
-            else item.ivHasPhoto.visibility = View.GONE
+            else item.ivHasPhoto.visibility = View.INVISIBLE
         }
 
     }

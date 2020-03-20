@@ -5,7 +5,6 @@ import android.content.ClipData
 import android.content.ClipDescription
 import android.content.ContextWrapper
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -16,6 +15,7 @@ import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.Lazy
 import kotlinx.android.synthetic.main.content_home_photos.*
 import kotlinx.android.synthetic.main.content_home_weight.*
 import ru.ruslan.weighttracker.MainApplication
@@ -24,45 +24,48 @@ import ru.ruslan.weighttracker.dagger.scope.HomeScope
 import ru.ruslan.weighttracker.domain.contract.HomeContract
 import ru.ruslan.weighttracker.ui.camera.CameraActivity
 import ru.ruslan.weighttracker.ui.util.*
+import java.util.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
 
 @HomeScope
-class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClickListener, PopupMenu.OnMenuItemClickListener {
+class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClickListener,
+    PopupMenu.OnMenuItemClickListener, AddWeightBottomSheetDialog.AddWeightBottomSheetListener {
 
     private val onDragListener = View.OnDragListener { view, dragEvent ->
         (view as? CardView)?.let {
             when (dragEvent.action) {
-                // Once the drag event has started, we elevate all the views that are listening.
-                // In our case, that's two of the areas.
                 DragEvent.ACTION_DRAG_STARTED -> {
                     it.elevation = toDP(CARD_ELEVATION_DRAG_START_DP)
                     return@OnDragListener true
                 }
-                // Once the drag gesture enters a certain area, we want to elevate it even more.
                 DragEvent.ACTION_DRAG_ENTERED -> {
                     it.elevation = toDP(CARD_ELEVATION_DRAG_ENTER_DP)
                     return@OnDragListener true
                 }
-                // No need to handle this for our use case.
-                DragEvent.ACTION_DRAG_LOCATION -> {
-                    return@OnDragListener true
-                }
-                // Once the drag gesture exits the area, we lower the elevation down to the previous one.
+                DragEvent.ACTION_DRAG_LOCATION -> return@OnDragListener true
                 DragEvent.ACTION_DRAG_EXITED -> {
                     it.elevation = toDP(CARD_ELEVATION_DRAG_START_DP)
                     return@OnDragListener true
                 }
-                // Once the color is dropped on the area, we want to paint it in that color.
                 DragEvent.ACTION_DROP -> {
                     val photoId: ClipData.Item = dragEvent.clipData.getItemAt(0)
-                    presenter.recyclerItemDropped(photoId.text)
-                    val colorHex = photoId.text
-                    it.setBackgroundColor(Color.parseColor(colorHex.toString()))
+                    if (view.id == R.id.card_photo_before)
+                        presenter.recyclerItemDropped(
+                            photoId.text.toString(),
+                            Constants.BEFORE_PHOTO_RESULT,
+                            activity?.cacheDir!!
+                        )
+                    else
+                        presenter.recyclerItemDropped(
+                            photoId.text.toString(),
+                            Constants.AFTER_PHOTO_RESULT,
+                            activity?.cacheDir!!
+                        )
+
                     return@OnDragListener true
                 }
-                // Once the drag has ended, revert card views to the default elevation.
                 DragEvent.ACTION_DRAG_ENDED -> {
                     it.elevation = toDP(CARD_ELEVATION_DEFAULT_DP)
                     return@OnDragListener true
@@ -75,21 +78,21 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
 
     @Inject
     lateinit var presenter: HomeContract.Presenter
+    @Inject
+    lateinit var weightBottomDialog: Lazy<AddWeightBottomSheetDialog>
 
     private var weightAdapter: WeightAdapter? = null
 
     companion object {
         @JvmStatic
         fun newInstance() = HomeFragment()
-        // Default card elevation.
+
         const val CARD_ELEVATION_DEFAULT_DP = 8F
-        // Card elevation once the dragging has started.
         const val CARD_ELEVATION_DRAG_START_DP = 28F
-        // Card elevation once the color is dragged over one of the areas.
         const val CARD_ELEVATION_DRAG_ENTER_DP = 40F
     }
 
-    private fun toDP(px: Float): Float{
+    private fun toDP(px: Float): Float {
         val displayMetrics = context!!.resources.displayMetrics
         return (px * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt().toFloat()
     }
@@ -117,11 +120,16 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
         iv_photo_before.loadImage(drawableId = R.drawable.img_placeholder)
         iv_photo_after.loadImage(drawableId = R.drawable.img_placeholder)
 
-        weightAdapter =  WeightAdapter(this@HomeFragment)
+        weightAdapter = WeightAdapter(this@HomeFragment)
 
         rv_my_weight.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            addItemDecoration(DividerItemDecoration(rv_my_weight.context, DividerItemDecoration.VERTICAL))
+            addItemDecoration(
+                DividerItemDecoration(
+                    rv_my_weight.context,
+                    DividerItemDecoration.VERTICAL
+                )
+            )
             adapter = weightAdapter
         }
     }
@@ -142,8 +150,15 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
                     presenter.photoAfterViewClicked()
             } else presenter.photoAfterViewClicked()
         }
-        iv_more_weight_block.setOnClickListener{presenter.moreViewClicked(iv_more_weight_block)}
+        iv_more_weight_block.setOnClickListener { presenter.moreViewClicked(iv_more_weight_block) }
 
+        ivAddWeight.setOnClickListener { presenter.addWeightButtonClicked() }
+    }
+
+    override fun openBottomSheetDialogForWeight() {
+        val dialog = weightBottomDialog.get()
+        dialog.setOnAddWeightBottomSheetListener(this)
+        dialog.show(activity?.supportFragmentManager!!, "AddWeightDialog")
     }
 
     override fun updatePictureViews(profile: HomeUI?,
@@ -181,9 +196,9 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
     }
 
     override fun onMenuItemClick(menuItem: MenuItem?): Boolean {
-        when(menuItem?.itemId){
-            R.id.sortDate -> context?.let { weightAdapter?.sort(Constants.SORT_DATE)}
-            R.id.sortWeight -> context?.let { weightAdapter?.sort(Constants.SORT_WEIGHT)}
+        when (menuItem?.itemId) {
+            R.id.sortDate -> context?.let { weightAdapter?.sort(Constants.SORT_DATE) }
+            R.id.sortWeight -> context?.let { weightAdapter?.sort(Constants.SORT_WEIGHT) }
             R.id.sortPhoto -> context?.let { weightAdapter?.sort(Constants.SORT_PHOTO) }
         }
         return false
@@ -195,12 +210,14 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
                 Constants.BEFORE_PHOTO_RESULT -> {
                     this.startActivityForResultExt<CameraActivity>(
                         context!!,
-                        Constants.BEFORE_PHOTO_RESULT)
+                        Constants.BEFORE_PHOTO_RESULT
+                    )
                 }
                 Constants.AFTER_PHOTO_RESULT -> {
                     this.startActivityForResultExt<CameraActivity>(
                         context!!,
-                        Constants.AFTER_PHOTO_RESULT)
+                        Constants.AFTER_PHOTO_RESULT
+                    )
                 }
             }
         } else activity?.startActivityExt<CameraActivity>(context!!)
@@ -222,16 +239,27 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
     }
 
     override fun weightItemLongClicked(position: Int, it: View, homeUI: HomeUI) {
+        if(homeUI.photoId == 0){
+            context?.let { it1 -> getString(R.string.text_no_photo_for_this_case).showToast(it1) }
+            return
+        }
         val item = ClipData.Item(homeUI.photoId.toString())
-
-        val dragData = ClipData(it.tag as? CharSequence, arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN), item)
-
+        val dragData =
+            ClipData(it.tag as? CharSequence, arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN), item)
         val myShadow = MyDragShadowBuilder(it)
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             it.startDragAndDrop(dragData, myShadow, null, 0)
         } else {
             it.startDrag(dragData, myShadow, null, 0)
         }
+    }
+
+    override fun cancelButtonClicked() {
+        context?.let { getString(R.string.text_cancel_weight_adding).showToast(it) }
+    }
+
+    override fun okButtonClicked(weightValue: String) {
+        context?.let { getString(R.string.text_add_weight_successfull).showToast(it) }
+        presenter.saveNewWeight(weightValue.toInt(), Calendar.getInstance().time.toString("dd.MM.yyyy"))
     }
 }

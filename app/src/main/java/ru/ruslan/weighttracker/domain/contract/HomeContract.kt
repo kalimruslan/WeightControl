@@ -13,6 +13,7 @@ interface HomeContract {
         fun errorForLoadingWeightList(errorText: String)
         fun populateWeightAdapter(weights: List<HomeUI>?)
         fun showSortingPopup(view: ImageView)
+        fun openBottomSheetDialogForWeight()
     }
 
     interface Presenter : BasePresenter<VIew>{
@@ -22,7 +23,11 @@ interface HomeContract {
         fun getSavedObjects(cacheDir: File)
         fun getWeightList()
         fun moreViewClicked(view: ImageView)
-        fun recyclerItemDropped(photoId: CharSequence)
+        fun recyclerItemDropped(photoId: String, requestCode: Int,
+                                cacheDir: File)
+
+        fun addWeightButtonClicked()
+        fun saveNewWeight(weight: Int, date: String)
     }
 
 }

@@ -69,7 +69,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
         transaction.apply {
             replace(R.id.fl_container, fragment)
-            addToBackStack(null)
             commit()
         }
         supportActionBar?.title = title

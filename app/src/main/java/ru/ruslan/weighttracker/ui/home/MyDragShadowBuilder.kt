@@ -8,10 +8,8 @@ import android.view.View
 
 class MyDragShadowBuilder(v: View) : View.DragShadowBuilder(v) {
     private val shadowBorder = ColorDrawable(Color.BLACK)
-
     private val shadow = ColorDrawable(Color.parseColor(v.tag.toString()))
 
-    // Defines a callback that sends the drag shadow dimensions and touch point back to the system.
     override fun onProvideShadowMetrics(size: Point, touch: Point) {
         // First, we define the shadow width and height. In our example, it will be
         // half of the size of the view that's been dragged.
