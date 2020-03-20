@@ -4,6 +4,7 @@ import ru.ruslan.weightracker.core.BaseMapper
 import ru.ruslan.weighttracker.data.datasource.localdb.model.ProfileLocal
 import ru.ruslan.weighttracker.domain.model.PhotoDataEntity
 import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
+import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
 import ru.ruslan.weighttracker.domain.model.videolists.VideoEntity
 import ru.ruslan.weighttracker.ui.home.HomeUI
 import ru.ruslan.weighttracker.ui.profile.vm.model.ProfileUI
@@ -37,6 +38,14 @@ object ProfileEntityToUIMapper : BaseMapper<ProfileEntity, ProfileUI> {
                 goalWeight = it.goalWeight,
                 measuresMap = it.measuresMap
             )
+        }
+    }
+}
+
+object WeightEntityToHomeUI : BaseMapper<List<WeightEntity>, List<HomeUI>>{
+    override fun map(type: List<WeightEntity>?): List<HomeUI>? {
+        return type?.map {
+            HomeUI(it.weightDate, null, it.weight.toString(), it.photoId)
         }
     }
 }

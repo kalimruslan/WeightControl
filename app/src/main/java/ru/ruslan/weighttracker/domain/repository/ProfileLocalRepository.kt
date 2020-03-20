@@ -6,6 +6,7 @@ import ru.ruslan.weighttracker.domain.model.PhotoDataEntity
 import ru.ruslan.weighttracker.domain.model.profile.PhotoEntity
 import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
 import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
+import java.lang.invoke.CallSite
 
 interface ProfileLocalRepository {
     suspend fun saveWeight(weightEntity: WeightEntity)
@@ -17,6 +18,8 @@ interface ProfileLocalRepository {
     suspend fun createProfile(profileEntity: ProfileEntity): Result<Int>
     suspend fun editProfile(profileId:Int,  profileEntity: ProfileEntity)
     suspend fun getPhotoData(retrieveProfileId: Int): PhotoDataEntity
+    suspend fun getPhotoDataByPhotoId(photoId: Int): PhotoDataEntity
+    suspend fun getAllWeightsForUser(profileId: Int): Result<List<WeightEntity>>
 
     fun storeProfileId(profileId: Int)
     fun retrieveProfileId(): Int

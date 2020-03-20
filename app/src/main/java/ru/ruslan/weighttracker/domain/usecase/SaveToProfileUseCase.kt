@@ -28,10 +28,9 @@ class SaveToProfileUseCase @Inject constructor(
         }
     }
 
-    suspend fun saveWeight(weightEntity: WeightEntity?) {
-        weightEntity?.let {
-            profileLocalRepository.saveWeight(it)
-        }
+    suspend fun saveWeight(photoId: Int = 0, weight: Double, date: String) {
+        val weightEntity = WeightEntity(profileLocalRepository.retrieveProfileId(), photoId, weight, date)
+        profileLocalRepository.saveWeight(weightEntity)
     }
 
     suspend fun savePhotoData(dateString: String, filePath: String, weightStr: String, listener: Callback.Photo) {
@@ -40,12 +39,7 @@ class SaveToProfileUseCase @Inject constructor(
         ).let { photoId ->
             if (photoId.resultType == ResultType.SUCCESS) {
                 photoId.data?.let {
-                    saveWeight(WeightEntity(
-                            profileId = profileLocalRepository.retrieveProfileId(),
-                            photoId = it,
-                            weight = weightStr.toDouble(),
-                            weightDate = dateString)
-                    )
+                    saveWeight(photoId = it, weight = weightStr.toDouble(), date = dateString)
                     listener.photoSaveSuccess()
                 }
             }
