@@ -96,6 +96,6 @@ ext{
             'mockAndroid' : "io.mockk:mockk-android:$mockKVersion",
     ]
 
-    swipeView = "berhane.biniam.swipeview:swipeview:$swipeviewVersion"
+    swipeView = "com.ernestoyaquello.dragdropswiperecyclerview:drag-drop-swipe-recyclerview:$swipeviewVersion"
 
 }

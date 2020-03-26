@@ -21,4 +21,7 @@ interface PhotoLocalDao {
 
     @Query("SELECT * FROM photos WHERE id = :photoId")
     fun getPhotoById(photoId: Int): PhotoLocal?
+
+    @Query("DELETE FROM photos WHERE id = :photoId")
+    fun removeById(photoId: Int)
 }

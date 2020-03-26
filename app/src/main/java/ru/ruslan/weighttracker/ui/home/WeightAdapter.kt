@@ -67,6 +67,11 @@ class WeightAdapter(private val listener: WeightItemClickListener) : RecyclerVie
         notifyDataSetChanged()
     }
 
+    fun removeItemByPosition(adapterPosition: Int) {
+        list.removeAt(adapterPosition)
+        notifyItemRemoved(adapterPosition)
+    }
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val item = itemView
 

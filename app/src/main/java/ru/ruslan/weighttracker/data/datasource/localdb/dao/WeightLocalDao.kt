@@ -16,4 +16,10 @@ interface WeightLocalDao {
     @Query("SELECT * FROM weight WHERE profile_id = :userId")
     fun getAllWeight(userId: Int): List<WeightLocal>?
 
+    @Query("DELETE FROM weight WHERE photo_id = :photoId")
+    fun removeByPhotoId(photoId: Int)
+
+    @Query("DELETE FROM weight WHERE weight_date = :photoDate AND weight = :weightOnPhoto")
+    fun remove(photoDate: String?, weightOnPhoto: String?)
+
 }
