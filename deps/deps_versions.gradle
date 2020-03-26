@@ -16,6 +16,7 @@ ext{
     carouselVersion = "1.2.4"
     jsr330Version = '1'
     swipeviewVersion = '0.6.0'
+    firebaseAnalyticsVersion = '17.2.2'
 
     // Testing
     junitVersion = '4.12'
@@ -97,5 +98,6 @@ ext{
     ]
 
     swipeView = "com.ernestoyaquello.dragdropswiperecyclerview:drag-drop-swipe-recyclerview:$swipeviewVersion"
+    firebaseAnalytics = "com.google.firebase:firebase-analytics:$firebaseAnalyticsVersion"
 
 }
