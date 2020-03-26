@@ -28,6 +28,7 @@ interface HomeContract {
 
         fun addWeightButtonClicked()
         fun saveNewWeight(weight: Int, date: String)
+        fun removeWeightSwiped(item: HomeUI)
     }
 
 }

@@ -106,4 +106,14 @@ class ProfileLocalDBDataSource(private val roomDatabase: AppRoomDatabase) {
         }
     }
 
+    fun deleteWeight(photoId: Int, photoDate: String?, weightOnPhoto: String?) {
+        if(photoId > 0){
+            roomDatabase.photoLocalDao().removeById(photoId)
+            roomDatabase.weightLocalDao().removeByPhotoId(photoId)
+        }
+        else{
+            roomDatabase.weightLocalDao().remove(photoDate, weightOnPhoto)
+        }
+    }
+
 }

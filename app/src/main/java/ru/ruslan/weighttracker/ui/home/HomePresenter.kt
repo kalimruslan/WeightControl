@@ -8,6 +8,7 @@ import ru.ruslan.weighttracker.dagger.scope.HomeScope
 import ru.ruslan.weighttracker.domain.contract.HomeContract
 import ru.ruslan.weighttracker.domain.model.PhotoDataEntity
 import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
+import ru.ruslan.weighttracker.domain.usecase.DeleteFromProfileUseCase
 import ru.ruslan.weighttracker.domain.usecase.GetFromProfileUseCase
 import ru.ruslan.weighttracker.domain.usecase.SaveToProfileUseCase
 import ru.ruslan.weighttracker.ui.PhotoDataEntityToHomeUIMapper
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @HomeScope
 class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFromProfileUseCase,
-                                        private var saveToProfileUseCase: SaveToProfileUseCase) :
+                                        private var saveToProfileUseCase: SaveToProfileUseCase,
+                                        private val deleteFromProfileUseCase: DeleteFromProfileUseCase) :
     HomeContract.Presenter {
 
     private lateinit var homeView: HomeContract.VIew
@@ -39,6 +41,7 @@ class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFr
                     val homeUI = PhotoDataEntityToHomeUIMapper.map(photoDataEntity)
                     saveToJsonFile(homeUI, requestCode, filesDir)
                     homeView.updatePictureViews(homeUI, requestCode)
+                    getWeightList()
                 }
             })
         }
@@ -53,6 +56,12 @@ class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFr
             saveToProfileUseCase.saveWeight(weight = weight.toDouble(), date = date)
             delay(500)
             getWeightList()
+        }
+    }
+
+    override fun removeWeightSwiped(item: HomeUI) {
+        parentJob = coroutineScope.launch {
+            deleteFromProfileUseCase.removeWeight(item.photoId, item.photoDate, item.weightOnPhoto)
         }
     }
 

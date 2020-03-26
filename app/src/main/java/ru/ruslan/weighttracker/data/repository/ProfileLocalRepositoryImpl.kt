@@ -96,6 +96,9 @@ class ProfileLocalRepositoryImpl(private val localDataSource: ProfileLocalDBData
             Result.error(result.error)
     }
 
+    override fun deleteWeight(photoId: Int, photoDate: String?, weightOnPhoto: String?) {
+        localDataSource.deleteWeight(photoId, photoDate, weightOnPhoto)
+    }
 
     override suspend fun getAllProfileData(): Result<List<ProfileEntity>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

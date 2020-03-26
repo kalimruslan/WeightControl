@@ -27,4 +27,5 @@ interface ProfileLocalRepository {
     fun retrieveWeightMeasure(): String?
     fun storeHeightMeasure(unit: String)
     fun retrieveHeightMeasure(): String?
+    fun deleteWeight(photoId: Int, photoDate: String?, weightOnPhoto: String?)
 }

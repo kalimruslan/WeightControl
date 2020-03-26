@@ -69,4 +69,5 @@ class SaveToProfileUseCase @Inject constructor(
             }
         }
     }
+
 }

@@ -11,10 +11,13 @@ import android.util.DisplayMetrics
 import android.view.*
 import android.widget.ImageView
 import android.widget.PopupMenu
+import android.widget.SimpleAdapter
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.Lazy
 import kotlinx.android.synthetic.main.content_home_photos.*
 import kotlinx.android.synthetic.main.content_home_weight.*
@@ -23,6 +26,7 @@ import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.dagger.scope.HomeScope
 import ru.ruslan.weighttracker.domain.contract.HomeContract
 import ru.ruslan.weighttracker.ui.camera.CameraActivity
+import ru.ruslan.weighttracker.ui.common.SwipeToDeleteCallback
 import ru.ruslan.weighttracker.ui.util.*
 import java.util.*
 import javax.inject.Inject
@@ -132,6 +136,16 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
             )
             adapter = weightAdapter
         }
+
+        val itemTouchHelper = ItemTouchHelper(object : SwipeToDeleteCallback(context!!) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter = rv_my_weight.adapter as WeightAdapter
+                val item = adapter.getItemByPosition(viewHolder.adapterPosition)
+                presenter.removeWeightSwiped(item)
+                adapter.removeItemByPosition(viewHolder.adapterPosition)
+            }
+        })
+        itemTouchHelper.attachToRecyclerView(rv_my_weight)
     }
 
     override fun setListeners() {
