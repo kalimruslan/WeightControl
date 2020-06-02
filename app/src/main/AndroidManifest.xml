@@ -45,6 +45,21 @@
         <activity android:name=".ui.videos.detail.VideoDetailActivity" />
         <activity android:name=".ui.profile.ProfileActivity" />
         <activity android:name=".ui.camera.CameraActivity" />
+
+        <service
+            android:name=".ui.firebase.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_launcher_foreground" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorPrimary" />
     </application>
 
 </manifest>

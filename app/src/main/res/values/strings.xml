@@ -60,4 +60,7 @@
         <item>Мужской</item>
         <item>Женский</item>
     </string-array>
+
+    <string name="token_prefix">Token: %s</string>
+
 </resources>

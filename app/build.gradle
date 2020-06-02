@@ -83,6 +83,7 @@ dependencies {
     androidTestImplementation androidTestDependencies.values()
 
     implementation firebaseAnalytics
+    implementation firebaseMessaging
 
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
