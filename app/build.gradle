@@ -40,7 +40,6 @@ android {
 }
 
 apply from: "$project.rootDir/deps/deps_versions.gradle"
-
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
