@@ -40,7 +40,6 @@ class CameraActivity : AppCompatActivity(), CameraContract.View {
         setSupportActionBar(camera_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         camera_toolbar.title = getString(R.string.title_camera)
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -40,7 +40,6 @@ android {
 }
 
 apply from: "$project.rootDir/deps/deps_versions.gradle"
-
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -83,6 +82,7 @@ dependencies {
     androidTestImplementation androidTestDependencies.values()
 
     implementation firebaseAnalytics
+    implementation firebaseMessaging
 
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
