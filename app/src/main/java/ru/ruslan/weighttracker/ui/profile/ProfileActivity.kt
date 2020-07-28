@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -46,9 +47,13 @@ class ProfileActivity : DaggerAppCompatActivity() {
     private fun initViews() {
         profile_toolbar.setNavigationIcon(R.drawable.ic_close)
         profile_toolbar.setNavigationOnClickListener {
-            if(profileViewModel?.userIsExist()!!)
+            if(profileViewModel?.userIsExist()!!) {
                 startActivityExt<MainActivity>(this)
-            onBackPressed()
+                onBackPressed()
+            }
+            else{
+                getString(R.string.toast_text_create_profile).showToast(this)
+            }
         }
         profile_toolbar.title = resources.getString(R.string.profile)
 

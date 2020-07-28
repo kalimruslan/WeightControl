@@ -62,5 +62,6 @@
     </string-array>
 
     <string name="token_prefix">Token: %s</string>
+    <string name="toast_text_create_profile">Создайте профиль</string>
 
 </resources>
