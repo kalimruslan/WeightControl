@@ -8,6 +8,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import ru.ruslan.weighttracker.dagger.component.ApplicationComponent
 import ru.ruslan.weighttracker.dagger.component.DaggerApplicationComponent
+import ru.ruslan.weighttracker.ui.util.Constants.THIS_APP
 import javax.inject.Inject
 
 class MainApplication : Application(), HasAndroidInjector {
@@ -18,6 +19,7 @@ class MainApplication : Application(), HasAndroidInjector {
 
     override fun onCreate() {
         super.onCreate()
+        THIS_APP = this
         MultiDex.install(this)
         applicationComponent =  DaggerApplicationComponent
             .builder()

@@ -3,6 +3,7 @@ package ru.ruslan.weighttracker.ui.util
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -14,9 +15,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import ru.ruslan.weighttracker.R
+import ru.ruslan.weighttracker.ui.util.Constants.APP_ACTIVITY
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 fun View.showSnackBar(message: String, duration: Int = Snackbar.LENGTH_SHORT) {
     Snackbar.make(this, message, duration).show()
@@ -60,3 +63,9 @@ inline fun <reified T: Activity> Fragment.startActivityForResultExt(context: Con
     val intent: Intent = Intent(context, T::class.java)
     startActivityForResult(intent, resultCode)
 }
+
+internal fun Float.toDP(): Float {
+    val displayMetrics = APP_ACTIVITY.resources.displayMetrics
+    return (this * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt().toFloat()
+}
+

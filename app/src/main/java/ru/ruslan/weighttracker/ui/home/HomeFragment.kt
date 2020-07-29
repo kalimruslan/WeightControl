@@ -25,6 +25,7 @@ import ru.ruslan.weighttracker.MainApplication
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.dagger.scope.HomeScope
 import ru.ruslan.weighttracker.domain.contract.HomeContract
+import ru.ruslan.weighttracker.ui.BaseFragment
 import ru.ruslan.weighttracker.ui.camera.CameraActivity
 import ru.ruslan.weighttracker.ui.common.SwipeToDeleteCallback
 import ru.ruslan.weighttracker.ui.util.*
@@ -34,23 +35,23 @@ import kotlin.math.roundToInt
 
 
 @HomeScope
-class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClickListener,
+class HomeFragment : BaseFragment(R.layout.home_fragment), HomeContract.VIew, WeightAdapter.WeightItemClickListener,
     PopupMenu.OnMenuItemClickListener, AddWeightBottomSheetDialog.AddWeightBottomSheetListener {
 
     private val onDragListener = View.OnDragListener { view, dragEvent ->
         (view as? CardView)?.let {
             when (dragEvent.action) {
                 DragEvent.ACTION_DRAG_STARTED -> {
-                    it.elevation = toDP(CARD_ELEVATION_DRAG_START_DP)
+                    it.elevation = CARD_ELEVATION_DRAG_START_DP.toDP()
                     return@OnDragListener true
                 }
                 DragEvent.ACTION_DRAG_ENTERED -> {
-                    it.elevation = toDP(CARD_ELEVATION_DRAG_ENTER_DP)
+                    it.elevation = CARD_ELEVATION_DRAG_ENTER_DP.toDP()
                     return@OnDragListener true
                 }
                 DragEvent.ACTION_DRAG_LOCATION -> return@OnDragListener true
                 DragEvent.ACTION_DRAG_EXITED -> {
-                    it.elevation = toDP(CARD_ELEVATION_DRAG_START_DP)
+                    it.elevation = CARD_ELEVATION_DRAG_START_DP.toDP()
                     return@OnDragListener true
                 }
                 DragEvent.ACTION_DROP -> {
@@ -71,7 +72,7 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
                     return@OnDragListener true
                 }
                 DragEvent.ACTION_DRAG_ENDED -> {
-                    it.elevation = toDP(CARD_ELEVATION_DEFAULT_DP)
+                    it.elevation = CARD_ELEVATION_DEFAULT_DP.toDP()
                     return@OnDragListener true
                 }
                 else -> return@OnDragListener false
@@ -96,21 +97,9 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
         const val CARD_ELEVATION_DRAG_ENTER_DP = 40F
     }
 
-    private fun toDP(px: Float): Float {
-        val displayMetrics = context!!.resources.displayMetrics
-        return (px * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt().toFloat()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun initDagger() {
         (context?.applicationContext as MainApplication).getAppComponent().getHomeComponent()
             .create().inject(this)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return LayoutInflater.from(container?.context)
-            .inflate(R.layout.home_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

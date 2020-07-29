@@ -1,12 +1,13 @@
 package ru.ruslan.weighttracker.domain.contract
 
-import ru.ruslan.weighttracker.ui.profile.vm.model.ProfileUI
+import ru.ruslan.weighttracker.ui.profile.ProfileUI
 
 interface ProfileContract {
     interface View: BaseView{
         fun initViews()
-        fun hideShowButtons(show: Boolean)
-        fun populateProfileViews(profileUI: ProfileUI)
+        fun setListeners()
+        fun hasItAccount(isHas: Boolean)
+        fun populateProfileViews(profileUI: ProfileUI?)
         fun showToastProfileCreatedSuccess()
         fun showToastProfileCreatedError()
         fun showToastProfileEditedSuccess()

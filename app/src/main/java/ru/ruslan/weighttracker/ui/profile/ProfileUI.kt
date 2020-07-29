@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.ui.profile.vm.model
+package ru.ruslan.weighttracker.ui.profile
 
 
 class ProfileUI(val fio: String?,

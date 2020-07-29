@@ -19,8 +19,5 @@ abstract class UIModule {
     internal abstract fun provideVideoDetailActivity(): VideoDetailActivity
 
     @ContributesAndroidInjector
-    internal abstract fun provideProfileActivity(): ProfileActivity
-
-    @ContributesAndroidInjector
     abstract fun provideVideosFragment() : VideosFragment
 }

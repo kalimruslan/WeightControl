@@ -7,7 +7,6 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 import ru.ruslan.weighttracker.dagger.annotation.ViewModelKey
 import ru.ruslan.weighttracker.ui.ViewModelFactory
-import ru.ruslan.weighttracker.ui.profile.vm.ProfileViewModel
 import ru.ruslan.weighttracker.ui.videos.list.vm.VideoListViewModel
 
 @Module
@@ -18,11 +17,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(VideoListViewModel::class)
     abstract fun provideVideoListViewModel(videoListViewModel: VideoListViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ProfileViewModel::class)
-    abstract fun provideProfileViewModel(videoListViewModel: ProfileViewModel): ViewModel
 
     // Factory
     @Binds

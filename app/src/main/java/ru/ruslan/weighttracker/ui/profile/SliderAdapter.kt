@@ -26,7 +26,7 @@ class SliderAdapter(private val listener: OnItemCLickListener): RecyclerView.Ada
         }
     }
 
-    fun setData(data: ArrayList<String>){
+    fun setData(data: List<String>){
         this.data = data
         notifyDataSetChanged()
     }

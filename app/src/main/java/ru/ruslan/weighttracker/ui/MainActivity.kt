@@ -14,15 +14,16 @@ import kotlinx.android.synthetic.main.activity_main.*
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.ui.home.HomeFragment
 import ru.ruslan.weighttracker.ui.profile.ProfileActivity
+import ru.ruslan.weighttracker.ui.util.Constants.APP_ACTIVITY
 import ru.ruslan.weighttracker.ui.util.startActivityExt
 import ru.ruslan.weighttracker.ui.videos.list.VideosFragment
 
-class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity(R.layout.activity_main), BottomNavigationView.OnNavigationItemSelectedListener {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun initDagger() = AndroidInjection.inject(this)
+
+    override fun initMembers() {
+        APP_ACTIVITY = this
         setSupportActionBar(main_toolbar)
         clickListeners()
 
@@ -31,7 +32,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         bottom_navigation.selectedItemId = R.id.nav_main
     }
-
 
     private fun clickListeners() {
         bottom_navigation.setOnNavigationItemSelectedListener(this)
