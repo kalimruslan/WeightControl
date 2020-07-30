@@ -1,34 +1,35 @@
 package ru.ruslan.weighttracker.ui
 
 import android.content.Intent
-import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.ui.home.HomeFragment
 import ru.ruslan.weighttracker.ui.profile.ProfileActivity
-import ru.ruslan.weighttracker.ui.videos.list.VideosFragment
+import ru.ruslan.weighttracker.ui.util.Constants.APP_ACTIVITY
+import ru.ruslan.weighttracker.ui.util.replaceFragment
+import ru.ruslan.weighttracker.ui.util.startActivityExt
+import ru.ruslan.weighttracker.ui.videos.list.VideoListFragment
 
-class MainActivity : DaggerAppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity(R.layout.activity_main),
+    BottomNavigationView.OnNavigationItemSelectedListener {
+    override fun initDagger() {}
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun initMembers() {
+        APP_ACTIVITY = this
         setSupportActionBar(main_toolbar)
         clickListeners()
 
-        val toolbar = findViewById<Toolbar>(R.id.main_toolbar)
+        val toolbar = findViewById<MaterialToolbar>(R.id.main_toolbar)
         setSupportActionBar(toolbar)
 
         bottom_navigation.selectedItemId = R.id.nav_main
     }
-
 
     private fun clickListeners() {
         bottom_navigation.setOnNavigationItemSelectedListener(this)
@@ -42,8 +43,8 @@ class MainActivity : DaggerAppCompatActivity(), BottomNavigationView.OnNavigatio
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.action_profile -> startActivity(Intent(this, ProfileActivity::class.java))
+        when (item.itemId) {
+            R.id.action_profile -> startActivityExt<ProfileActivity>(this)
         }
         return true
     }
@@ -51,10 +52,11 @@ class MainActivity : DaggerAppCompatActivity(), BottomNavigationView.OnNavigatio
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_main -> {
-                openFragment(HomeFragment.newInstance(), item.title.toString())
+                replaceFragment(HomeFragment.newInstance(), title = item.title.toString())
+                return true
             }
             R.id.nav_video -> {
-                openFragment(VideosFragment.newInstance(), item.title.toString())
+                replaceFragment(VideoListFragment.newInstance(), title = item.title.toString())
                 return true
             }
             R.id.nav_settings -> return true
@@ -62,13 +64,15 @@ class MainActivity : DaggerAppCompatActivity(), BottomNavigationView.OnNavigatio
         return false
     }
 
-    private fun openFragment(fragment: Fragment, title: String) {
-        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
-        transaction.apply {
-            replace(R.id.fl_container, fragment)
-            addToBackStack(null)
-            commit()
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        val fragments = supportFragmentManager.fragments
+        for (fragment in fragments) {
+            fragment.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
-        supportActionBar?.title = title
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }

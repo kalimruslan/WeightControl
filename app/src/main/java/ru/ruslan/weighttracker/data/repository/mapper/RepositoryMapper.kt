@@ -10,8 +10,7 @@ import ru.ruslan.weighttracker.domain.model.profile.PhotoEntity
 import ru.ruslan.weighttracker.domain.model.profile.ProfileEntity
 import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
 
-object ApiToEntityMapper :
-    ru.ruslan.weightracker.core.BaseMapper<YoutubeResponce, VideosEntity> {
+object ApiToEntityMapper : BaseMapper<YoutubeResponce, VideosEntity> {
     override fun map(type: YoutubeResponce?): VideosEntity? {
         var videosEntity: VideosEntity? = null
         if (type != null) {
@@ -47,8 +46,7 @@ object ApiToEntityMapper :
     }
 }
 
-object ProfileEntityToLocalMapper :
-    ru.ruslan.weightracker.core.BaseMapper<ProfileEntity, ProfileLocal> {
+object ProfileEntityToLocalMapper : BaseMapper<ProfileEntity, ProfileLocal> {
     override fun map(type: ProfileEntity?): ProfileLocal? {
         var profileLocal: ProfileLocal? = null
         type?.let {
@@ -56,14 +54,16 @@ object ProfileEntityToLocalMapper :
                 if (it.weightEntity != null) {
                     WeightLocal(
                         profileId = it.weightEntity.profileId,
-                        weight = it.weightEntity.weight, weightDate = it.weightEntity.weightDate
+                        photoId = it.weightEntity.photoId,
+                        weight = it.weightEntity.weight,
+                        weightDate = it.weightEntity.weightDate
                     )
                 } else null
             val photoLocal =
                 if (it.photoEntity != null) {
                     PhotoLocal(
                         profileId = it.photoEntity.profileId,
-                        photoUrl = it.photoEntity.photoUrl,
+                        photoUrl = it.photoEntity.photoPath,
                         photoDate = it.photoEntity.photoDate
                     )
                 } else null
@@ -72,6 +72,7 @@ object ProfileEntityToLocalMapper :
                 dateBirth = it.dateBirth,
                 currWeight = it.currentWeight,
                 currHeight = it.currentHeight,
+                sex = it.sex,
                 currIMT = it.currentIMT,
                 goalWeight = it.goalWeight,
                 weightLocal = weightLocal,
@@ -82,13 +83,13 @@ object ProfileEntityToLocalMapper :
     }
 }
 
-object WeightEntityToLocalMapper :
-    ru.ruslan.weightracker.core.BaseMapper<WeightEntity, WeightLocal> {
+object WeightEntityToLocalMapper : BaseMapper<WeightEntity, WeightLocal> {
     override fun map(type: WeightEntity?): WeightLocal? {
         var weightLocal: WeightLocal? = null
         type?.let {
             weightLocal = WeightLocal(
                 profileId = it.profileId,
+                photoId = it.photoId,
                 weight = it.weight,
                 weightDate = it.weightDate
             )
@@ -97,25 +98,43 @@ object WeightEntityToLocalMapper :
     }
 }
 
-object PhotoEntityToLocalMapper :
-    ru.ruslan.weightracker.core.BaseMapper<PhotoEntity, PhotoLocal> {
+object PhotoEntityToLocalMapper : BaseMapper<PhotoEntity, PhotoLocal> {
     override fun map(type: PhotoEntity?): PhotoLocal? {
         var photoLocal: PhotoLocal? = null
         type?.let {
             photoLocal = PhotoLocal(
                 profileId = it.profileId,
-                photoUrl =  it.photoUrl,
-                photoDate =  it.photoDate
+                photoUrl = it.photoPath,
+                photoDate = it.photoDate
             )
         }
         return photoLocal
     }
 }
 
-object LocalToEntittMapper :
-    ru.ruslan.weightracker.core.BaseMapper<ProfileLocal, ProfileEntity> {
+object ProfileLocalToEntityMapper : BaseMapper<ProfileLocal, ProfileEntity> {
     override fun map(type: ProfileLocal?): ProfileEntity? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var profileEntity: ProfileEntity? = null
+        type?.let {
+            profileEntity = ProfileEntity(
+                fio = it.fio,
+                dateBirth = it.dateBirth,
+                currentWeight = it.currWeight,
+                currentHeight = it.currHeight,
+                sex = it.sex,
+                goalWeight = it.goalWeight,
+                weightEntity = null,
+                photoEntity = null
+                )
+        }
+        return profileEntity
     }
+}
 
+object WeightLocalToWeightEntity : BaseMapper<List<WeightLocal>, List<WeightEntity>>{
+    override fun map(type: List<WeightLocal>?): List<WeightEntity>? {
+        return type?.map { item ->
+            WeightEntity(item.profileId, item.photoId, item.weight, item.weightDate)
+        }
+    }
 }

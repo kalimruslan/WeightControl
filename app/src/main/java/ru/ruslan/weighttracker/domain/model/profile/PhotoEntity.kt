@@ -3,5 +3,5 @@ package ru.ruslan.weighttracker.domain.model.profile
 
 data class PhotoEntity(
     var profileId: Int,
-    var photoUrl: String,
+    var photoPath: String,
     var photoDate: String)

@@ -6,8 +6,9 @@ import ru.ruslan.weighttracker.data.datasource.api.VideoListNetworkDataSource
 import ru.ruslan.weighttracker.data.repository.mapper.ApiToEntityMapper
 import ru.ruslan.weighttracker.domain.repository.VideoListRepository
 import ru.ruslan.weighttracker.domain.model.videolists.VideosEntity
+import javax.inject.Inject
 
-class VideoListRepositoryImpl(private val videoListNetworkDataSource: VideoListNetworkDataSource) :
+class VideoListRepositoryImpl @Inject constructor(private val videoListNetworkDataSource: VideoListNetworkDataSource) :
     VideoListRepository {
 
     override suspend fun getVideosForPlayList(playlist: String,

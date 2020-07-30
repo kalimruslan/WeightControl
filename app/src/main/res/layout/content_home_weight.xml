@@ -1,56 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.google.android.material.card.MaterialCardView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/indent_8dp"
+    app:cardElevation="@dimen/indent_8dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="false"
     android:layout_marginStart="@dimen/indent_8dp"
     android:layout_marginTop="@dimen/indent_8dp"
     android:layout_marginEnd="@dimen/indent_8dp"
     android:layout_marginBottom="@dimen/indent_8dp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/divider"
-    app:layout_constraintBottom_toBottomOf="parent"
     tools:showIn="@layout/home_fragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+
         <TextView
             android:id="@+id/tv_weight_block_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            tools:text="Список взвешиваний"
-            app:layout_constraintEnd_toStartOf="@+id/iv_more_weight_block"
+            android:text="@string/text_my_weights_list"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_22sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ivAddWeight"
+            app:layout_constraintEnd_toStartOf="@+id/ivAddWeight"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/ivAddWeight" />
+
+        <ImageView
+            android:id="@+id/ivAddWeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="Добавить вес"
+            android:padding="@dimen/indent_8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:layout_constraintEnd_toStartOf="@+id/iv_more_weight_block"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_add" />
+
         <ImageView
             android:id="@+id/iv_more_weight_block"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
             android:contentDescription="Больше"
+            android:padding="@dimen/indent_8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
             app:srcCompat="@drawable/ic_more_menu" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_my_weight"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_weight_block_title" />
+            app:layout_constraintTop_toBottomOf="@+id/ivAddWeight" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
 

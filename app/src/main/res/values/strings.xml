@@ -2,7 +2,6 @@
     <string name="app_name">WeightTracker</string>
     <string name="text_no_internet_connection">НЕт соединения с интернетом</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="text_please_wait">Пожалуйста, подождите ...</string>
     <string name="text_home">Главная</string>
@@ -19,4 +18,47 @@
     <string name="text_chooser_image">Select Picture</string>
     <string name="text_collapsing_toolbar">Мотивация</string>
     <string name="text_action_profile">Профиль</string>
+    <string name="fio">Ваше имя</string>
+    <string name="et_text_hint">Введите ваше имя</string>
+    <string name="hint_sex">Ваш пол</string>
+    <string name="hepler_tex_sex">Введите ваш пол</string>
+    <string name="profile">Профиль</string>
+    <string name="btn_create_profile">Создать</string>
+    <string name="btn_edit_profile">Изменить</string>
+    <string name="snackbar_create_new_profile">Профиль не найден. Создайте новый профиль.</string>
+    <string name="text_your_current_weight">Ваш текущий вес</string>
+    <string name="text_your_current_height">Ваш текущий рост</string>
+    <string name="text_imt">Индекс массы тела (ИМТ)</string>
+    <string name="text_get_object_error">Произошла ошибка</string>
+    <string name="text_error_accaunt_create">Произошла ошибка при создании профиля</string>
+    <string name="text_accaunt_create_successfull">Профиль создан</string>
+    <string name="text_accaunt_edit_successfull">Профиль изменен</string>
+    <string name="text_error_accaunt_edit">Произошла ошибка при изменении профиля</string>
+    <string name="text_default_height_measuer"> см</string>
+    <string name="text_default_weight_measure"> кг</string>
+    <string name="save_image">Сохранить фото</string>
+    <string name="toggle_camera_lens">Выбор камеры</string>
+    <string name="image_popup">Предварительный просмотр</string>
+    <string name="image_capture_failed">Ошибка при сохранении файла</string>
+    <string name="toast_profile_not_found">Профиль не найден</string>
+    <string name="alert_title_input_weight">Введите ваш вес</string>
+    <string name="hint_input_weight">Введите ваш вес</string>
+    <string name="button_text_save">Сохранить</string>
+    <string name="button_text_cancel">Отмена</string>
+    <string name="text_design_by_ruslan_kalimulin">Разработчик: Руслан Калимуллин</string>
+    <string name="text_logo">Логотип</string>
+    <string name="title_camera">Камера</string>
+    <string name="text_my_weights_list">Мои взвешивания</string>
+    <string name="sort_date">По дате</string>
+    <string name="sort_weight">По весу</string>
+    <string name="sort_photo">По фото</string>
+    <string name="text_no_photo_for_this_case">Для этого взвешивания нет фото</string>
+    <string name="text_cancel_weight_adding">Отмена добавления веса</string>
+    <string name="text_add_weight_successfull">Данные успешно сохранены</string>
+    <string name="text_input_weight">Введите вес</string>
+
+    <string-array name="sex_dropdown">
+        <item>Мужской</item>
+        <item>Женский</item>
+    </string-array>
 </resources>

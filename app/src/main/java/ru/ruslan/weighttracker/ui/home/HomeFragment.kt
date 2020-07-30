@@ -1,198 +1,286 @@
 package ru.ruslan.weighttracker.ui.home
 
-import android.app.Dialog
-import android.content.Context
+import android.app.Activity.RESULT_OK
+import android.content.ClipData
+import android.content.ClipDescription
+import android.content.ContextWrapper
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.*
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
+import android.widget.ImageView
+import android.widget.PopupMenu
+import android.widget.SimpleAdapter
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import dagger.Lazy
 import kotlinx.android.synthetic.main.content_home_photos.*
-import kotlinx.android.synthetic.main.dialog_choose_camera_or_gallery.*
-import kotlinx.android.synthetic.main.home_fragment.*
-import android.content.Intent
-import android.app.Activity.RESULT_OK
-import android.graphics.Bitmap
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation
+import kotlinx.android.synthetic.main.content_home_weight.*
+import ru.ruslan.weighttracker.MainApplication
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.ui.home.vm.HomeViewModel
-import ru.ruslan.weighttracker.ui.home.vm.ProfileUI
+import ru.ruslan.weighttracker.dagger.scope.HomeScope
+import ru.ruslan.weighttracker.domain.contract.HomeContract
+import ru.ruslan.weighttracker.ui.BaseFragment
+import ru.ruslan.weighttracker.ui.camera.CameraActivity
+import ru.ruslan.weighttracker.ui.common.SwipeToDeleteCallback
 import ru.ruslan.weighttracker.ui.util.*
+import java.util.*
+import javax.inject.Inject
+import kotlin.math.roundToInt
 
-class HomeFragment : Fragment() {
 
-    private lateinit var glideOptions: RequestOptions
-    private lateinit var fabAnimOpen: Animation
-    private lateinit var fabAnimClose: Animation
-    private lateinit var fabAnimClock: Animation
-    private lateinit var fabAnimAntiClock: Animation
-    private var homeContext: Context? = null
-    private var chooseDialog: Dialog? = null
+@HomeScope
+class HomeFragment : BaseFragment(R.layout.home_fragment), HomeContract.VIew,
+    WeightAdapter.WeightItemClickListener,
+    PopupMenu.OnMenuItemClickListener, AddWeightBottomSheetDialog.AddWeightBottomSheetListener {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private val onDragListener = View.OnDragListener { view, dragEvent ->
+        (view as? CardView)?.let {
+            when (dragEvent.action) {
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    it.elevation = CARD_ELEVATION_DRAG_START_DP.toDP()
+                    return@OnDragListener true
+                }
+                DragEvent.ACTION_DRAG_ENTERED -> {
+                    it.elevation = CARD_ELEVATION_DRAG_ENTER_DP.toDP()
+                    return@OnDragListener true
+                }
+                DragEvent.ACTION_DRAG_LOCATION -> return@OnDragListener true
+                DragEvent.ACTION_DRAG_EXITED -> {
+                    it.elevation = CARD_ELEVATION_DRAG_START_DP.toDP()
+                    return@OnDragListener true
+                }
+                DragEvent.ACTION_DROP -> {
+                    val photoId: ClipData.Item = dragEvent.clipData.getItemAt(0)
+                    if (view.id == R.id.card_photo_before)
+                        presenter.recyclerItemDropped(
+                            photoId.text.toString(),
+                            Constants.BEFORE_PHOTO_RESULT,
+                            activity?.cacheDir!!
+                        )
+                    else
+                        presenter.recyclerItemDropped(
+                            photoId.text.toString(),
+                            Constants.AFTER_PHOTO_RESULT,
+                            activity?.cacheDir!!
+                        )
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        homeContext = context
+                    return@OnDragListener true
+                }
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    it.elevation = CARD_ELEVATION_DEFAULT_DP.toDP()
+                    return@OnDragListener true
+                }
+                else -> return@OnDragListener false
+            }
+        }
+        false
     }
+
+    @Inject
+    lateinit var presenter: HomeContract.Presenter
+
+    @Inject
+    lateinit var weightBottomDialog: Lazy<AddWeightBottomSheetDialog>
+
+    private var weightAdapter: WeightAdapter? = null
 
     companion object {
         @JvmStatic
         fun newInstance() = HomeFragment()
+
+        const val CARD_ELEVATION_DEFAULT_DP = 8F
+        const val CARD_ELEVATION_DRAG_START_DP = 28F
+        const val CARD_ELEVATION_DRAG_ENTER_DP = 40F
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val view = LayoutInflater.from(container?.context).inflate(R.layout.home_fragment, container, false)
-        initVars()
-        return view
+    override fun initVars() {}
+
+    override fun initDagger() {
+        (context?.applicationContext as MainApplication).getAppComponent().getHomeComponent()
+            .create().inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews()
-        setListeners()
-        observerLiveData()
+        presenter.setView(this)
+        presenter.getWeightList()
+        presenter.getSavedObjects(activity?.cacheDir!!)
     }
 
-    private fun observerLiveData() {
-        homeViewModel.openCloseFabLd.observe(this, Observer(::openCloseFabMenu))
-        homeViewModel.profileLiveData.observe(this, Observer(::updateProfileViews))
-    }
+    override fun initViews() {
+        iv_photo_before.loadImage(drawableId = R.drawable.img_placeholder)
+        iv_photo_after.loadImage(drawableId = R.drawable.img_placeholder)
 
-    private fun initVars() {
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        weightAdapter = WeightAdapter(this@HomeFragment)
 
-        glideOptions = RequestOptions()
-        glideOptions.apply {
-            fitCenter()
-            transform(RoundedCornersTransformation(30, 10))
-            placeholder(R.drawable.img_placeholder)
-            error(R.drawable.img_placeholder)
-            fallback(R.drawable.img_placeholder)
+        rv_my_weight.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(
+                DividerItemDecoration(
+                    rv_my_weight.context,
+                    DividerItemDecoration.VERTICAL
+                )
+            )
+            adapter = weightAdapter
         }
 
-        fabAnimOpen = AnimationUtils.loadAnimation(homeContext, R.anim.fab_open)
-        fabAnimClose = AnimationUtils.loadAnimation(homeContext, R.anim.fab_close)
-        fabAnimClock = AnimationUtils.loadAnimation(homeContext, R.anim.fab_rotate_clock)
-        fabAnimAntiClock = AnimationUtils.loadAnimation(homeContext, R.anim.fab_rotate_anticlock)
+        val itemTouchHelper = ItemTouchHelper(object : SwipeToDeleteCallback(context!!) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter = rv_my_weight.adapter as WeightAdapter
+                val item = adapter.getItemByPosition(viewHolder.adapterPosition)
+                presenter.removeWeightSwiped(item)
+                adapter.removeItemByPosition(viewHolder.adapterPosition)
+            }
+        })
+        itemTouchHelper.attachToRecyclerView(rv_my_weight)
     }
 
-    private fun initViews() {
-        initChooseAppDialog()
+    override fun setListeners() {
+        card_photo_before.setOnDragListener(onDragListener)
+        card_photo_after.setOnDragListener(onDragListener)
 
-        iv_photo_before.loadImage(drawableId = R.drawable.test)
-        iv_photo_after.loadImage(drawableId = R.drawable.test)
-    }
-
-    private fun updateProfileViews(profile: ProfileUI?){
-        profile?.let { prof ->
-            tv_date_before.text = prof.dateBefore
-            tv_date_after.text = prof.dateAfter
-            tv_weight_before.text = prof.weigthBefore
-            tv_weight_after.text = prof.weigthAfter
+        iv_photo_before.setOnClickListener {
+            if (checkPermission(CAMERA_PERMISSION, CAMERA_PERMISSION_REQUEST)
+                && checkPermission(WRITE_EXTERNAL_STORAGE_PERMISSION, EXTERNAL_PERMISSION_REQUEST)
+                && checkPermission(READ_EXTERNAL_STORAGE_PERMISSION, EXTERNAL_PERMISSION_REQUEST)
+            )
+                presenter.photoBeforeViewClicked()
         }
-    }
-
-    private fun initChooseAppDialog() {
-        chooseDialog = homeContext?.let { Dialog(it, R.style.AppTheme) }
-        chooseDialog?.apply {
-            window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            window?.setGravity(Gravity.BOTTOM)
-            requestWindowFeature(Window.FEATURE_NO_TITLE)
-            setCancelable(true)
-            setContentView(R.layout.dialog_choose_camera_or_gallery)
-            llCamera.setOnClickListener{tryOpenCamera()}
-            llGallery.setOnClickListener{tryOpenGallery()}
-            iv_choose_close.setOnClickListener{this.dismiss()}
+        iv_photo_after.setOnClickListener {
+            if (checkPermission(CAMERA_PERMISSION, CAMERA_PERMISSION_REQUEST)
+                && checkPermission(WRITE_EXTERNAL_STORAGE_PERMISSION, EXTERNAL_PERMISSION_REQUEST)
+                && checkPermission(READ_EXTERNAL_STORAGE_PERMISSION, EXTERNAL_PERMISSION_REQUEST))
+                presenter.photoAfterViewClicked()
         }
+        iv_more_weight_block.setOnClickListener { presenter.moreViewClicked(iv_more_weight_block) }
+
+        ivAddWeight.setOnClickListener { presenter.addWeightButtonClicked() }
     }
 
-   private fun setListeners() {
-        fab_main.setOnClickListener{ homeViewModel.handleFabMain() }
-        fab_photo.setOnClickListener{showChooseDialog()}
+    override fun openBottomSheetDialogForWeight() {
+        val dialog = weightBottomDialog.get()
+        dialog.setOnAddWeightBottomSheetListener(this)
+        dialog.show(activity?.supportFragmentManager!!, "AddWeightDialog")
     }
 
-    private fun openCloseFabMenu(isOpen: Boolean){
-        if(isOpen){
-            fab_photo.startAnimation(fabAnimOpen)
-            fab_weight.startAnimation(fabAnimOpen)
-            fab_main.startAnimation(fabAnimClock)
-            fab_photo.isClickable = true
-            fab_photo.isClickable = true
-        }
-        else{
-            fab_photo.startAnimation(fabAnimClose)
-            fab_weight.startAnimation(fabAnimClose)
-            fab_main.startAnimation(fabAnimAntiClock)
-            fab_photo.isClickable = false
-            fab_photo.isClickable = false
-        }
-    }
-
-    private fun showChooseDialog() {
-        chooseDialog?.show()
-    }
-
-    private fun tryOpenCamera() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if(PermissionUtils.checkAndRequestCameraPermissions(homeContext)){
-                RouterUtil.openCamera(this)
-                chooseDialog?.dismiss()
+    override fun updatePictureViews(profile: HomeUI?,
+                                    requestCode: Int) {
+        profile?.let {
+            when (requestCode) {
+                Constants.BEFORE_PHOTO_RESULT -> {
+                    tv_date_before.text = it.photoDate
+                    tv_weight_before.text = "${it.weightOnPhoto} кг."
+                    iv_photo_before.loadImage(imageUri = it.photoPath!!)
+                }
+                Constants.AFTER_PHOTO_RESULT -> {
+                    tv_date_after.text = it.photoDate
+                    tv_weight_after.text = "${it.weightOnPhoto} кг."
+                    iv_photo_after.loadImage(imageUri = it.photoPath!!)
+                }
             }
         }
-        else{
-            RouterUtil.openCamera(this)
-            chooseDialog?.dismiss()
-        }
     }
 
-    private fun tryOpenGallery() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if(PermissionUtils.checkAndRequestExternalPermission(homeContext)){
-                RouterUtil.openGallery(this)
-                chooseDialog?.dismiss()
+    override fun errorForLoadingWeightList(errorText: String) {
+        context?.let { errorText.showToast(it) }
+    }
+
+    override fun populateWeightAdapter(weights: List<HomeUI>?) {
+        weights?.let { weightAdapter?.setList(it) }
+    }
+
+    override fun showSortingPopup(view: ImageView) {
+        val wrapper: ContextWrapper = ContextThemeWrapper(context, R.style.MyPopupOtherStyle)
+        val popupMenu = PopupMenu(wrapper, view)
+        popupMenu.menuInflater.inflate(R.menu.sort_popup_menu, popupMenu.menu)
+        popupMenu.setOnMenuItemClickListener(this)
+        popupMenu.show()
+    }
+
+    override fun onMenuItemClick(menuItem: MenuItem?): Boolean {
+        when (menuItem?.itemId) {
+            R.id.sortDate -> context?.let { weightAdapter?.sort(Constants.SORT_DATE) }
+            R.id.sortWeight -> context?.let { weightAdapter?.sort(Constants.SORT_WEIGHT) }
+            R.id.sortPhoto -> context?.let { weightAdapter?.sort(Constants.SORT_PHOTO) }
+        }
+        return false
+    }
+
+    override fun startCameraScreen(needResult: Boolean, requestCode: Int) {
+        if (needResult) {
+            when (requestCode) {
+                Constants.BEFORE_PHOTO_RESULT -> {
+                    this.startActivityForResultExt<CameraActivity>(
+                        context!!,
+                        Constants.BEFORE_PHOTO_RESULT
+                    )
+                }
+                Constants.AFTER_PHOTO_RESULT -> {
+                    this.startActivityForResultExt<CameraActivity>(
+                        context!!,
+                        Constants.AFTER_PHOTO_RESULT
+                    )
+                }
             }
-        }
-        else{
-            RouterUtil.openGallery(this)
-            chooseDialog?.dismiss()
-        }
-    }
-
-    private fun setAfterImageView(bitmap: Bitmap?) {
-        iv_photo_after.setImageBitmap(bitmap)
+        } else activity?.startActivityExt<CameraActivity>(context!!)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == Constants.RESULT_CAMERA && resultCode == RESULT_OK && data != null){
-            homeContext?.let {setAfterImageView(ImageUtil.convertUriToBitmap(homeContext, data.data))}
-        }
-        else if(requestCode == Constants.RESULT_GALLERY && resultCode == RESULT_OK && data != null){
-            homeContext?.let {setAfterImageView(data.extras?.get("data") as Bitmap) }
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                Constants.BEFORE_PHOTO_RESULT ->
+                    presenter.getDataForPicture(Constants.BEFORE_PHOTO_RESULT, activity?.cacheDir!!)
+                Constants.AFTER_PHOTO_RESULT ->
+                    presenter.getDataForPicture(Constants.AFTER_PHOTO_RESULT, activity?.cacheDir!!)
+            }
         }
     }
 
-    // TODO Что-то это не срабатывает
+    override fun weightItemClick(position: Int) {
+    }
+
+    override fun weightItemLongClicked(position: Int, it: View, homeUI: HomeUI) {
+        if (homeUI.photoId == 0) {
+            context?.let { it1 -> getString(R.string.text_no_photo_for_this_case).showToast(it1) }
+            return
+        }
+        val item = ClipData.Item(homeUI.photoId.toString())
+        val dragData =
+            ClipData(it.tag as? CharSequence, arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN), item)
+        val myShadow = MyDragShadowBuilder(it)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            it.startDragAndDrop(dragData, myShadow, null, 0)
+        } else {
+            it.startDrag(dragData, myShadow, null, 0)
+        }
+    }
+
+    override fun cancelButtonClicked() {
+        context?.let { getString(R.string.text_cancel_weight_adding).showToast(it) }
+    }
+
+    override fun okButtonClicked(weightValue: String) {
+        context?.let { getString(R.string.text_add_weight_successfull).showToast(it) }
+        presenter.saveNewWeight(
+            weightValue.toInt(),
+            Calendar.getInstance().time.toString("dd.MM.yyyy")
+        )
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
                                             grantResults: IntArray) {
+        when(requestCode){
+            CAMERA_PERMISSION_REQUEST -> {iv_photo_before.performClick() }
+            EXTERNAL_PERMISSION_REQUEST -> {iv_photo_before.performClick() }
+        }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == PermissionUtils.CODE_CAMERA_PERMISSION){
-            if(grantResults.isNotEmpty()){
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) tryOpenCamera()
-            }
-        }
-        else if(requestCode == PermissionUtils.CODE_EXTERNAL_PERMISSION){
-            if(grantResults.isNotEmpty()){
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) tryOpenGallery()
-            }
-        }
     }
 }

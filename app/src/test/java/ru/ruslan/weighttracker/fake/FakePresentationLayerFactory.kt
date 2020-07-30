@@ -1,0 +1,15 @@
+package ru.ruslan.weighttracker.fake
+
+import ru.ruslan.weighttracker.ui.videos.list.model.VideoUI
+
+object FakePresentationLayerFactory {
+
+    fun makeVideoUI(itemsSize: Int): List<VideoUI>? {
+        val list = mutableListOf<VideoUI>()
+        repeat(itemsSize){
+            list.add(VideoUI())
+        }
+        return list
+    }
+
+}
