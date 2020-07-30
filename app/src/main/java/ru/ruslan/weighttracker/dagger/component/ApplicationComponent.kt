@@ -3,7 +3,6 @@ package ru.ruslan.weighttracker.dagger.component
 import android.app.Application
 import dagger.BindsInstance
 import dagger.Component
-import dagger.android.AndroidInjectionModule
 import ru.ruslan.weighttracker.MainApplication
 import ru.ruslan.weighttracker.dagger.module.*
 import ru.ruslan.weighttracker.dagger.new_modules.ProfileModule

@@ -60,9 +60,6 @@ dependencies {
 
     implementation dagger
     kapt dagger_compiler
-    implementation daggerAndroid
-    implementation daggerAndroidSupport
-    kapt daggerAndroidProcessor
     implementation glide
     implementation glide_transformation
 
