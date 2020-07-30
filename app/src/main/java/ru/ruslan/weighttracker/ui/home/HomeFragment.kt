@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipDescription
 import android.content.ContextWrapper
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -25,6 +26,7 @@ import ru.ruslan.weighttracker.MainApplication
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.dagger.scope.HomeScope
 import ru.ruslan.weighttracker.domain.contract.HomeContract
+import ru.ruslan.weighttracker.ui.BaseFragment
 import ru.ruslan.weighttracker.ui.camera.CameraActivity
 import ru.ruslan.weighttracker.ui.common.SwipeToDeleteCallback
 import ru.ruslan.weighttracker.ui.util.*
@@ -34,23 +36,24 @@ import kotlin.math.roundToInt
 
 
 @HomeScope
-class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClickListener,
+class HomeFragment : BaseFragment(R.layout.home_fragment), HomeContract.VIew,
+    WeightAdapter.WeightItemClickListener,
     PopupMenu.OnMenuItemClickListener, AddWeightBottomSheetDialog.AddWeightBottomSheetListener {
 
     private val onDragListener = View.OnDragListener { view, dragEvent ->
         (view as? CardView)?.let {
             when (dragEvent.action) {
                 DragEvent.ACTION_DRAG_STARTED -> {
-                    it.elevation = toDP(CARD_ELEVATION_DRAG_START_DP)
+                    it.elevation = CARD_ELEVATION_DRAG_START_DP.toDP()
                     return@OnDragListener true
                 }
                 DragEvent.ACTION_DRAG_ENTERED -> {
-                    it.elevation = toDP(CARD_ELEVATION_DRAG_ENTER_DP)
+                    it.elevation = CARD_ELEVATION_DRAG_ENTER_DP.toDP()
                     return@OnDragListener true
                 }
                 DragEvent.ACTION_DRAG_LOCATION -> return@OnDragListener true
                 DragEvent.ACTION_DRAG_EXITED -> {
-                    it.elevation = toDP(CARD_ELEVATION_DRAG_START_DP)
+                    it.elevation = CARD_ELEVATION_DRAG_START_DP.toDP()
                     return@OnDragListener true
                 }
                 DragEvent.ACTION_DROP -> {
@@ -71,7 +74,7 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
                     return@OnDragListener true
                 }
                 DragEvent.ACTION_DRAG_ENDED -> {
-                    it.elevation = toDP(CARD_ELEVATION_DEFAULT_DP)
+                    it.elevation = CARD_ELEVATION_DEFAULT_DP.toDP()
                     return@OnDragListener true
                 }
                 else -> return@OnDragListener false
@@ -82,6 +85,7 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
 
     @Inject
     lateinit var presenter: HomeContract.Presenter
+
     @Inject
     lateinit var weightBottomDialog: Lazy<AddWeightBottomSheetDialog>
 
@@ -96,21 +100,11 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
         const val CARD_ELEVATION_DRAG_ENTER_DP = 40F
     }
 
-    private fun toDP(px: Float): Float {
-        val displayMetrics = context!!.resources.displayMetrics
-        return (px * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt().toFloat()
-    }
+    override fun initVars() {}
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun initDagger() {
         (context?.applicationContext as MainApplication).getAppComponent().getHomeComponent()
             .create().inject(this)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return LayoutInflater.from(container?.context)
-            .inflate(R.layout.home_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -153,16 +147,17 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
         card_photo_after.setOnDragListener(onDragListener)
 
         iv_photo_before.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (PermissionUtils.checkAndRequestCameraPermissions(context))
-                    presenter.photoBeforeViewClicked()
-            } else presenter.photoBeforeViewClicked()
+            if (checkPermission(CAMERA_PERMISSION, CAMERA_PERMISSION_REQUEST)
+                && checkPermission(WRITE_EXTERNAL_STORAGE_PERMISSION, EXTERNAL_PERMISSION_REQUEST)
+                && checkPermission(READ_EXTERNAL_STORAGE_PERMISSION, EXTERNAL_PERMISSION_REQUEST)
+            )
+                presenter.photoBeforeViewClicked()
         }
         iv_photo_after.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (PermissionUtils.checkAndRequestCameraPermissions(context))
-                    presenter.photoAfterViewClicked()
-            } else presenter.photoAfterViewClicked()
+            if (checkPermission(CAMERA_PERMISSION, CAMERA_PERMISSION_REQUEST)
+                && checkPermission(WRITE_EXTERNAL_STORAGE_PERMISSION, EXTERNAL_PERMISSION_REQUEST)
+                && checkPermission(READ_EXTERNAL_STORAGE_PERMISSION, EXTERNAL_PERMISSION_REQUEST))
+                presenter.photoAfterViewClicked()
         }
         iv_more_weight_block.setOnClickListener { presenter.moreViewClicked(iv_more_weight_block) }
 
@@ -253,7 +248,7 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
     }
 
     override fun weightItemLongClicked(position: Int, it: View, homeUI: HomeUI) {
-        if(homeUI.photoId == 0){
+        if (homeUI.photoId == 0) {
             context?.let { it1 -> getString(R.string.text_no_photo_for_this_case).showToast(it1) }
             return
         }
@@ -274,6 +269,18 @@ class HomeFragment : Fragment(), HomeContract.VIew, WeightAdapter.WeightItemClic
 
     override fun okButtonClicked(weightValue: String) {
         context?.let { getString(R.string.text_add_weight_successfull).showToast(it) }
-        presenter.saveNewWeight(weightValue.toInt(), Calendar.getInstance().time.toString("dd.MM.yyyy"))
+        presenter.saveNewWeight(
+            weightValue.toInt(),
+            Calendar.getInstance().time.toString("dd.MM.yyyy")
+        )
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        when(requestCode){
+            CAMERA_PERMISSION_REQUEST -> {iv_photo_before.performClick() }
+            EXTERNAL_PERMISSION_REQUEST -> {iv_photo_before.performClick() }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }

@@ -6,7 +6,7 @@ import kotlinx.coroutines.launch
 import ru.ruslan.weighttracker.dagger.scope.CameraScope
 import ru.ruslan.weighttracker.domain.contract.CameraContract
 import ru.ruslan.weighttracker.domain.usecase.SaveToProfileUseCase
-import ru.ruslan.weighttracker.ui.util.FileUtils
+import ru.ruslan.weighttracker.ui.common.FileUtils
 import ru.ruslan.weighttracker.ui.util.toString
 import java.io.File
 import java.util.*
@@ -44,15 +44,9 @@ class CameraPresenter @Inject constructor(private val saveToProfileUseCase: Save
     override fun imageSavedToFile(file: File) {
         val dateString = Calendar.getInstance().time.toString("dd.MM.yyyy")
         CoroutineScope(Dispatchers.Main).launch {
-            saveToProfileUseCase.savePhotoData(dateString, file.path, inputWeight,
-                object : SaveToProfileUseCase.Callback.Photo {
-                    override fun photoSaveSuccess() {
-                        cameraPreviewView.closeThisFragment()
-                    }
-
-                    override fun photoSaveError() {
-                    }
-                })
+            saveToProfileUseCase.savePhotoData(dateString, file.path, inputWeight) {
+                cameraPreviewView.closeThisFragment()
+            }
         }
     }
 

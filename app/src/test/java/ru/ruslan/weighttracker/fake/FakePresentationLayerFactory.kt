@@ -1,6 +1,6 @@
 package ru.ruslan.weighttracker.fake
 
-import ru.ruslan.weighttracker.ui.videos.list.vm.model.VideoUI
+import ru.ruslan.weighttracker.ui.videos.list.model.VideoUI
 
 object FakePresentationLayerFactory {
 

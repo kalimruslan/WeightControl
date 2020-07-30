@@ -1,5 +1,8 @@
 package ru.ruslan.weighttracker.ui.util
 
+import ru.ruslan.weighttracker.MainApplication
+import ru.ruslan.weighttracker.ui.MainActivity
+
 object Constants {
     const val VIDEO_PLAYLIST = "PLh13OF-FPwGGKuAfUfTksOgbeqWernIkV"
     const val EXTRA_PARAM_VIDEO = "video"
@@ -19,4 +22,7 @@ object Constants {
     const val SORT_DATE = "sort_date"
     const val SORT_WEIGHT = "sort_weight"
     const val SORT_PHOTO = "sort_photo"
+
+    lateinit var APP_ACTIVITY: MainActivity
+    lateinit var THIS_APP: MainApplication
 }
