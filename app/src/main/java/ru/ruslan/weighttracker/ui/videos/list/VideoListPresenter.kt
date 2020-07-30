@@ -34,30 +34,23 @@ class VideoListPresenter @Inject constructor(private val getVideoListUseCase: Ge
         if (pageToken.isEmpty())
             view.showHideLoadingView(true)
         coroutineScope.launch {
-            getVideoListUseCase.getVideosByPlaylist(
-                playList,
-                pageToken,
-                object : GetVideoListUseCase.Callback {
-                    override fun success(videos: VideosEntity?) {
-                        launch(Dispatchers.Main) {
-                            view.showHideLoadingView(false)
-                            nextPageToken = videos?.nextPageToken!!
-                            totalPage = videos.totalResult / videos.resultPerPage
+            getVideoListUseCase.getVideosByPlaylist(playList, pageToken, { videos ->
+                launch(Dispatchers.Main) {
+                    view.showHideLoadingView(false)
+                    nextPageToken = videos.nextPageToken
+                    totalPage = videos.totalResult / videos.resultPerPage
 
-                            val videosUI = VideosEntityToUiMapper.map(videos.items)
+                    val videosUI = VideosEntityToUiMapper.map(videos.items)
 
-                            if (videosUI.isNotEmpty())
-                                view.populateAdapter(videosUI)
-                        }
-                    }
-
-                    override fun error(error: String) {
-                        launch(Dispatchers.Main) {
-                            view.showHideLoadingView(false)
-                            view.errorLoading(error)
-                        }
-                    }
-                })
+                    if (videosUI.isNotEmpty())
+                        view.populateAdapter(videosUI)
+                }
+            }, { error ->
+                launch(Dispatchers.Main) {
+                    view.showHideLoadingView(false)
+                    view.errorLoading(error)
+                }
+            })
         }
     }
 
@@ -65,7 +58,7 @@ class VideoListPresenter @Inject constructor(private val getVideoListUseCase: Ge
         currentPage = 1
         view.isLastLoadedPage(false)
         downloadVideos(Constants.VIDEO_PLAYLIST, "")
-        if(currentPage < totalPage)
+        if (currentPage < totalPage)
             view.showHideLoadingInAdapter(true)
         else
             view.isLastLoadedPage(true)

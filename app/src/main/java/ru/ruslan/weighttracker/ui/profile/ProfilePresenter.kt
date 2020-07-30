@@ -16,7 +16,8 @@ import javax.inject.Inject
 
 @ProfileScope
 class ProfilePresenter @Inject constructor(private val saveToProfileUseCase: SaveToProfileUseCase,
-                                           private val getFromProfileUseCase: GetFromProfileUseCase) : ProfileContract.Presenter {
+                                           private val getFromProfileUseCase: GetFromProfileUseCase) :
+    ProfileContract.Presenter {
 
     private lateinit var view: ProfileContract.View
     private val coroutineScope = CoroutineScope(Job() + Dispatchers.IO)
@@ -29,19 +30,16 @@ class ProfilePresenter @Inject constructor(private val saveToProfileUseCase: Sav
 
     override fun getCurrentProfile() {
         coroutineScope.launch {
-            getFromProfileUseCase.getCurrentProfile(object :
-                GetFromProfileUseCase.Callback.GetProfile {
-                override fun getProfileSuccess(profileEntity: ProfileEntity?) {
-                    val profileUI = ProfileEntityToUIMapper.map(profileEntity)
-                    launch(Dispatchers.Main) {
+            getFromProfileUseCase.getCurrentProfile({ profileEntity ->
+                val profileUI = ProfileEntityToUIMapper.map(profileEntity)
+                launch(Dispatchers.Main) {
+                    profileUI?.apply {
                         view.hasItAccount(true)
                         view.populateProfileViews(profileUI)
-                    }
+                    } ?: view.hasItAccount(false)
                 }
-
-                override fun getProfileError() {
-                    view.hasItAccount(false)
-                }
+            }, {
+                view.hasItAccount(false)
             })
         }
     }
@@ -60,24 +58,16 @@ class ProfilePresenter @Inject constructor(private val saveToProfileUseCase: Sav
 
     private fun createNewProfile(profileUI: ProfileUI) {
         coroutineScope.launch {
-            saveToProfileUseCase.insertProfile(
-                ProfileUIToEntityMapper.map(profileUI),
-                object : SaveToProfileUseCase.Callback.Profile {
-                    override fun profileCreateSuccess() {
-                        launch(Dispatchers.Main) {
-                            view.showToastProfileCreatedSuccess()
-                            getCurrentProfile()
-                        }
-                    }
-
-                    override fun profileCreateError() {
-                        launch(Dispatchers.Main) {
-                            view.showToastProfileCreatedError()
-                        }
-                    }
-
-                    override fun profileEditSuccess() {}
-                })
+            saveToProfileUseCase.insertProfile(ProfileUIToEntityMapper.map(profileUI), {
+                launch(Dispatchers.Main) {
+                    view.showToastProfileCreatedSuccess()
+                    getCurrentProfile()
+                }
+            }, {
+                launch(Dispatchers.Main) {
+                    view.showToastProfileCreatedError()
+                }
+            })
         }
     }
 
@@ -91,18 +81,12 @@ class ProfilePresenter @Inject constructor(private val saveToProfileUseCase: Sav
 
     private fun editCurrentProfile(profileUI: ProfileUI) {
         coroutineScope.launch {
-            saveToProfileUseCase.editProfile(
-                ProfileUIToEntityMapper.map(profileUI),
-                object : SaveToProfileUseCase.Callback.Profile {
-                    override fun profileCreateSuccess() {}
-                    override fun profileCreateError() {}
-                    override fun profileEditSuccess() {
-                        launch(Dispatchers.Main) {
-                            view.showToastProfileEditedSuccess()
-                            getCurrentProfile()
-                        }
-                    }
-                })
+            saveToProfileUseCase.editProfile(ProfileUIToEntityMapper.map(profileUI)) {
+                launch(Dispatchers.Main) {
+                    view.showToastProfileEditedSuccess()
+                    getCurrentProfile()
+                }
+            }
         }
     }
 

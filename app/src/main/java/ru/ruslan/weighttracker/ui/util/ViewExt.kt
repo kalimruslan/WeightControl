@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -55,8 +56,18 @@ inline fun <reified T : Activity> Activity.startActivityExt(context: Context) {
     startActivity(Intent(context, T::class.java))
 }
 
-inline fun <reified T : Activity> Fragment.startActivityExt(context: Context) {
-    startActivity(Intent(context, T::class.java))
+fun AppCompatActivity.replaceFragment(fragment: Fragment, addStack: Boolean = true, title: String) {
+    if(addStack){
+        supportFragmentManager.beginTransaction()
+            .addToBackStack(null)
+            .replace(R.id.fl_container, fragment)
+            .commit()
+    } else{
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fl_container, fragment)
+            .commit()
+    }
+    supportActionBar?.title = title
 }
 
 inline fun <reified T: Activity> Fragment.startActivityForResultExt(context: Context, resultCode: Int){

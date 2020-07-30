@@ -15,7 +15,9 @@ import ru.ruslan.weighttracker.MainApplication
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.dagger.scope.CameraScope
 import ru.ruslan.weighttracker.domain.contract.CameraContract
+import ru.ruslan.weighttracker.ui.BaseActivity
 import ru.ruslan.weighttracker.ui.util.Constants
+import ru.ruslan.weighttracker.ui.util.Constants.THIS_APP
 import ru.ruslan.weighttracker.ui.util.showToast
 import java.io.File
 import java.util.concurrent.Executor
@@ -23,24 +25,24 @@ import java.util.concurrent.Executors
 import javax.inject.Inject
 
 @CameraScope
-class CameraActivity : AppCompatActivity(), CameraContract.View {
+class CameraActivity : BaseActivity(R.layout.activity_camera), CameraContract.View {
 
     private var animationRotate: Animation? = null
     private var imageCapture: ImageCapture? = null
     private var lensFacing = CameraX.LensFacing.BACK
-    @Inject lateinit var presenter: CameraContract.Presenter
+    @Inject
+    lateinit var presenter: CameraContract.Presenter
     private var preview: Preview? = null
     private val executor: Executor by lazy { Executors.newSingleThreadExecutor() }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        (applicationContext as MainApplication).getAppComponent().getCameraComponent().create().inject(this)
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_camera)
+    override fun initDagger() =
+        THIS_APP.getAppComponent().getCameraComponent().create().inject(this)
+
+    override fun initMembers() {
         presenter.setView(this)
         setSupportActionBar(camera_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         camera_toolbar.title = getString(R.string.title_camera)
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -51,7 +53,7 @@ class CameraActivity : AppCompatActivity(), CameraContract.View {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             android.R.id.home -> finish()
             R.id.action_camera_lens -> presenter.actionCameraLensViewClicked()
         }
@@ -63,14 +65,14 @@ class CameraActivity : AppCompatActivity(), CameraContract.View {
     }
 
     override fun setListeners() {
-        iv_take_photo.setOnClickListener{
+        iv_take_photo.setOnClickListener {
             it.startAnimation(animationRotate)
             presenter.takePhotoViewClicked()
         }
     }
 
     override fun startCamera() {
-        camera_preview.post{
+        camera_preview.post {
             CameraX.unbindAll()
 
             preview = Preview(PreviewConfig.Builder().apply {
@@ -84,7 +86,8 @@ class CameraActivity : AppCompatActivity(), CameraContract.View {
                         setLensFacing(lensFacing)
                         setTargetRotation(camera_preview.display.rotation)
                         setCaptureMode(ImageCapture.CaptureMode.MAX_QUALITY)
-                    }.build())
+                    }.build()
+            )
 
             preview?.setOnPreviewOutputUpdateListener {
                 val parent = camera_preview.parent as ViewGroup
@@ -154,14 +157,12 @@ class CameraActivity : AppCompatActivity(), CameraContract.View {
         val dialogLayout = layoutInflater.inflate(R.layout.dialog_input_weight_for_photo, null)
         val alertDialog = AlertDialog.Builder(this).setView(dialogLayout).show()
 
-
         dialogLayout.buttonSubmit.setOnClickListener {
-            if(dialogLayout.edt_comment.text.isNotEmpty()){
+            if (dialogLayout.edt_comment.text.isNotEmpty()) {
                 presenter.positiveButtonForInputWeightClicked(dialogLayout.edt_comment.text.toString())
                 alertDialog.dismiss()
-            }
-            else{
-                "Введите вес".showToast(this)
+            } else {
+                getString(R.string.text_input_weight).showToast(this)
             }
         }
         dialogLayout.buttonCancel.setOnClickListener {

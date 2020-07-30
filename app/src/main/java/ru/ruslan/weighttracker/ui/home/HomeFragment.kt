@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipDescription
 import android.content.ContextWrapper
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -35,7 +36,8 @@ import kotlin.math.roundToInt
 
 
 @HomeScope
-class HomeFragment : BaseFragment(R.layout.home_fragment), HomeContract.VIew, WeightAdapter.WeightItemClickListener,
+class HomeFragment : BaseFragment(R.layout.home_fragment), HomeContract.VIew,
+    WeightAdapter.WeightItemClickListener,
     PopupMenu.OnMenuItemClickListener, AddWeightBottomSheetDialog.AddWeightBottomSheetListener {
 
     private val onDragListener = View.OnDragListener { view, dragEvent ->
@@ -83,6 +85,7 @@ class HomeFragment : BaseFragment(R.layout.home_fragment), HomeContract.VIew, We
 
     @Inject
     lateinit var presenter: HomeContract.Presenter
+
     @Inject
     lateinit var weightBottomDialog: Lazy<AddWeightBottomSheetDialog>
 
@@ -144,16 +147,17 @@ class HomeFragment : BaseFragment(R.layout.home_fragment), HomeContract.VIew, We
         card_photo_after.setOnDragListener(onDragListener)
 
         iv_photo_before.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (PermissionUtils.checkAndRequestCameraPermissions(context))
-                    presenter.photoBeforeViewClicked()
-            } else presenter.photoBeforeViewClicked()
+            if (checkPermission(CAMERA_PERMISSION, CAMERA_PERMISSION_REQUEST)
+                && checkPermission(WRITE_EXTERNAL_STORAGE_PERMISSION, EXTERNAL_PERMISSION_REQUEST)
+                && checkPermission(READ_EXTERNAL_STORAGE_PERMISSION, EXTERNAL_PERMISSION_REQUEST)
+            )
+                presenter.photoBeforeViewClicked()
         }
         iv_photo_after.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (PermissionUtils.checkAndRequestCameraPermissions(context))
-                    presenter.photoAfterViewClicked()
-            } else presenter.photoAfterViewClicked()
+            if (checkPermission(CAMERA_PERMISSION, CAMERA_PERMISSION_REQUEST)
+                && checkPermission(WRITE_EXTERNAL_STORAGE_PERMISSION, EXTERNAL_PERMISSION_REQUEST)
+                && checkPermission(READ_EXTERNAL_STORAGE_PERMISSION, EXTERNAL_PERMISSION_REQUEST))
+                presenter.photoAfterViewClicked()
         }
         iv_more_weight_block.setOnClickListener { presenter.moreViewClicked(iv_more_weight_block) }
 
@@ -244,7 +248,7 @@ class HomeFragment : BaseFragment(R.layout.home_fragment), HomeContract.VIew, We
     }
 
     override fun weightItemLongClicked(position: Int, it: View, homeUI: HomeUI) {
-        if(homeUI.photoId == 0){
+        if (homeUI.photoId == 0) {
             context?.let { it1 -> getString(R.string.text_no_photo_for_this_case).showToast(it1) }
             return
         }
@@ -265,6 +269,18 @@ class HomeFragment : BaseFragment(R.layout.home_fragment), HomeContract.VIew, We
 
     override fun okButtonClicked(weightValue: String) {
         context?.let { getString(R.string.text_add_weight_successfull).showToast(it) }
-        presenter.saveNewWeight(weightValue.toInt(), Calendar.getInstance().time.toString("dd.MM.yyyy"))
+        presenter.saveNewWeight(
+            weightValue.toInt(),
+            Calendar.getInstance().time.toString("dd.MM.yyyy")
+        )
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        when(requestCode){
+            CAMERA_PERMISSION_REQUEST -> {iv_photo_before.performClick() }
+            EXTERNAL_PERMISSION_REQUEST -> {iv_photo_before.performClick() }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }

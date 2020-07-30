@@ -44,15 +44,9 @@ class CameraPresenter @Inject constructor(private val saveToProfileUseCase: Save
     override fun imageSavedToFile(file: File) {
         val dateString = Calendar.getInstance().time.toString("dd.MM.yyyy")
         CoroutineScope(Dispatchers.Main).launch {
-            saveToProfileUseCase.savePhotoData(dateString, file.path, inputWeight,
-                object : SaveToProfileUseCase.Callback.Photo {
-                    override fun photoSaveSuccess() {
-                        cameraPreviewView.closeThisFragment()
-                    }
-
-                    override fun photoSaveError() {
-                    }
-                })
+            saveToProfileUseCase.savePhotoData(dateString, file.path, inputWeight) {
+                cameraPreviewView.closeThisFragment()
+            }
         }
     }
 

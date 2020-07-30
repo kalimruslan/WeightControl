@@ -8,19 +8,14 @@ import javax.inject.Inject
 
 class GetVideoListUseCase @Inject constructor(private val remoteRepo: VideoListRepository?) {
 
-    interface Callback{
-        fun success(videos: VideosEntity?)
-        fun error(error: String)
-    }
-
-    suspend fun getVideosByPlaylist(playList: String, pageToken: String, callback: Callback) {
-        var videos: Result<VideosEntity>? = null
-
+    suspend fun getVideosByPlaylist(playList: String, pageToken: String,
+                                    funcSuccess: (VideosEntity) -> Unit,
+                                    funcError: (String) -> Unit) {
         val result = remoteRepo?.getVideosForPlayList(playList, pageToken)
         if (result?.resultType == ResultType.SUCCESS) {
-            callback.success(result.data)
+            result.data?.let { funcSuccess(it) }
         } else {
-            callback.error(result?.error?.message.toString())
+            funcError(result?.error?.message.toString())
         }
     }
 }

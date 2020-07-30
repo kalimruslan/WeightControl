@@ -35,15 +35,12 @@ class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFr
 
     override fun getDataForPicture(requestCode: Int, filesDir: File) {
         parentJob = coroutineScope.launch {
-            getFromProfileUseCase.getDataForPhoto(object :
-                GetFromProfileUseCase.Callback.GetDataForPhoto {
-                override fun success(photoDataEntity: PhotoDataEntity) {
-                    val homeUI = PhotoDataEntityToHomeUIMapper.map(photoDataEntity)
-                    saveToJsonFile(homeUI, requestCode, filesDir)
-                    homeView.updatePictureViews(homeUI, requestCode)
-                    getWeightList()
-                }
-            })
+            getFromProfileUseCase.getDataForPhoto { photoDataEntity ->
+                val homeUI = PhotoDataEntityToHomeUIMapper.map(photoDataEntity)
+                saveToJsonFile(homeUI, requestCode, filesDir)
+                homeView.updatePictureViews(homeUI, requestCode)
+                getWeightList()
+            }
         }
     }
 
@@ -67,28 +64,20 @@ class HomePresenter @Inject constructor(private val getFromProfileUseCase: GetFr
 
     override fun recyclerItemDropped(photoId: String, requestCode: Int, filesDir: File) {
         parentJob = coroutineScope.launch {
-            getFromProfileUseCase.getDataByPhotoId(photoId = photoId.toInt(), listener =  object :
-                GetFromProfileUseCase.Callback.GetDataForPhoto {
-                override fun success(photoDataEntity: PhotoDataEntity) {
-                    val homeUI = PhotoDataEntityToHomeUIMapper.map(photoDataEntity)
-                    saveToJsonFile(homeUI, requestCode, filesDir)
-                    homeView.updatePictureViews(homeUI, requestCode)
-                }
-            })
+            getFromProfileUseCase.getDataByPhotoId(photoId = photoId.toInt()) { photoDataEntity ->
+                val homeUI = PhotoDataEntityToHomeUIMapper.map(photoDataEntity)
+                saveToJsonFile(homeUI, requestCode, filesDir)
+                homeView.updatePictureViews(homeUI, requestCode)
+            }
         }
     }
 
     override fun getWeightList() {
         parentJob = coroutineScope.launch {
-            getFromProfileUseCase.getWeightsDataList(object :
-                GetFromProfileUseCase.Callback.GetWeightDataList {
-                override fun success(list: List<WeightEntity>?) {
-                    homeView.populateWeightAdapter(WeightEntityToHomeUI.map(list))
-                }
-
-                override fun error(e: String) {
-                    homeView.errorForLoadingWeightList(e)
-                }
+            getFromProfileUseCase.getWeightsDataList({ list ->
+                homeView.populateWeightAdapter(WeightEntityToHomeUI.map(list))
+            }, { error ->
+                homeView.errorForLoadingWeightList(error)
             })
         }
     }

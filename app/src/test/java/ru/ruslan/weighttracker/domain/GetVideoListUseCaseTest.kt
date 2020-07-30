@@ -9,6 +9,8 @@ import org.junit.Before
 import org.junit.Test
 
 import org.junit.Assert.*
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import ru.ruslan.weightracker.core.datatype.Result
 import ru.ruslan.weighttracker.data.datasource.api.exceptions.NoConnectivityException
 import ru.ruslan.weighttracker.data.repository.VideoListRepositoryImpl
@@ -23,6 +25,8 @@ class GetVideoListUseCaseTest {
     private lateinit var remoteRepo: VideoListRepository
     @MockK
     private lateinit var exception: Exception
+    @MockK
+    private lateinit var callback: GetVideoListUseCase.Callback
 
     private lateinit var getVideoListUseCase: GetVideoListUseCase
 
@@ -38,7 +42,7 @@ class GetVideoListUseCaseTest {
         val expectedResultSuccess = Result.success(expectedVideosEntity)
         coEvery { remoteRepo.getVideosForPlayList("", "") } returns expectedResultSuccess
 
-        val result = runBlocking { getVideoListUseCase.getVideosByPlaylist("", "") }
+        val result = runBlocking { getVideoListUseCase.getVideosByPlaylist("", "", callback) }
 
         assertEquals(expectedResultSuccess, result)
     }
@@ -48,7 +52,7 @@ class GetVideoListUseCaseTest {
         val expectedResultError = Result.error<Exception>(exception)
         coEvery{remoteRepo.getVideosForPlayList("","")} returns Result.error(exception)
 
-        val result = runBlocking { getVideoListUseCase.getVideosByPlaylist("", "") }
+        val result = runBlocking { getVideoListUseCase.getVideosByPlaylist("", "", callback) }
         assertEquals(expectedResultError, result)
     }
 }

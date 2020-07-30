@@ -12,10 +12,12 @@ import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.ui.home.HomeFragment
 import ru.ruslan.weighttracker.ui.profile.ProfileActivity
 import ru.ruslan.weighttracker.ui.util.Constants.APP_ACTIVITY
+import ru.ruslan.weighttracker.ui.util.replaceFragment
 import ru.ruslan.weighttracker.ui.util.startActivityExt
 import ru.ruslan.weighttracker.ui.videos.list.VideoListFragment
 
-class MainActivity : BaseActivity(R.layout.activity_main), BottomNavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity(R.layout.activity_main),
+    BottomNavigationView.OnNavigationItemSelectedListener {
     override fun initDagger() {}
 
     override fun initMembers() {
@@ -41,7 +43,7 @@ class MainActivity : BaseActivity(R.layout.activity_main), BottomNavigationView.
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             R.id.action_profile -> startActivityExt<ProfileActivity>(this)
         }
         return true
@@ -50,10 +52,11 @@ class MainActivity : BaseActivity(R.layout.activity_main), BottomNavigationView.
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_main -> {
-                openFragment(HomeFragment.newInstance(), item.title.toString())
+                replaceFragment(HomeFragment.newInstance(), title = item.title.toString())
+                return true
             }
             R.id.nav_video -> {
-                openFragment(VideoListFragment.newInstance(), item.title.toString())
+                replaceFragment(VideoListFragment.newInstance(), title = item.title.toString())
                 return true
             }
             R.id.nav_settings -> return true
@@ -61,13 +64,12 @@ class MainActivity : BaseActivity(R.layout.activity_main), BottomNavigationView.
         return false
     }
 
-    private fun openFragment(fragment: Fragment, title: String) {
-        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
-        transaction.apply {
-            replace(R.id.fl_container, fragment)
-            commit()
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        val fragments = supportFragmentManager.fragments
+        for (fragment in fragments) {
+            fragment.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
-        supportActionBar?.title = title
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -55,6 +55,7 @@
     <string name="text_no_photo_for_this_case">Для этого взвешивания нет фото</string>
     <string name="text_cancel_weight_adding">Отмена добавления веса</string>
     <string name="text_add_weight_successfull">Данные успешно сохранены</string>
+    <string name="text_input_weight">Введите вес</string>
 
     <string-array name="sex_dropdown">
         <item>Мужской</item>
