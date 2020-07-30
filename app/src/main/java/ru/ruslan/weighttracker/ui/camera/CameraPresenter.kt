@@ -6,7 +6,7 @@ import kotlinx.coroutines.launch
 import ru.ruslan.weighttracker.dagger.scope.CameraScope
 import ru.ruslan.weighttracker.domain.contract.CameraContract
 import ru.ruslan.weighttracker.domain.usecase.SaveToProfileUseCase
-import ru.ruslan.weighttracker.ui.util.FileUtils
+import ru.ruslan.weighttracker.ui.common.FileUtils
 import ru.ruslan.weighttracker.ui.util.toString
 import java.io.File
 import java.util.*

@@ -12,7 +12,7 @@ import com.google.android.youtube.player.YouTubePlayer
 import kotlinx.android.synthetic.main.activity_video_detail.*
 import ru.ruslan.weighttracker.BuildConfig
 import ru.ruslan.weighttracker.R
-import ru.ruslan.weighttracker.ui.videos.list.vm.model.VideoUI
+import ru.ruslan.weighttracker.ui.videos.list.model.VideoUI
 import ru.ruslan.weighttracker.ui.util.Constants
 import ru.ruslan.weighttracker.ui.util.showToast
 import kotlin.math.abs

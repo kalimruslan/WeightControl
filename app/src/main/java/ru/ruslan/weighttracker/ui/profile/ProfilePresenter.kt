@@ -24,6 +24,7 @@ class ProfilePresenter @Inject constructor(private val saveToProfileUseCase: Sav
     override fun setView(view: ProfileContract.View) {
         this.view = view
         this.view.initViews()
+        this.view.setListeners()
     }
 
     override fun getCurrentProfile() {
@@ -33,11 +34,14 @@ class ProfilePresenter @Inject constructor(private val saveToProfileUseCase: Sav
                 override fun getProfileSuccess(profileEntity: ProfileEntity?) {
                     val profileUI = ProfileEntityToUIMapper.map(profileEntity)
                     launch(Dispatchers.Main) {
+                        view.hasItAccount(true)
                         view.populateProfileViews(profileUI)
                     }
                 }
 
-                override fun getProfileError() {}
+                override fun getProfileError() {
+                    view.hasItAccount(false)
+                }
             })
         }
     }
@@ -62,7 +66,7 @@ class ProfilePresenter @Inject constructor(private val saveToProfileUseCase: Sav
                     override fun profileCreateSuccess() {
                         launch(Dispatchers.Main) {
                             view.showToastProfileCreatedSuccess()
-                            view.hasItAccount(accountIfExist())
+                            getCurrentProfile()
                         }
                     }
 
@@ -95,6 +99,7 @@ class ProfilePresenter @Inject constructor(private val saveToProfileUseCase: Sav
                     override fun profileEditSuccess() {
                         launch(Dispatchers.Main) {
                             view.showToastProfileEditedSuccess()
+                            getCurrentProfile()
                         }
                     }
                 })

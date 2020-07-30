@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.ui.util
+package ru.ruslan.weighttracker.ui.common
 
 import android.os.Environment
 import java.io.File
@@ -13,7 +13,8 @@ class FileUtils {
 
     fun createDirectoryIfNotExist() {
         val folder = File(
-            Environment.getExternalStorageDirectory().toString() + File.separator + FOLDER_NAME)
+            Environment.getExternalStorageDirectory().toString() + File.separator + FOLDER_NAME
+        )
         if (!folder.exists()) {
             folder.mkdirs()
         }

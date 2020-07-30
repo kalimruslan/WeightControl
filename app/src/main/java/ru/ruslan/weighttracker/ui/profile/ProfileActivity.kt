@@ -12,6 +12,7 @@ import ru.ruslan.weighttracker.dagger.scope.ProfileScope
 import ru.ruslan.weighttracker.domain.contract.ProfileContract
 import ru.ruslan.weighttracker.ui.BaseActivity
 import ru.ruslan.weighttracker.ui.MainActivity
+import ru.ruslan.weighttracker.ui.common.SliderLayoutManager
 import ru.ruslan.weighttracker.ui.util.*
 import ru.ruslan.weighttracker.ui.util.Constants.THIS_APP
 import javax.inject.Inject
@@ -31,7 +32,6 @@ class ProfileActivity : BaseActivity(R.layout.activity_profile), ProfileContract
     }
 
     override fun initMembers() {
-        presenter.setView(this)
 
         dataHeight = (140..210).toList().map { it.toString() }
         dataWeight = (40..150).toList().map { it.toString() }
@@ -53,6 +53,9 @@ class ProfileActivity : BaseActivity(R.layout.activity_profile), ProfileContract
                 rv_curr_weight.smoothScrollToPosition(pos)
             }
         })
+
+        presenter.setView(this)
+        presenter.getCurrentProfile()
     }
 
     override fun initViews() {
@@ -75,7 +78,12 @@ class ProfileActivity : BaseActivity(R.layout.activity_profile), ProfileContract
 
         rv_curr_height.apply {
             setPadding(padding, 0, padding, 0)
-            layoutManager = SliderLayoutManager(context, scaleDown = true, needListener = false)
+            layoutManager =
+                SliderLayoutManager(
+                    context,
+                    scaleDown = true,
+                    needListener = false
+                )
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 @SuppressLint("SetTextI18n")
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -93,7 +101,12 @@ class ProfileActivity : BaseActivity(R.layout.activity_profile), ProfileContract
 
         rv_curr_weight.apply {
             setPadding(padding, 0, padding, 0)
-            layoutManager = SliderLayoutManager(context, scaleDown = true, needListener = false)
+            layoutManager =
+                SliderLayoutManager(
+                    context,
+                    scaleDown = true,
+                    needListener = false
+                )
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 @SuppressLint("SetTextI18n")
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -138,7 +151,6 @@ class ProfileActivity : BaseActivity(R.layout.activity_profile), ProfileContract
 
     override fun hasItAccount(isHas: Boolean) {
         if (isHas) {
-            presenter.getCurrentProfile()
             btn_create_profile.visibility = View.INVISIBLE
             btn_edit_profile.visibility = View.VISIBLE
         } else {
@@ -157,12 +169,12 @@ class ProfileActivity : BaseActivity(R.layout.activity_profile), ProfileContract
             rv_curr_height.smoothScrollToPosition(
                 heightSliderAdapter.getPosition(
                     it.currentHeight.toInt().toString()
-                )!!
+                )
             )
             rv_curr_weight.smoothScrollToPosition(
                 weightSliderAdapter.getPosition(
                     it.currentWeight.toInt().toString()
-                )!!
+                )
             )
         }
     }

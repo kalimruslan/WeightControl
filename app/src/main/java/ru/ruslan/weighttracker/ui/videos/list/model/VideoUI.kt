@@ -1,4 +1,4 @@
-package ru.ruslan.weighttracker.ui.videos.list.vm.model
+package ru.ruslan.weighttracker.ui.videos.list.model
 
 import android.os.Parcel
 import android.os.Parcelable

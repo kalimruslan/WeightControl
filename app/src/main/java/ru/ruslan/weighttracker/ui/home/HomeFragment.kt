@@ -97,6 +97,8 @@ class HomeFragment : BaseFragment(R.layout.home_fragment), HomeContract.VIew, We
         const val CARD_ELEVATION_DRAG_ENTER_DP = 40F
     }
 
+    override fun initVars() {}
+
     override fun initDagger() {
         (context?.applicationContext as MainApplication).getAppComponent().getHomeComponent()
             .create().inject(this)

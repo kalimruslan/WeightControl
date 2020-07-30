@@ -23,8 +23,8 @@
     <string name="hint_sex">Ваш пол</string>
     <string name="hepler_tex_sex">Введите ваш пол</string>
     <string name="profile">Профиль</string>
-    <string name="btn_create_profile">Создать профиль</string>
-    <string name="btn_edit_profile">Изменить профиль</string>
+    <string name="btn_create_profile">Создать</string>
+    <string name="btn_edit_profile">Изменить</string>
     <string name="snackbar_create_new_profile">Профиль не найден. Создайте новый профиль.</string>
     <string name="text_your_current_weight">Ваш текущий вес</string>
     <string name="text_your_current_height">Ваш текущий рост</string>

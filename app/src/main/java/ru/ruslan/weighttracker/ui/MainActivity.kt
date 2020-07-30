@@ -1,26 +1,22 @@
 package ru.ruslan.weighttracker.ui
 
 import android.content.Intent
-import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.ui.home.HomeFragment
 import ru.ruslan.weighttracker.ui.profile.ProfileActivity
 import ru.ruslan.weighttracker.ui.util.Constants.APP_ACTIVITY
 import ru.ruslan.weighttracker.ui.util.startActivityExt
-import ru.ruslan.weighttracker.ui.videos.list.VideosFragment
+import ru.ruslan.weighttracker.ui.videos.list.VideoListFragment
 
 class MainActivity : BaseActivity(R.layout.activity_main), BottomNavigationView.OnNavigationItemSelectedListener {
-
-    override fun initDagger() = AndroidInjection.inject(this)
+    override fun initDagger() {}
 
     override fun initMembers() {
         APP_ACTIVITY = this
@@ -57,7 +53,7 @@ class MainActivity : BaseActivity(R.layout.activity_main), BottomNavigationView.
                 openFragment(HomeFragment.newInstance(), item.title.toString())
             }
             R.id.nav_video -> {
-                openFragment(VideosFragment.newInstance(), item.title.toString())
+                openFragment(VideoListFragment.newInstance(), item.title.toString())
                 return true
             }
             R.id.nav_settings -> return true

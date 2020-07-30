@@ -18,7 +18,7 @@ android {
     }
     buildTypes {
         buildTypes.each {
-            it.buildConfigField("String", "API_KEY", '"AIzaSyCDyJli99VLtMSS-bQa1yCzMxsNqCIm2_E"')
+            it.buildConfigField("String", "API_KEY", '"AIzaSyBiCBBqX9B0mQxh5fFs8FUOjjQXibVohFg"')
             it.buildConfigField("String", "BASE_URL", '"https://www.googleapis.com/youtube/"')
             it.buildConfigField("String", "CHANNEL_ID", '"PLh13OF-FPwGGKuAfUfTksOgbeqWernIkV"')
         }

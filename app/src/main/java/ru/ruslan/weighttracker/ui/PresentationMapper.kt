@@ -7,7 +7,7 @@ import ru.ruslan.weighttracker.domain.model.profile.WeightEntity
 import ru.ruslan.weighttracker.domain.model.videolists.VideoEntity
 import ru.ruslan.weighttracker.ui.home.HomeUI
 import ru.ruslan.weighttracker.ui.profile.ProfileUI
-import ru.ruslan.weighttracker.ui.videos.list.vm.model.VideoUI
+import ru.ruslan.weighttracker.ui.videos.list.model.VideoUI
 import kotlin.math.round
 
 object VideosEntityToUiMapper : BaseMapper<List<VideoEntity>, List<VideoUI>> {

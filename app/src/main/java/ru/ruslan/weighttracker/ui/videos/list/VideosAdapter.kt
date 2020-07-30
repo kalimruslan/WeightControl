@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.item_video.view.*
 import ru.ruslan.weighttracker.ui.OnItemClickListener
 import ru.ruslan.weighttracker.R
 import ru.ruslan.weighttracker.ui.util.showToast
-import ru.ruslan.weighttracker.ui.videos.list.vm.model.VideoUI
+import ru.ruslan.weighttracker.ui.videos.list.model.VideoUI
 
 class VideosAdapter(
     private val context: Context?,

@@ -7,22 +7,16 @@ import dagger.android.AndroidInjectionModule
 import ru.ruslan.weighttracker.MainApplication
 import ru.ruslan.weighttracker.dagger.module.*
 import ru.ruslan.weighttracker.dagger.new_modules.ProfileModule
-import ru.ruslan.weighttracker.dagger.subcomponents.CameraSubComponent
-import ru.ruslan.weighttracker.dagger.subcomponents.HomeSubComponent
-import ru.ruslan.weighttracker.dagger.subcomponents.ProfileSubComponent
-import ru.ruslan.weighttracker.dagger.subcomponents.SplashSubComponent
+import ru.ruslan.weighttracker.dagger.subcomponents.*
 import javax.inject.Singleton
 
 @Singleton
 @Component(
     modules = [
-        AndroidInjectionModule::class,
         ApplicationModule::class,
         DatabaseModule::class,
-        ViewModelModule::class,
         NetworkModule::class,
         ProfileModule::class,
-        UIModule::class,
         SubComponentsModule::class]
 )
 interface ApplicationComponent {
@@ -31,6 +25,7 @@ interface ApplicationComponent {
     fun getHomeComponent(): HomeSubComponent.Factory
     fun getSplashComponent(): SplashSubComponent.Factory
     fun getProfileComponent(): ProfileSubComponent.Factory
+    fun getVideoListComponent(): VideoListSubComponent.Factory
 
     fun inject(mainApplication: MainApplication)
 
